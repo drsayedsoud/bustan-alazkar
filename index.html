@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>بستان الأذكار ومدرب الصلاة وعقيدتي للأطفال 🌸</title>
+  <title>البطل المسلم للأطفال 🌟 (أذكار، صلاة، وعقيدتي)</title>
   
-  <meta name="description" content="تطبيق تفاعلي مبهج يعلم أطفالنا الأذكار والصلوات والعقيدة الإسلامية بطريقة ممتعة ومحفزة">
-  <meta name="theme-color" content="#10b981">
+  <meta name="description" content="تطبيق البطل المسلم للأطفال: تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتدريب القراءة في العقيدة الإسلامية">
+  <meta name="theme-color" content="#0284c7">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon.svg">
@@ -23,9 +23,9 @@
   <!-- شريط الرأس -->
   <header class="app-header">
     <div class="brand">
-      <span class="brand-icon">🌱</span>
+      <img src="icons/icon.svg" class="brand-icon-img" alt="شعار البطل المسلم">
       <div>
-        <h1 class="brand-title">بُستان الإيمان</h1>
+        <h1 class="brand-title">البَطَلُ المُسْلِم</h1>
         <div class="brand-greeting" id="header-greeting" title="اضغط لتعديل الاسم">
           <span id="greeting-avatar">👦</span>
           <span id="greeting-text">أهلاً بالبطل الصغير</span>
@@ -35,6 +35,12 @@
     </div>
 
     <div class="header-badges">
+      <!-- زر تثبيت التطبيق السريع في شريط الرأس -->
+      <button type="button" class="btn-install-header hidden" id="btn-header-install" title="تثبيت التطبيق على جهازك">
+        <span>📲</span>
+        <span>تثبيت</span>
+      </button>
+
       <div class="badge badge-coins" title="حصالة الحسنات">
         <span>💰</span>
         <span id="coins-count">0</span>
@@ -236,6 +242,21 @@
 
   </main>
 
+  <!-- ==================== 📲 شريط اقتراح تثبيت التطبيق (PWA Banner) ==================== -->
+  <aside class="pwa-install-banner hidden" id="pwa-install-banner" aria-label="تثبيت التطبيق">
+    <div class="pwa-install-info">
+      <img src="icons/icon.svg" alt="أيقونة البطل المسلم" class="pwa-install-logo">
+      <div>
+        <div class="pwa-install-title">ثبِّت تطبيق «البطل المسلم» على شاشتك! 🌟</div>
+        <div class="pwa-install-sub">يعمل بسرعة فائقة وبدون إنترنت، للوصول السريع للأذكار والصلاة والعقيدة.</div>
+      </div>
+    </div>
+    <div class="pwa-install-actions">
+      <button type="button" class="btn-pwa-install" id="btn-pwa-install-now">تثبيت الآن 📥</button>
+      <button type="button" class="btn-pwa-dismiss" id="btn-pwa-dismiss" title="لاحقاً" aria-label="إغلاق">✕</button>
+    </div>
+  </aside>
+
   <!-- كانفاس الاحتفالات والنجوم المتطايرة -->
   <canvas id="confetti-canvas"></canvas>
 
@@ -243,7 +264,7 @@
   <div class="modal-overlay" id="welcome-modal">
     <div class="modal-card">
       <div class="modal-icon">🌟</div>
-      <h3 class="modal-title">أهلاً بك في بُستان الإيمان!</h3>
+      <h3 class="modal-title">أهلاً بك في تطبيق «البطل المسلم»!</h3>
       <p class="modal-desc">ما هو اسم بطلنا الجميل واسم الدلع الذي تحب أن نناديك به؟</p>
 
       <form class="welcome-form" id="welcome-form" onsubmit="return false;">
@@ -267,6 +288,21 @@
 
         <button type="submit" class="modal-btn" id="btn-save-profile">هيا بنا ننطلق! 🚀</button>
       </form>
+    </div>
+  </div>
+
+  <!-- نافذة إرشادات التثبيت على أجهزة iPhone / iPad (iOS Safari) -->
+  <div class="modal-overlay" id="ios-install-modal">
+    <div class="modal-card">
+      <div class="modal-icon">📲</div>
+      <h3 class="modal-title">تثبيت «البطل المسلم» على الآيفون والآيباد</h3>
+      <p class="modal-desc" style="text-align: right; line-height: 1.8;">
+        1. اضغط على زر المشاركة <b>(⎋ Share)</b> أسفل متصفح Safari.<br>
+        2. مرر للأسفل واختر <b>«إضافة إلى الشاشة الرئيسية ➕» (Add to Home Screen)</b>.<br>
+        3. اضغط على <b>«إضافة» (Add)</b> في الأعلى.<br>
+        ستجد أيقونة البطل المسلم على شاشة جهازك جاهزة للتشغيل في أي وقت!
+      </p>
+      <button type="button" class="modal-btn" id="close-ios-install-btn">حسناً، فهمت 👍</button>
     </div>
   </div>
 

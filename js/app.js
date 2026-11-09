@@ -1,4 +1,4 @@
-// المتحكم الشامل لتطبيق بستان الإيمان للأطفال (أذكار، صلاة، عقيدتي وتدريب القراءة)
+// تطبيق «البطل المسلم» للأطفال (أذكار، صلاة، وعقيدتي مع تدريب القراءة وتثبيت التطبيق)
 
 // دالة تلوين حروف المد والتشكيل (طبق الأصل لتدريب القراءة في kids)
 function colorize(rawText) {
@@ -33,7 +33,8 @@ class AppController {
   constructor() {
     this.garden = null;
     this.confetti = null;
-    this.activeTab = 'azkar'; // 'azkar' أو 'prayer' أو 'aqeedah'
+    this.activeTab = 'azkar';
+    this.deferredInstallPrompt = null;
 
     // بيانات الطفل
     this.profile = {
@@ -95,6 +96,7 @@ class AppController {
     this.renderCurrentAqeedahLesson();
 
     this.setupEventListeners();
+    this.setupPWAInstallation();
     this.updateUI();
     this.restoreGardenVisuals();
 
@@ -109,6 +111,87 @@ class AppController {
         console.log('SW registration error:', err);
       });
     }
+  }
+
+  // ========== إدارة PWA واقتراح تثبيت التطبيق ==========
+  setupPWAInstallation() {
+    const installBanner = document.getElementById('pwa-install-banner');
+    const headerInstallBtn = document.getElementById('btn-header-install');
+    const installNowBtn = document.getElementById('btn-pwa-install-now');
+    const dismissBtn = document.getElementById('btn-pwa-dismiss');
+    const iosModal = document.getElementById('ios-install-modal');
+    const closeIosBtn = document.getElementById('close-ios-install-btn');
+
+    // كشف ما إذا كان التطبيق مثبتاً بالفعل
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (isStandalone) {
+      installBanner.classList.add('hidden');
+      headerInstallBtn.classList.add('hidden');
+      return;
+    }
+
+    // فحص ما إذا كان المستخدم رفض التثبيت مؤخراً
+    const dismissedTime = localStorage.getItem('bustan_install_dismissed');
+    const isRecentlyDismissed = dismissedTime && (Date.now() - parseInt(dismissedTime, 10) < 1000 * 60 * 60 * 24); // 24 ساعة
+
+    // التقاط حدث التثبيت القياسي من المتصفح (Chrome, Edge, Samsung Internet, Android)
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredInstallPrompt = e;
+
+      // إظهار زر الرأس دائماً
+      headerInstallBtn.classList.remove('hidden');
+
+      // إظهار البانر بعد ثانيتين إلا إذا تم إغلاقه مؤخراً
+      if (!isRecentlyDismissed) {
+        setTimeout(() => {
+          installBanner.classList.remove('hidden');
+        }, 2200);
+      }
+    });
+
+    const triggerInstall = async () => {
+      sounds.playPop();
+      if (this.deferredInstallPrompt) {
+        this.deferredInstallPrompt.prompt();
+        const choice = await this.deferredInstallPrompt.userChoice;
+        if (choice.outcome === 'accepted') {
+          sounds.playVictory();
+          this.confetti.burst(70);
+          installBanner.classList.add('hidden');
+          headerInstallBtn.classList.add('hidden');
+        }
+        this.deferredInstallPrompt = null;
+      } else {
+        // فحص أجهزة iOS Safari
+        const isIosDevice = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+        if (isIosDevice) {
+          iosModal.classList.add('active');
+        } else {
+          alert('لتثبيت التطبيق: افتح قائمة المتصفح (⋮) واختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية" 👍');
+        }
+      }
+    };
+
+    installNowBtn.addEventListener('click', triggerInstall);
+    headerInstallBtn.addEventListener('click', triggerInstall);
+
+    dismissBtn.addEventListener('click', () => {
+      sounds.playPop();
+      installBanner.classList.add('hidden');
+      localStorage.setItem('bustan_install_dismissed', Date.now().toString());
+    });
+
+    closeIosBtn.addEventListener('click', () => {
+      sounds.playPop();
+      iosModal.classList.remove('active');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      installBanner.classList.add('hidden');
+      headerInstallBtn.classList.add('hidden');
+      sounds.playVictory();
+    });
   }
 
   // ========== حفظ واسترجاع البيانات ==========
@@ -180,7 +263,7 @@ class AppController {
       document.getElementById('aq-congrat-name').textContent = this.profile.nickname || this.profile.name;
       document.getElementById('gallery-child-name').textContent = this.profile.nickname || this.profile.name;
     } else {
-      avatarEl.textContent = '🌱';
+      avatarEl.textContent = '🌟';
       textEl.textContent = 'اضغط لتسجيل اسمك يا بطل';
     }
   }
@@ -255,7 +338,6 @@ class AppController {
     const secPrayer = document.getElementById('section-prayer');
     const secAqeedah = document.getElementById('section-aqeedah');
 
-    // إزالة التفعيل
     tabAzkar.className = 'nav-tab-btn';
     tabPrayer.className = 'nav-tab-btn';
     tabAqeedah.className = 'nav-tab-btn';
@@ -574,10 +656,8 @@ class AppController {
     document.getElementById('aq-chapter-subtitle').textContent = `الدَّرْسُ ${lesson.number} مِنْ ${AQEEDAH_LESSONS.length}: ${lesson.subtitle}`;
     document.getElementById('aq-chapter-title').innerHTML = colorize(lesson.title);
 
-    // تلوين النص بالكامل بواسطة دالة colorize ليقرأه الطفل بنفسه
     document.getElementById('aq-chapter-text').innerHTML = colorize(lesson.text);
 
-    // النقاط الإيمانية المستفادة
     const conceptsList = document.getElementById('aq-concepts-list');
     conceptsList.innerHTML = '';
     lesson.keyConcepts.forEach(c => {
@@ -587,12 +667,11 @@ class AppController {
       conceptsList.appendChild(div);
     });
 
-    // سؤال الفهم الذكي
     document.getElementById('aq-q-text').innerHTML = colorize(lesson.question.text);
     const choicesGrid = document.getElementById('aq-choices-grid');
     choicesGrid.innerHTML = '';
 
-    lesson.question.choices.forEach((choice, cIdx) => {
+    lesson.question.choices.forEach((choice) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'choice-btn';
@@ -601,7 +680,6 @@ class AppController {
       choicesGrid.appendChild(btn);
     });
 
-    // أزرار التنقل
     const prevBtn = document.getElementById('btn-aq-prev');
     const nextBtn = document.getElementById('btn-aq-next');
 
@@ -617,7 +695,6 @@ class AppController {
 
       btn.classList.add('correct');
 
-      // تسجيل إتمام الدرس
       if (!this.completedLessons[lesson.id]) {
         this.completedLessons[lesson.id] = true;
         this.state.coins += 25;

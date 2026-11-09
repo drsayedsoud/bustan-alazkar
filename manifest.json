@@ -1,16 +1,17 @@
 {
-  "name": "بستان الأذكار للأطفال",
-  "short_name": "بستان الأذكار",
-  "description": "تطبيق إسلامي تفاعلي مبهج لتعليم الأطفال الأذكار اليومية",
+  "name": "البطل المسلم للأطفال",
+  "short_name": "البطل المسلم",
+  "description": "تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتدريب القراءة في العقيدة الإسلامية للأطفال",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#bae6fd",
-  "theme_color": "#10b981",
+  "background_color": "#0284c7",
+  "theme_color": "#0284c7",
   "orientation": "portrait",
   "icons": [
     {
       "src": "icons/icon.svg",
-      "sizes": "512x512",
+      "sizes": "192x192 512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
