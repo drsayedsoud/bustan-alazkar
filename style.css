@@ -1,4 +1,4 @@
-/* بستان الأذكار ومدرب الصلاة للأطفال - تصميم تفاعلي مبهج وطفولي */
+/* بستان الأذكار ومدرب الصلاة وقسم عقيدتي للأطفال */
 :root {
   --primary: #10b981;
   --primary-dark: #059669;
@@ -12,11 +12,14 @@
   --text-muted: #4b5563;
   --prayer-theme: #6366f1;
   --prayer-light: #e0e7ff;
+  --aqeedah-theme: #0284c7;
+  --aqeedah-light: #e0f2fe;
   --radius-xl: 24px;
   --radius-lg: 18px;
   --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
   --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.35);
   --shadow-prayer: 0 0 20px rgba(99, 102, 241, 0.35);
+  --shadow-aqeedah: 0 0 20px rgba(2, 132, 199, 0.35);
 }
 
 * {
@@ -128,14 +131,14 @@ body {
   transform: scale(0.92);
 }
 
-/* شريط التبديل بين القسمين الرئيسيين (الأذكار والصلاة) */
+/* شريط التبديل بين الأقسام الثلاثة */
 .main-nav-tabs {
   display: flex;
   max-width: 800px;
   width: 100%;
   margin: 10px auto 0 auto;
   padding: 0 16px;
-  gap: 10px;
+  gap: 8px;
 }
 
 .nav-tab-btn {
@@ -143,12 +146,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 14px;
+  gap: 6px;
+  padding: 10px 12px;
   border-radius: var(--radius-lg);
   border: 2px solid transparent;
-  background: rgba(255, 255, 255, 0.8);
-  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
   font-weight: 800;
   color: var(--text-muted);
   cursor: pointer;
@@ -172,6 +175,14 @@ body {
   transform: translateY(-2px);
 }
 
+.nav-tab-btn.active-aqeedah {
+  background: white;
+  color: var(--aqeedah-theme);
+  border-color: var(--aqeedah-theme);
+  box-shadow: var(--shadow-aqeedah);
+  transform: translateY(-2px);
+}
+
 /* الحاوية الرئيسية */
 .main-container {
   max-width: 800px;
@@ -183,7 +194,6 @@ body {
   gap: 14px;
 }
 
-/* إخفاء وإظهار الأقسام */
 .app-section {
   display: flex;
   flex-direction: column;
@@ -195,7 +205,7 @@ body {
   display: none !important;
 }
 
-/* ========== تصميم قسم بستان الأذكار ========== */
+/* ========== 1. قسم بستان الأذكار ========== */
 .garden-card {
   background: white;
   border-radius: var(--radius-xl);
@@ -331,7 +341,6 @@ body {
   border: 2px solid #bbf7d0;
   border-radius: var(--radius-lg);
   padding: 18px 14px;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .dhikr-arabic {
@@ -469,7 +478,7 @@ body {
   transform: scale(0.95);
 }
 
-/* ========== 🕌 تصميم قسم تعليم الصلاة ========== */
+/* ========== 2. قسم تعليم الصلاة ========== */
 .prayer-header-card {
   background: white;
   border-radius: var(--radius-xl);
@@ -491,7 +500,6 @@ body {
   color: var(--text-muted);
 }
 
-/* شريط اختيار الصلوات الخمس */
 .prayers-selector {
   display: flex;
   gap: 8px;
@@ -545,7 +553,6 @@ body {
   color: white;
 }
 
-/* تفاصيل الصلاة المختارة */
 .prayer-info-banner {
   background: #f5f3ff;
   border: 2px dashed #c4b5fd;
@@ -559,7 +566,6 @@ body {
   color: #4338ca;
 }
 
-/* بطاقة خطوات الصلاة التفاعلية */
 .prayer-step-card {
   background: var(--card-bg);
   border-radius: var(--radius-xl);
@@ -632,7 +638,6 @@ body {
   line-height: 1.6;
 }
 
-/* شريط التقدم في الخطوات (11 خطوة) */
 .steps-progress-bar {
   display: flex;
   gap: 4px;
@@ -657,7 +662,6 @@ body {
   background: #10b981;
 }
 
-/* أزرار التنقل بين خطوات الصلاة */
 .prayer-nav-actions {
   display: flex;
   gap: 10px;
@@ -699,6 +703,331 @@ body {
 
 .prayer-btn:active {
   transform: scale(0.96);
+}
+
+/* ========== 3. 📖 قسم عقيدتي وتدريب القراءة (طبق الأصل لتطبيق kids) ========== */
+/* ألوان المدود والتشكيل لتسهيل قراءة الطفل بنفسه */
+.c-alef { color: #dc2626 !important; font-weight: inherit !important; }  /* أحمر */
+.c-waw { color: #2563eb !important; font-weight: inherit !important; }   /* أزرق */
+.c-ya { color: #16a34a !important; font-weight: inherit !important; }    /* أخضر */
+.c-tanwin { color: #ea580c !important; font-weight: inherit !important; } /* برتقالي */
+.c-shadda { color: #a855f7 !important; font-weight: inherit !important; } /* بنفسجي */
+.c-sukun { color: #14b8a6 !important; font-weight: inherit !important; } /* أزرق مخضر */
+
+/* ترويسة قسم عقيدتي */
+.aqeedah-header-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+  border: 2px solid #bae6fd;
+  text-align: center;
+}
+
+.aqeedah-header-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--aqeedah-theme);
+  margin-bottom: 4px;
+}
+
+.aqeedah-header-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* شريط اختيار الدروس الـ 12 */
+.lessons-selector-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px;
+  scrollbar-width: none;
+}
+
+.lessons-selector-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.lesson-pill-btn {
+  background: white;
+  border: 2px solid #e2e8f0;
+  padding: 8px 14px;
+  border-radius: 18px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #334155;
+  white-space: nowrap;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.lesson-pill-btn.active {
+  background: var(--aqeedah-theme);
+  border-color: #0369a1;
+  color: white;
+  box-shadow: var(--shadow-aqeedah);
+  transform: translateY(-2px);
+}
+
+.lesson-pill-btn.completed {
+  border-color: #10b981;
+}
+
+/* شريط دليل ألوان الحروف والمدود والتشكيل (طبق الأصل لتدريب القراءة) */
+.key-bar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border: 2px solid #e2e8f0;
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif !important;
+}
+
+.key-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.key-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* بطاقة قراءة الدرس (مثل قصة قبل النوم بالضبط) */
+.aqeedah-reading-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  padding: 24px 20px;
+  box-shadow: var(--shadow-soft);
+  border: 2px solid #e0f2fe;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.chapter-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 2px;
+  text-align: center;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  animation: bounceSlow 2.5s infinite ease-in-out;
+}
+
+.chapter-title {
+  font-family: 'Amiri', 'Noto Naskh Arabic', 'Traditional Arabic', serif !important;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.chapter-subtitle {
+  font-size: 0.85rem;
+  color: #0284c7;
+  text-align: center;
+  font-weight: 800;
+  background: #f0f9ff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  align-self: center;
+}
+
+/* نص القراءة المشكول والملون بحجم كبير وسهل للقراءة الذاتية */
+.chapter-text-box {
+  background: #fcfcfd;
+  border: 2px solid #f1f5f9;
+  border-radius: 20px;
+  padding: 20px 18px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.chapter-text {
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif !important;
+  font-size: 1.75rem;
+  line-height: 2.35;
+  color: #1e293b;
+  text-align: right;
+  margin: 0;
+  font-weight: 700;
+  white-space: pre-line;
+}
+
+.chapter-text b,
+.chapter-text span {
+  font-family: inherit;
+  font-weight: inherit;
+}
+
+/* ما نتعلمه من الدرس (Key Concepts) */
+.key-concepts-container {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.key-concepts-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #15803d;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.concepts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.concept-item {
+  font-size: 0.88rem;
+  color: #166534;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.5;
+}
+
+/* منطقة سؤال الفهم الذكي (Question Area) */
+.question-area {
+  width: 100%;
+  margin-top: 10px;
+  padding-top: 18px;
+  border-top: 2px dashed #cbd5e1;
+  animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.q-box {
+  background: #f8fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.q-icon {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.q-text {
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif !important;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.7;
+}
+
+.choices-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.choice-btn {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif !important;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: right;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.03);
+}
+
+.choice-btn:active {
+  transform: scale(0.98);
+}
+
+.choice-btn.correct {
+  background: #dcfce7 !important;
+  border-color: #22c55e !important;
+  color: #15803d !important;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important;
+}
+
+.choice-btn.wrong {
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #b91c1c !important;
+  animation: shake 0.4s ease-in-out;
+}
+
+/* شريط أزرار التحكم في الدرس */
+.controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.ctrl-btn {
+  padding: 12px 20px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.ctrl-btn.primary {
+  background: var(--aqeedah-theme);
+  color: white;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+  flex: 1;
+}
+
+.ctrl-btn.secondary {
+  background: #f1f5f9;
+  color: #475569;
+  flex: 1;
+}
+
+.ctrl-btn.round {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: white;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+  flex-shrink: 0;
+}
+
+.ctrl-btn:active {
+  transform: scale(0.94);
 }
 
 /* ========== النوافذ المنبثقة (Modals) ========== */
@@ -788,7 +1117,6 @@ body {
   transform: scale(0.96);
 }
 
-/* نافذة الترحيب وتسجيل اسم الطفل */
 .welcome-form {
   display: flex;
   flex-direction: column;
@@ -852,7 +1180,6 @@ body {
   color: var(--primary-dark);
 }
 
-/* معرض الحديقة (Garden Gallery) */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -883,19 +1210,32 @@ body {
   font-weight: 700;
 }
 
-/* أنيميشن */
 @keyframes bounceSlow {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
 }
 
-/* شاشات الهواتف الصغيرة */
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
 @media (max-width: 480px) {
   .canvas-wrapper {
     height: 190px;
   }
   .dhikr-arabic, .prayer-arabic {
     font-size: 1.25rem;
+  }
+  .chapter-text {
+    font-size: 1.35rem;
+    line-height: 1.95;
   }
   .water-btn {
     width: 95px;
@@ -905,7 +1245,7 @@ body {
     font-size: 1.8rem;
   }
   .nav-tab-btn {
-    font-size: 0.9rem;
-    padding: 10px 8px;
+    font-size: 0.85rem;
+    padding: 9px 6px;
   }
 }

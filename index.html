@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>بستان الأذكار ومدرب الصلاة للأطفال 🌸</title>
+  <title>بستان الأذكار ومدرب الصلاة وعقيدتي للأطفال 🌸</title>
   
-  <meta name="description" content="تطبيق تفاعلي مبهج يعلم أطفالنا الأذكار والصلوات الخمس بطريقة ممتعة ومحفزة">
+  <meta name="description" content="تطبيق تفاعلي مبهج يعلم أطفالنا الأذكار والصلوات والعقيدة الإسلامية بطريقة ممتعة ومحفزة">
   <meta name="theme-color" content="#10b981">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon.svg">
 
-  <!-- الخطوط العربية -->
+  <!-- الخطوط العربية الراقية -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -48,7 +48,7 @@
     </div>
   </header>
 
-  <!-- شريط التبديل بين القسمين الرئيسيين -->
+  <!-- شريط التبديل بين الأقسام الثلاثة الرئيسية -->
   <nav class="main-nav-tabs" aria-label="أقسام التطبيق">
     <button type="button" class="nav-tab-btn active-azkar" id="tab-azkar-btn">
       <span>🌿</span>
@@ -57,6 +57,10 @@
     <button type="button" class="nav-tab-btn" id="tab-prayer-btn">
       <span>🕌</span>
       <span>تعلّم الصلاة</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="tab-aqeedah-btn">
+      <span>📖</span>
+      <span>عَقِيدَتِي</span>
     </button>
   </nav>
 
@@ -130,7 +134,6 @@
 
     <!-- ==================== 2. قسم تعليم الصلاة ==================== -->
     <section class="app-section hidden" id="section-prayer">
-      <!-- ترويسة مدرب الصلاة -->
       <div class="prayer-header-card">
         <h2 class="prayer-header-title">🕌 مُدرِّب الصَّلاة للصِّغار</h2>
         <p class="prayer-header-desc">الصلاة صلة بينك وبين الله، تعال نتعلّم كيف نصلّي بخشوع وجمال!</p>
@@ -167,15 +170,68 @@
           💡 <b>تلميح للبطل:</b> ارفع يديك حذو منكبيك واجعل نظرك لموضع السجود.
         </div>
 
-        <!-- مؤشر الخطوات -->
         <div class="steps-progress-bar" id="steps-progress-bar"></div>
 
-        <!-- أزرار التنقل بين خطوات الصلاة -->
         <div class="prayer-nav-actions">
           <button type="button" class="prayer-btn prayer-btn-prev" id="btn-prayer-prev">➡️ الخطوة السابقة</button>
           <button type="button" class="prayer-btn prayer-btn-next" id="btn-prayer-next">الخطوة التالية ⬅️</button>
         </div>
       </div>
+    </section>
+
+    <!-- ==================== 3. 📖 قسم عقيدتي (تدريب القراءة الذاتية) ==================== -->
+    <section class="app-section hidden" id="section-aqeedah">
+      <div class="aqeedah-header-card">
+        <h2 class="aqeedah-header-title">📖 عَقِيدَتِي نُورِي (تَدْرِيبُ الْقِرَاءَةِ الذَّاتِيَّةِ)</h2>
+        <p class="aqeedah-header-desc">اقرأ الدرس بنفسك بمساعدة ألوان التهجي، ثم أجب عن سؤال الذكاء واربح حسنات!</p>
+      </div>
+
+      <!-- شريط الدروس الـ 12 -->
+      <div class="lessons-selector-bar" id="lessons-selector-bar"></div>
+
+      <!-- شريط دليل ألوان الحروف والمدود والتشكيل (طبق الأصل لتدريب القراءة في kids) -->
+      <div class="key-bar" aria-label="دليل ألوان التهجي والقراءة">
+        <div class="key-item"><span class="key-dot" style="background:#dc2626;"></span><span>مَدّ أَلِف</span></div>
+        <div class="key-item"><span class="key-dot" style="background:#2563eb;"></span><span>مَدّ وَاو</span></div>
+        <div class="key-item"><span class="key-dot" style="background:#16a34a;"></span><span>مَدّ يَاء</span></div>
+        <div class="key-item"><span class="key-dot" style="background:#ea580c;"></span><span>تَنْوِين</span></div>
+        <div class="key-item"><span class="key-dot" style="background:#a855f7;"></span><span>شَدَّة</span></div>
+        <div class="key-item"><span class="key-dot" style="background:#14b8a6;"></span><span>سُكُون</span></div>
+      </div>
+
+      <!-- بطاقة قراءة الدرس التفاعلية -->
+      <article class="aqeedah-reading-card">
+        <div class="chapter-emoji" id="aq-chapter-emoji">☀️</div>
+        <span class="chapter-subtitle" id="aq-chapter-subtitle">الدَّرْسُ 1 مِنْ 12</span>
+        <h3 class="chapter-title" id="aq-chapter-title">مَنْ هُوَ رَبِّي؟</h3>
+
+        <!-- صندوق النص المشكول والملون بدقة للطفل -->
+        <div class="chapter-text-box">
+          <p class="chapter-text" id="aq-chapter-text">نص الدرس مشكول وملون...</p>
+        </div>
+
+        <!-- النقاط الإيمانية المستفادة -->
+        <div class="key-concepts-container" id="aq-concepts-box">
+          <div class="key-concepts-title">🌟 مَا نَتَعَلَّمُهُ مِنَ الدَّرْسِ:</div>
+          <div class="concepts-list" id="aq-concepts-list"></div>
+        </div>
+
+        <!-- منطقة سؤال الفهم الذكي للطفل -->
+        <div class="question-area" id="aq-question-area">
+          <div class="q-box">
+            <div class="q-icon">🎯</div>
+            <div class="q-text" id="aq-q-text">سؤال الفهم للبطل...</div>
+          </div>
+          <div class="choices-grid" id="aq-choices-grid"></div>
+        </div>
+
+        <!-- شريط التحكم والتنقل -->
+        <div class="controls-bar">
+          <button type="button" class="ctrl-btn secondary" id="btn-aq-prev">➡️ السابق</button>
+          <button type="button" class="ctrl-btn round" id="btn-aq-speak" title="استمع للقراءة بالصوت" aria-label="استمع للدرس">🔊</button>
+          <button type="button" class="ctrl-btn primary" id="btn-aq-next">الدرس التالي ⬅️</button>
+        </div>
+      </article>
     </section>
 
   </main>
@@ -244,12 +300,27 @@
     </div>
   </div>
 
+  <!-- نافذة التهنئة عند إتمام درس العقيدة -->
+  <div class="modal-overlay" id="aqeedah-congrat-modal">
+    <div class="modal-card">
+      <div class="modal-icon">🌟</div>
+      <h3 class="modal-title">بطل الإيمان الذكي! أحسنت يا <span id="aq-congrat-name">بطل</span></h3>
+      <p class="modal-desc">
+        قرأت الدرس ببراعة وأجبت عن السؤال بذكاء.. الإيمان يملأ قلبك نوراً!
+      </p>
+      <div style="font-size: 1.25rem; font-weight: 800; color: #0284c7; margin-bottom: 18px;">
+        ربحت في حصالتك: <b>+25</b> حسنة وزهرة جديدة في بستانك 🌸
+      </div>
+      <button type="button" class="modal-btn" id="close-aq-congrat-btn">الدرس التالي 🚀</button>
+    </div>
+  </div>
+
   <!-- نافذة معرض حديقتي -->
   <div class="modal-overlay" id="gallery-modal">
     <div class="modal-card">
       <div class="modal-icon">🏡</div>
       <h3 class="modal-title">بُستاني الجميل</h3>
-      <p class="modal-desc">كل ذكر وصلاتها تغرس لك خيراً ويزهر في بستانك يا <b id="gallery-child-name">بطل</b>!</p>
+      <p class="modal-desc">كل ذكر وصلاة ودرس عقيدة يغرس لك خيراً ويزهر في بستانك يا <b id="gallery-child-name">بطل</b>!</p>
       
       <div class="gallery-grid">
         <div class="gallery-item">
@@ -291,6 +362,7 @@
   <!-- ملفات الجافاسكريبت بالترتيب -->
   <script src="js/azkar-data.js"></script>
   <script src="js/prayer-data.js"></script>
+  <script src="js/aqeedah-data.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/tree.js"></script>
   <script src="js/confetti.js"></script>

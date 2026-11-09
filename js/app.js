@@ -1,15 +1,45 @@
-// المتحكم الشامل لتطبيق بستان الأذكار ومدرب الصلاة للأطفال
+// المتحكم الشامل لتطبيق بستان الإيمان للأطفال (أذكار، صلاة، عقيدتي وتدريب القراءة)
+
+// دالة تلوين حروف المد والتشكيل (طبق الأصل لتدريب القراءة في kids)
+function colorize(rawText) {
+  let h = String(rawText || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\n/g, '<br>');
+
+  // المد بالألف — لوّن الألف (U+0627) التي تسبقها فتحة
+  h = h.replace(/(\u064E)(\u0627)/g, '$1<b class="c-alef">$2</b>');
+
+  // المد بالواو — لوّن الواو (U+0648) غير المشكّلة بعد ضمة
+  h = h.replace(/(\u064F)(\u0648)(?![\u064E\u064F\u0650\u0651\u0652])/g, '$1<b class="c-waw">$2</b>');
+
+  // المد بالياء — لوّن الياء (U+064A) غير المشكّلة بعد كسرة
+  h = h.replace(/(\u0650)(\u064A)(?![\u064E\u064F\u0650\u0651\u0652])/g, '$1<b class="c-ya">$2</b>');
+
+  // التنوين — لوّن علامة التنوين نفسها (ً ٌ ٍ)
+  h = h.replace(/([\u064B\u064C\u064D])/g, '<b class="c-tanwin">$1</b>');
+
+  // الشدة — لوّن علامة الشدة نفسها (U+0651)
+  h = h.replace(/(\u0651)/g, '<b class="c-shadda">$1</b>');
+
+  // السكون — لوّن علامة السكون نفسها (U+0652)
+  h = h.replace(/(\u0652)/g, '<b class="c-sukun">$1</b>');
+
+  return h;
+}
+
 class AppController {
   constructor() {
     this.garden = null;
     this.confetti = null;
-    this.activeTab = 'azkar'; // 'azkar' أو 'prayer'
+    this.activeTab = 'azkar'; // 'azkar' أو 'prayer' أو 'aqeedah'
 
     // بيانات الطفل
     this.profile = {
       name: '',
       nickname: '',
-      gender: 'boy' // 'boy' أو 'girl'
+      gender: 'boy'
     };
 
     // حالة الأذكار
@@ -22,6 +52,10 @@ class AppController {
     this.currentPrayerIndex = 0;
     this.currentPrayerStep = 0;
 
+    // حالة العقيدة
+    this.currentAqeedahIndex = 0;
+    this.completedLessons = {};
+
     // المخزون والنقاط
     this.state = {
       coins: 0,
@@ -33,7 +67,8 @@ class AppController {
         orange: 0,
         star: 0,
         totalWater: 0,
-        prayersCompleted: 0
+        prayersCompleted: 0,
+        lessonsCompleted: 0
       }
     };
 
@@ -48,27 +83,27 @@ class AppController {
     this.setupProfileUI();
     this.setupTabNavigation();
 
-    // تجهيز قسم الأذكار
+    // تجهيز الأقسام الثلاثة
     this.filterAzkar(this.currentCategory);
     this.setupCategoriesUI();
     this.renderCurrentDhikr();
 
-    // تجهيز قسم الصلاة
     this.setupPrayersUI();
     this.renderCurrentPrayerStep();
+
+    this.setupAqeedahUI();
+    this.renderCurrentAqeedahLesson();
 
     this.setupEventListeners();
     this.updateUI();
     this.restoreGardenVisuals();
 
-    // فحص ما إذا كان الطفل قد سجل اسمه من قبل
     if (!this.profile.name) {
       setTimeout(() => {
         this.openWelcomeModal();
       }, 300);
     }
 
-    // تسجيل الـ Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./service-worker.js').catch(err => {
         console.log('SW registration error:', err);
@@ -76,7 +111,7 @@ class AppController {
     }
   }
 
-  // ========== إدارة البيانات والحفظ ==========
+  // ========== حفظ واسترجاع البيانات ==========
   loadState() {
     try {
       const savedProfile = localStorage.getItem('bustan_child_profile');
@@ -86,6 +121,10 @@ class AppController {
       const savedState = localStorage.getItem('bustan_azkar_state');
       if (savedState) {
         this.state = JSON.parse(savedState);
+      }
+      const savedLessons = localStorage.getItem('bustan_completed_lessons');
+      if (savedLessons) {
+        this.completedLessons = JSON.parse(savedLessons);
       }
     } catch (e) {
       console.warn('Failed to load storage', e);
@@ -101,6 +140,7 @@ class AppController {
   saveState() {
     try {
       localStorage.setItem('bustan_azkar_state', JSON.stringify(this.state));
+      localStorage.setItem('bustan_completed_lessons', JSON.stringify(this.completedLessons));
     } catch (e) {}
   }
 
@@ -135,9 +175,9 @@ class AppController {
       avatarEl.textContent = this.profile.gender === 'girl' ? '👧' : '👦';
       textEl.textContent = `أهلاً بـ${title} ${this.profile.name}${nick}`;
 
-      // تحديث الأسماء في النوافذ المنبثقة
       document.getElementById('congrat-child-name').textContent = this.profile.nickname || this.profile.name;
       document.getElementById('prayer-congrat-name').textContent = this.profile.nickname || this.profile.name;
+      document.getElementById('aq-congrat-name').textContent = this.profile.nickname || this.profile.name;
       document.getElementById('gallery-child-name').textContent = this.profile.nickname || this.profile.name;
     } else {
       avatarEl.textContent = '🌱';
@@ -183,10 +223,11 @@ class AppController {
     this.confetti.burst(50);
   }
 
-  // ========== التبديل بين قسمي الأذكار والصلاة ==========
+  // ========== التبديل بين الأقسام الثلاثة ==========
   setupTabNavigation() {
     const tabAzkar = document.getElementById('tab-azkar-btn');
     const tabPrayer = document.getElementById('tab-prayer-btn');
+    const tabAqeedah = document.getElementById('tab-aqeedah-btn');
 
     tabAzkar.addEventListener('click', () => {
       sounds.playPop();
@@ -197,25 +238,41 @@ class AppController {
       sounds.playPop();
       this.switchTab('prayer');
     });
+
+    tabAqeedah.addEventListener('click', () => {
+      sounds.playPop();
+      this.switchTab('aqeedah');
+    });
   }
 
   switchTab(tab) {
     this.activeTab = tab;
     const tabAzkar = document.getElementById('tab-azkar-btn');
     const tabPrayer = document.getElementById('tab-prayer-btn');
+    const tabAqeedah = document.getElementById('tab-aqeedah-btn');
+
     const secAzkar = document.getElementById('section-azkar');
     const secPrayer = document.getElementById('section-prayer');
+    const secAqeedah = document.getElementById('section-aqeedah');
+
+    // إزالة التفعيل
+    tabAzkar.className = 'nav-tab-btn';
+    tabPrayer.className = 'nav-tab-btn';
+    tabAqeedah.className = 'nav-tab-btn';
+
+    secAzkar.classList.add('hidden');
+    secPrayer.classList.add('hidden');
+    secAqeedah.classList.add('hidden');
 
     if (tab === 'azkar') {
       tabAzkar.classList.add('active-azkar');
-      tabPrayer.classList.remove('active-prayer');
       secAzkar.classList.remove('hidden');
-      secPrayer.classList.add('hidden');
-    } else {
-      tabAzkar.classList.remove('active-azkar');
+    } else if (tab === 'prayer') {
       tabPrayer.classList.add('active-prayer');
-      secAzkar.classList.add('hidden');
       secPrayer.classList.remove('hidden');
+    } else if (tab === 'aqeedah') {
+      tabAqeedah.classList.add('active-aqeedah');
+      secAqeedah.classList.remove('hidden');
     }
   }
 
@@ -418,7 +475,6 @@ class AppController {
     document.getElementById('prayer-step-arabic').textContent = step.arabic;
     document.getElementById('prayer-step-tip').innerHTML = `💡 <b>نصيحة للبطل:</b> ${step.tip}`;
 
-    // مؤشر شريط الخطوات
     const bar = document.getElementById('steps-progress-bar');
     bar.innerHTML = '';
     for (let i = 0; i < totalSteps; i++) {
@@ -427,7 +483,6 @@ class AppController {
       bar.appendChild(dot);
     }
 
-    // تعديل أزرار التنقل
     const prevBtn = document.getElementById('btn-prayer-prev');
     const nextBtn = document.getElementById('btn-prayer-next');
 
@@ -449,7 +504,6 @@ class AppController {
       sounds.playPop();
       this.renderCurrentPrayerStep();
     } else {
-      // إتمام الصلاة
       this.onPrayerCompleted();
     }
   }
@@ -467,7 +521,6 @@ class AppController {
     sounds.playBloom();
     this.confetti.burst(70);
 
-    // مكافأة إتمام الصلاة: +50 حسنة ونجمة ذهبية في البستان
     this.state.coins += 50;
     this.state.inventory.star = (this.state.inventory.star || 0) + 1;
     this.state.inventory.prayersCompleted = (this.state.inventory.prayersCompleted || 0) + 1;
@@ -485,7 +538,132 @@ class AppController {
     this.renderCurrentPrayerStep();
   }
 
-  // ========== عام وإعدادات المستمعين ==========
+  // ========== 📖 قسم عقيدتي (تدريب القراءة الذاتية) ==========
+  setupAqeedahUI() {
+    const bar = document.getElementById('lessons-selector-bar');
+    bar.innerHTML = '';
+
+    AQEEDAH_LESSONS.forEach((lesson, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      const isDone = this.completedLessons[lesson.id];
+      btn.className = `lesson-pill-btn ${idx === this.currentAqeedahIndex ? 'active' : ''} ${isDone ? 'completed' : ''}`;
+      btn.innerHTML = `<span>${lesson.emoji}</span><span>الدرس ${lesson.number}</span>${isDone ? '<span>✓</span>' : ''}`;
+      btn.onclick = () => {
+        sounds.playPop();
+        this.selectAqeedahLesson(idx);
+      };
+      bar.appendChild(btn);
+    });
+  }
+
+  selectAqeedahLesson(index) {
+    this.currentAqeedahIndex = index;
+    this.renderCurrentAqeedahLesson();
+
+    document.querySelectorAll('.lesson-pill-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', idx === index);
+    });
+  }
+
+  renderCurrentAqeedahLesson() {
+    const lesson = AQEEDAH_LESSONS[this.currentAqeedahIndex];
+    if (!lesson) return;
+
+    document.getElementById('aq-chapter-emoji').textContent = lesson.emoji;
+    document.getElementById('aq-chapter-subtitle').textContent = `الدَّرْسُ ${lesson.number} مِنْ ${AQEEDAH_LESSONS.length}: ${lesson.subtitle}`;
+    document.getElementById('aq-chapter-title').innerHTML = colorize(lesson.title);
+
+    // تلوين النص بالكامل بواسطة دالة colorize ليقرأه الطفل بنفسه
+    document.getElementById('aq-chapter-text').innerHTML = colorize(lesson.text);
+
+    // النقاط الإيمانية المستفادة
+    const conceptsList = document.getElementById('aq-concepts-list');
+    conceptsList.innerHTML = '';
+    lesson.keyConcepts.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'concept-item';
+      div.innerHTML = `<span>✅</span><span>${colorize(c)}</span>`;
+      conceptsList.appendChild(div);
+    });
+
+    // سؤال الفهم الذكي
+    document.getElementById('aq-q-text').innerHTML = colorize(lesson.question.text);
+    const choicesGrid = document.getElementById('aq-choices-grid');
+    choicesGrid.innerHTML = '';
+
+    lesson.question.choices.forEach((choice, cIdx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'choice-btn';
+      btn.innerHTML = colorize(choice.text);
+      btn.onclick = () => this.handleChoiceClick(btn, choice, lesson);
+      choicesGrid.appendChild(btn);
+    });
+
+    // أزرار التنقل
+    const prevBtn = document.getElementById('btn-aq-prev');
+    const nextBtn = document.getElementById('btn-aq-next');
+
+    prevBtn.style.visibility = this.currentAqeedahIndex === 0 ? 'hidden' : 'visible';
+    nextBtn.textContent = this.currentAqeedahIndex === AQEEDAH_LESSONS.length - 1 ? '🎉 ختمتُ دروس العقيدة' : 'الدرس التالي ⬅️';
+  }
+
+  handleChoiceClick(btn, choice, lesson) {
+    if (choice.correct) {
+      sounds.playVictory();
+      sounds.playCoin();
+      this.confetti.burst(60);
+
+      btn.classList.add('correct');
+
+      // تسجيل إتمام الدرس
+      if (!this.completedLessons[lesson.id]) {
+        this.completedLessons[lesson.id] = true;
+        this.state.coins += 25;
+        this.state.inventory.flower = (this.state.inventory.flower || 0) + 1;
+        this.state.inventory.lessonsCompleted = (this.state.inventory.lessonsCompleted || 0) + 1;
+        this.garden.addItem('flower');
+        this.saveState();
+        this.updateUI();
+        this.setupAqeedahUI();
+      }
+
+      setTimeout(() => {
+        document.getElementById('aqeedah-congrat-modal').classList.add('active');
+      }, 500);
+    } else {
+      sounds.playPop();
+      btn.classList.add('wrong');
+      setTimeout(() => {
+        btn.classList.remove('wrong');
+      }, 800);
+    }
+  }
+
+  nextAqeedahLesson() {
+    if (this.currentAqeedahIndex < AQEEDAH_LESSONS.length - 1) {
+      this.currentAqeedahIndex++;
+      sounds.playPop();
+      this.renderCurrentAqeedahLesson();
+      this.setupAqeedahUI();
+    } else {
+      sounds.playVictory();
+      this.confetti.burst(90);
+      alert('ما شاء الله تبارك الله! لقد أتممت جميع دروس العقيدة يا بطل!');
+    }
+  }
+
+  prevAqeedahLesson() {
+    if (this.currentAqeedahIndex > 0) {
+      this.currentAqeedahIndex--;
+      sounds.playPop();
+      this.renderCurrentAqeedahLesson();
+      this.setupAqeedahUI();
+    }
+  }
+
+  // ========== عام وتحديث الواجهة ==========
   updateUI() {
     document.getElementById('coins-count').textContent = this.state.coins;
     document.getElementById('streak-count').textContent = `${this.state.streak} يوم`;
@@ -506,18 +684,15 @@ class AppController {
   }
 
   setupEventListeners() {
-    // تعديل الاسم من الرأس
     document.getElementById('header-greeting').addEventListener('click', () => {
       sounds.playPop();
       this.openWelcomeModal();
     });
 
-    // حفظ الاسم في نافذة الترحيب
     document.getElementById('btn-save-profile').addEventListener('click', () => {
       this.saveChildProfile();
     });
 
-    // أزرار اختيار الشخصية (ولد/بنت)
     document.querySelectorAll('.gender-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
@@ -526,7 +701,7 @@ class AppController {
       });
     });
 
-    // زر السقي بالأذكار
+    // أذكار
     document.getElementById('water-action-btn').addEventListener('click', () => {
       this.handleWaterTap();
     });
@@ -541,19 +716,17 @@ class AppController {
       this.prevDhikr();
     });
 
-    // استمع للذكر
     document.getElementById('btn-speak').addEventListener('click', () => {
       const dhikr = this.getCurrentDhikr();
       if (dhikr) sounds.speakArabic(dhikr.arabic);
     });
 
-    // استمع لخطوة الصلاة
+    // صلاة
     document.getElementById('btn-prayer-speak').addEventListener('click', () => {
       const step = PRAYER_STEPS[this.currentPrayerStep];
       if (step) sounds.speakArabic(step.arabic);
     });
 
-    // أزرار خطوات الصلاة
     document.getElementById('btn-prayer-next').addEventListener('click', () => {
       this.nextPrayerStep();
     });
@@ -562,13 +735,33 @@ class AppController {
       this.prevPrayerStep();
     });
 
-    // إغلاق نوافذ التهنئة
+    // عقيدة
+    document.getElementById('btn-aq-speak').addEventListener('click', () => {
+      const lesson = AQEEDAH_LESSONS[this.currentAqeedahIndex];
+      if (lesson) sounds.speakArabic(lesson.text);
+    });
+
+    document.getElementById('btn-aq-next').addEventListener('click', () => {
+      this.nextAqeedahLesson();
+    });
+
+    document.getElementById('btn-aq-prev').addEventListener('click', () => {
+      this.prevAqeedahLesson();
+    });
+
+    // نوافذ التهنئة
     document.getElementById('close-congrat-btn').addEventListener('click', () => {
       this.closeCongratModal();
     });
 
     document.getElementById('close-prayer-congrat-btn').addEventListener('click', () => {
       this.closePrayerCongratModal();
+    });
+
+    document.getElementById('close-aq-congrat-btn').addEventListener('click', () => {
+      sounds.playPop();
+      document.getElementById('aqeedah-congrat-modal').classList.remove('active');
+      this.nextAqeedahLesson();
     });
 
     // المعرض والصوت
