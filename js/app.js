@@ -33,7 +33,7 @@ class AppController {
   constructor() {
     this.garden = null;
     this.confetti = null;
-    this.activeTab = 'azkar';
+    this.activeTab = 'home';
     this.deferredInstallPrompt = null;
 
     // بيانات الطفل
@@ -99,6 +99,7 @@ class AppController {
     this.setupPWAInstallation();
     this.updateUI();
     this.restoreGardenVisuals();
+    this.switchTab('home');
 
     if (!this.profile.name) {
       setTimeout(() => {
@@ -251,12 +252,18 @@ class AppController {
   setupProfileUI() {
     const avatarEl = document.getElementById('greeting-avatar');
     const textEl = document.getElementById('greeting-text');
+    const heroNameEl = document.getElementById('home-hero-name');
+    const heroAvatarEl = document.getElementById('home-hero-avatar');
 
     if (this.profile.name) {
       const title = this.profile.gender === 'girl' ? 'البطلة' : 'البطل';
       const nick = this.profile.nickname ? ` (${this.profile.nickname})` : '';
-      avatarEl.textContent = this.profile.gender === 'girl' ? '👧' : '👦';
+      const avatar = this.profile.gender === 'girl' ? '👧' : '👦';
+      avatarEl.textContent = avatar;
       textEl.textContent = `أهلاً بـ${title} ${this.profile.name}${nick}`;
+
+      if (heroNameEl) heroNameEl.textContent = this.profile.nickname || this.profile.name;
+      if (heroAvatarEl) heroAvatarEl.textContent = avatar;
 
       document.getElementById('congrat-child-name').textContent = this.profile.nickname || this.profile.name;
       document.getElementById('prayer-congrat-name').textContent = this.profile.nickname || this.profile.name;
@@ -265,6 +272,8 @@ class AppController {
     } else {
       avatarEl.textContent = '🌟';
       textEl.textContent = 'اضغط لتسجيل اسمك يا بطل';
+      if (heroNameEl) heroNameEl.textContent = 'بَطَلَنَا الصَّغِير';
+      if (heroAvatarEl) heroAvatarEl.textContent = '🌟';
     }
   }
 
@@ -306,56 +315,151 @@ class AppController {
     this.confetti.burst(50);
   }
 
-  // ========== التبديل بين الأقسام الثلاثة ==========
+  // ========== التبديل بين الشاشة الرئيسية والأقسام الثلاثة ==========
   setupTabNavigation() {
+    const tabHome = document.getElementById('tab-home-btn');
     const tabAzkar = document.getElementById('tab-azkar-btn');
     const tabPrayer = document.getElementById('tab-prayer-btn');
     const tabAqeedah = document.getElementById('tab-aqeedah-btn');
+    const brandHomeLink = document.getElementById('brand-home-link');
 
-    tabAzkar.addEventListener('click', () => {
-      sounds.playPop();
-      this.switchTab('azkar');
-    });
+    if (tabHome) {
+      tabHome.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('home');
+      });
+    }
 
-    tabPrayer.addEventListener('click', () => {
-      sounds.playPop();
-      this.switchTab('prayer');
-    });
+    if (brandHomeLink) {
+      brandHomeLink.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('home');
+      });
+      brandHomeLink.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sounds.playPop();
+          this.switchTab('home');
+        }
+      });
+    }
 
-    tabAqeedah.addEventListener('click', () => {
-      sounds.playPop();
-      this.switchTab('aqeedah');
+    if (tabAzkar) {
+      tabAzkar.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('azkar');
+      });
+    }
+
+    if (tabPrayer) {
+      tabPrayer.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('prayer');
+      });
+    }
+
+    if (tabAqeedah) {
+      tabAqeedah.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('aqeedah');
+      });
+    }
+
+    // ربط الكروت الثلاثة الكبيرة في شاشة البداية للتنقل المباشر للأقسام
+    const cardAzkar = document.getElementById('card-launch-azkar');
+    const cardPrayer = document.getElementById('card-launch-prayer');
+    const cardAqeedah = document.getElementById('card-launch-aqeedah');
+
+    if (cardAzkar) {
+      cardAzkar.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('azkar');
+      });
+      cardAzkar.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sounds.playPop();
+          this.switchTab('azkar');
+        }
+      });
+    }
+
+    if (cardPrayer) {
+      cardPrayer.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('prayer');
+      });
+      cardPrayer.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sounds.playPop();
+          this.switchTab('prayer');
+        }
+      });
+    }
+
+    if (cardAqeedah) {
+      cardAqeedah.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('aqeedah');
+      });
+      cardAqeedah.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sounds.playPop();
+          this.switchTab('aqeedah');
+        }
+      });
+    }
+
+    // ربط أزرار العودة للشاشة الرئيسية الموجودة أعلى كل قسم
+    document.querySelectorAll('.btn-back-home').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('home');
+      });
     });
   }
 
   switchTab(tab) {
     this.activeTab = tab;
+    const tabHome = document.getElementById('tab-home-btn');
     const tabAzkar = document.getElementById('tab-azkar-btn');
     const tabPrayer = document.getElementById('tab-prayer-btn');
     const tabAqeedah = document.getElementById('tab-aqeedah-btn');
 
+    const secHome = document.getElementById('section-home');
     const secAzkar = document.getElementById('section-azkar');
     const secPrayer = document.getElementById('section-prayer');
     const secAqeedah = document.getElementById('section-aqeedah');
 
-    tabAzkar.className = 'nav-tab-btn';
-    tabPrayer.className = 'nav-tab-btn';
-    tabAqeedah.className = 'nav-tab-btn';
+    if (tabHome) tabHome.className = 'nav-tab-btn';
+    if (tabAzkar) tabAzkar.className = 'nav-tab-btn';
+    if (tabPrayer) tabPrayer.className = 'nav-tab-btn';
+    if (tabAqeedah) tabAqeedah.className = 'nav-tab-btn';
 
-    secAzkar.classList.add('hidden');
-    secPrayer.classList.add('hidden');
-    secAqeedah.classList.add('hidden');
+    if (secHome) secHome.classList.add('hidden');
+    if (secAzkar) secAzkar.classList.add('hidden');
+    if (secPrayer) secPrayer.classList.add('hidden');
+    if (secAqeedah) secAqeedah.classList.add('hidden');
 
-    if (tab === 'azkar') {
-      tabAzkar.classList.add('active-azkar');
-      secAzkar.classList.remove('hidden');
+    if (tab === 'home') {
+      if (tabHome) tabHome.classList.add('active-home');
+      if (secHome) secHome.classList.remove('hidden');
+      this.updateUI();
+    } else if (tab === 'azkar') {
+      if (tabAzkar) tabAzkar.classList.add('active-azkar');
+      if (secAzkar) secAzkar.classList.remove('hidden');
+      if (this.garden) this.garden.resize();
     } else if (tab === 'prayer') {
-      tabPrayer.classList.add('active-prayer');
-      secPrayer.classList.remove('hidden');
+      if (tabPrayer) tabPrayer.classList.add('active-prayer');
+      if (secPrayer) secPrayer.classList.remove('hidden');
     } else if (tab === 'aqeedah') {
-      tabAqeedah.classList.add('active-aqeedah');
-      secAqeedah.classList.remove('hidden');
+      if (tabAqeedah) tabAqeedah.classList.add('active-aqeedah');
+      if (secAqeedah) secAqeedah.classList.remove('hidden');
     }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // ========== 🌿 قسم بستان الأذكار ==========
@@ -742,12 +846,43 @@ class AppController {
 
   // ========== عام وتحديث الواجهة ==========
   updateUI() {
-    document.getElementById('coins-count').textContent = this.state.coins;
-    document.getElementById('streak-count').textContent = `${this.state.streak} يوم`;
+    const coinsEl = document.getElementById('coins-count');
+    const streakEl = document.getElementById('streak-count');
+    if (coinsEl) coinsEl.textContent = this.state.coins;
+    if (streakEl) streakEl.textContent = `${this.state.streak} يوم`;
 
-    document.getElementById('stat-flowers').textContent = this.state.inventory.flower;
-    document.getElementById('stat-fruits').textContent = (this.state.inventory.apple || 0) + (this.state.inventory.orange || 0);
-    document.getElementById('stat-stars').textContent = this.state.inventory.star;
+    const flowersEl = document.getElementById('stat-flowers');
+    const fruitsEl = document.getElementById('stat-fruits');
+    const starsEl = document.getElementById('stat-stars');
+    if (flowersEl) flowersEl.textContent = this.state.inventory.flower || 0;
+    if (fruitsEl) fruitsEl.textContent = (this.state.inventory.apple || 0) + (this.state.inventory.orange || 0);
+    if (starsEl) starsEl.textContent = this.state.inventory.star || 0;
+
+    // تحديث إحصائيات وبطاقات شاشة البداية
+    const homeCoins = document.getElementById('home-stat-coins');
+    const homeStreak = document.getElementById('home-stat-streak');
+    const homeTree = document.getElementById('home-stat-tree');
+    const totalHarvest = (this.state.inventory.flower || 0) + (this.state.inventory.apple || 0) + (this.state.inventory.orange || 0) + (this.state.inventory.star || 0);
+
+    if (homeCoins) homeCoins.textContent = this.state.coins;
+    if (homeStreak) homeStreak.textContent = `${this.state.streak} يوم`;
+    if (homeTree) homeTree.textContent = totalHarvest;
+
+    const cardAzkarProgress = document.getElementById('card-azkar-progress');
+    if (cardAzkarProgress) {
+      cardAzkarProgress.textContent = `${(this.state.inventory.flower || 0) + (this.state.inventory.apple || 0) + (this.state.inventory.orange || 0)} زهرة وثمرة تم جمعها`;
+    }
+
+    const cardPrayerProgress = document.getElementById('card-prayer-progress');
+    if (cardPrayerProgress) {
+      cardPrayerProgress.textContent = `${this.state.inventory.prayersCompleted || 0} صلوات مكتملة`;
+    }
+
+    const cardAqeedahProgress = document.getElementById('card-aqeedah-progress');
+    if (cardAqeedahProgress) {
+      const completedCount = Object.keys(this.completedLessons || {}).length;
+      cardAqeedahProgress.textContent = `${completedCount} من 12 درساً مكتملة`;
+    }
   }
 
   restoreGardenVisuals() {

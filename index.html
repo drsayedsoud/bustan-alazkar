@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>البطل المسلم للأطفال 🌟 (أذكار، صلاة، وعقيدتي)</title>
   
   <meta name="description" content="تطبيق البطل المسلم للأطفال: تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتدريب القراءة في العقيدة الإسلامية">
@@ -22,7 +22,7 @@
 
   <!-- شريط الرأس -->
   <header class="app-header">
-    <div class="brand">
+    <div class="brand" id="brand-home-link" role="button" tabindex="0" title="العودة للشاشة الرئيسية">
       <img src="icons/icon.svg" class="brand-icon-img" alt="شعار البطل المسلم">
       <div>
         <h1 class="brand-title">البَطَلُ المُسْلِم</h1>
@@ -38,7 +38,7 @@
       <!-- زر تثبيت التطبيق السريع في شريط الرأس -->
       <button type="button" class="btn-install-header hidden" id="btn-header-install" title="تثبيت التطبيق على جهازك">
         <span>📲</span>
-        <span>تثبيت</span>
+        <span class="btn-text">تثبيت</span>
       </button>
 
       <div class="badge badge-coins" title="حصالة الحسنات">
@@ -54,17 +54,21 @@
     </div>
   </header>
 
-  <!-- شريط التبديل بين الأقسام الثلاثة الرئيسية -->
+  <!-- شريط التبديل بين الأقسام الرئيسية -->
   <nav class="main-nav-tabs" aria-label="أقسام التطبيق">
-    <button type="button" class="nav-tab-btn active-azkar" id="tab-azkar-btn">
+    <button type="button" class="nav-tab-btn active-home" id="tab-home-btn" aria-label="الشاشة الرئيسية">
+      <span>🏠</span>
+      <span>الرئيسية</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="tab-azkar-btn" aria-label="بستان الأذكار">
       <span>🌿</span>
       <span>بُستان الأذكار</span>
     </button>
-    <button type="button" class="nav-tab-btn" id="tab-prayer-btn">
+    <button type="button" class="nav-tab-btn" id="tab-prayer-btn" aria-label="تعلّم الصلاة">
       <span>🕌</span>
       <span>تعلّم الصلاة</span>
     </button>
-    <button type="button" class="nav-tab-btn" id="tab-aqeedah-btn">
+    <button type="button" class="nav-tab-btn" id="tab-aqeedah-btn" aria-label="عقيدتي">
       <span>📖</span>
       <span>عَقِيدَتِي</span>
     </button>
@@ -73,8 +77,150 @@
   <!-- الحاوية الرئيسية -->
   <main class="main-container">
 
+    <!-- ==================== 0. شاشة البداية (الـ 3 كروت الكبيرة) ==================== -->
+    <section class="app-section" id="section-home">
+      <!-- بطاقة ترحيب وتشجيع للبطل -->
+      <div class="home-hero-card">
+        <div class="home-hero-avatar-wrap">
+          <span class="home-hero-avatar" id="home-hero-avatar">👦</span>
+          <span class="home-hero-tag">🌟 بطل اليوم</span>
+        </div>
+        <div class="home-hero-content">
+          <h2 class="home-hero-title">
+            أَهْلاً بِكَ يَا <span id="home-hero-name" class="highlight-hero-name">بَطَلَنَا الصَّغِير</span>! 🚀
+          </h2>
+          <p class="home-hero-subtitle">
+            اختر مغامرتك الإيمانية الممتعة اليوم؛ ردد الأذكار، تعلّم الصلاة، واقرأ في العقيدة لتربح الحسنات وتعمّر بستانك الجميل:
+          </p>
+          <div class="home-quick-stats">
+            <div class="quick-stat-badge">
+              <span>💰</span>
+              <span>الحسنات: <b id="home-stat-coins">0</b></span>
+            </div>
+            <div class="quick-stat-badge">
+              <span>🔥</span>
+              <span>المداومة: <b id="home-stat-streak">1 يوم</b></span>
+            </div>
+            <div class="quick-stat-badge">
+              <span>🌱</span>
+              <span>أزهار وثمار: <b id="home-stat-tree">0</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- شبكة الكروت الثلاثة الكبيرة للأقسام -->
+      <div class="home-cards-grid">
+
+        <!-- الكارت 1: بُستان الأذكار -->
+        <article class="home-card card-azkar" id="card-launch-azkar" role="button" tabindex="0" aria-label="الدخول إلى بستان الأذكار">
+          <div class="card-glow-bg"></div>
+          <div class="card-badge-top">🌿 حديقة الحسنات الحية</div>
+          <div class="card-icon-container">
+            <div class="card-main-icon">🌳</div>
+            <div class="card-floating-mini f-icon-1">🌸</div>
+            <div class="card-floating-mini f-icon-2">💧</div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">بُسْتَانُ الأَذْكَارِ</h3>
+            <p class="card-desc">
+              شجرة حسنات تفاعلية حيّة تنمو وتتفتح عليها الأزهار والثمار مع كل تسبيحة وسقاية! تعلّم أذكار اليوم والليلة من حصن المسلم الصغير.
+            </p>
+            <ul class="card-features">
+              <li><span>🌸</span> شجرة تفاعلية حيّة (Canvas 2D) تتفتح وتزهر</li>
+              <li><span>💧</span> زر سقاية تفاعلي وتسبيح صوتي بالتشكيل</li>
+              <li><span>☀️</span> أذكار الصباح، المساء، النوم، والطعام، والمسجد</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <div class="card-stat-pill">
+              <span>🌸</span>
+              <span id="card-azkar-progress">0 زهرة وثمرة تم جمعها</span>
+            </div>
+            <div class="card-action-btn btn-azkar">
+              <span>ادخل البستان</span>
+              <span class="btn-arrow">⬅️</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- الكارت 2: مُدرِّب الصلاة -->
+        <article class="home-card card-prayer" id="card-launch-prayer" role="button" tabindex="0" aria-label="الدخول إلى مدرب الصلاة">
+          <div class="card-glow-bg"></div>
+          <div class="card-badge-top">🕌 تدريب تفاعلي خطوة بخطوة</div>
+          <div class="card-icon-container">
+            <div class="card-main-icon">🕌</div>
+            <div class="card-floating-mini f-icon-1">🤲</div>
+            <div class="card-floating-mini f-icon-2">⭐</div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">مُدَرِّبُ الصَّلَاةِ لِلصِّغَارِ</h3>
+            <p class="card-desc">
+              تعلّم كيف تصلّي صلواتك الخمس بخشوع وجمال؛ خطوة بخطوة من تكبيرة الإحرام حتى التسليم مع النطق الصوتي الصحيح ورسومات الحركات.
+            </p>
+            <ul class="card-features">
+              <li><span>🕋</span> الصلوات الخمس المفروضة وتفاصيل الركعات والجهر</li>
+              <li><span>🔊</span> نطق صوتي مشكول لكل دعاء وتكبيرة وآية</li>
+              <li><span>⭐</span> 11 خطوة تدريبية سهلة ومكافآت نجوم وحسنات</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <div class="card-stat-pill">
+              <span>⭐</span>
+              <span id="card-prayer-progress">0 صلوات مكتملة</span>
+            </div>
+            <div class="card-action-btn btn-prayer">
+              <span>تعلّم الصلاة</span>
+              <span class="btn-arrow">⬅️</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- الكارت 3: عقيدتي نوري -->
+        <article class="home-card card-aqeedah" id="card-launch-aqeedah" role="button" tabindex="0" aria-label="الدخول إلى قسم عقيدتي">
+          <div class="card-glow-bg"></div>
+          <div class="card-badge-top">📖 تدريب القراءة الذاتية الملونة</div>
+          <div class="card-icon-container">
+            <div class="card-main-icon">📖</div>
+            <div class="card-floating-mini f-icon-1">☀️</div>
+            <div class="card-floating-mini f-icon-2">🎯</div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">عَقِيدَتِي نُورِي</h3>
+            <p class="card-desc">
+              12 درساً شيقاً وممتعاً لبناء عقيدة الطفل، بنظام تلوين المدود والحروف لتسهيل القراءة الذاتية، مع أسئلة ذكاء تفاعلية واحتفالات مبهجة!
+            </p>
+            <ul class="card-features">
+              <li><span>🎨</span> تلوين ذكي لأحرف المدود والتشكيل والشدة والسكون</li>
+              <li><span>🧠</span> سؤال فهم تفاعلي لكل درس مع خيارات ذكية ومكافآت</li>
+              <li><span>📚</span> 12 درساً تشمل أركان الإيمان والملائكة وحب النبي ﷺ</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <div class="card-stat-pill">
+              <span>📚</span>
+              <span id="card-aqeedah-progress">0 من 12 درساً مكتملة</span>
+            </div>
+            <div class="card-action-btn btn-aqeedah">
+              <span>اقرأ وتعلّم</span>
+              <span class="btn-arrow">⬅️</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
     <!-- ==================== 1. قسم بستان الأذكار ==================== -->
-    <section class="app-section" id="section-azkar">
+    <section class="app-section hidden" id="section-azkar">
+      <!-- شريط علوي للعودة للرئيسية -->
+      <div class="section-top-bar">
+        <button type="button" class="btn-back-home" data-target="home" aria-label="العودة للشاشة الرئيسية">
+          <span>🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <span class="section-top-title">🌿 بُستان الأذكار وشجرة الحسنات</span>
+      </div>
       <!-- شاشة البستان والشجرة التفاعلية -->
       <div class="garden-card">
         <div class="canvas-wrapper">
@@ -140,6 +286,15 @@
 
     <!-- ==================== 2. قسم تعليم الصلاة ==================== -->
     <section class="app-section hidden" id="section-prayer">
+      <!-- شريط علوي للعودة للرئيسية -->
+      <div class="section-top-bar">
+        <button type="button" class="btn-back-home" data-target="home" aria-label="العودة للشاشة الرئيسية">
+          <span>🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <span class="section-top-title">🕌 مُدرِّب الصلاة للصغار</span>
+      </div>
+
       <div class="prayer-header-card">
         <h2 class="prayer-header-title">🕌 مُدرِّب الصَّلاة للصِّغار</h2>
         <p class="prayer-header-desc">الصلاة صلة بينك وبين الله، تعال نتعلّم كيف نصلّي بخشوع وجمال!</p>
@@ -187,6 +342,15 @@
 
     <!-- ==================== 3. 📖 قسم عقيدتي (تدريب القراءة الذاتية) ==================== -->
     <section class="app-section hidden" id="section-aqeedah">
+      <!-- شريط علوي للعودة للرئيسية -->
+      <div class="section-top-bar">
+        <button type="button" class="btn-back-home" data-target="home" aria-label="العودة للشاشة الرئيسية">
+          <span>🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <span class="section-top-title">📖 عَقِيدَتِي نُورِي (تدريب القراءة)</span>
+      </div>
+
       <div class="aqeedah-header-card">
         <h2 class="aqeedah-header-title">📖 عَقِيدَتِي نُورِي (تَدْرِيبُ الْقِرَاءَةِ الذَّاتِيَّةِ)</h2>
         <p class="aqeedah-header-desc">اقرأ الدرس بنفسك بمساعدة ألوان التهجي، ثم أجب عن سؤال الذكاء واربح حسنات!</p>

@@ -1,5 +1,5 @@
 // Service Worker لتشغيل بستان الإيمان بدون إنترنت (أوفلاين)
-const CACHE_NAME = 'bustan-alazkar-v3';
+const CACHE_NAME = 'bustan-alazkar-v4';
 const ASSETS = [
   './',
   './index.html',

@@ -14,12 +14,15 @@
   --prayer-light: #e0e7ff;
   --aqeedah-theme: #0284c7;
   --aqeedah-light: #e0f2fe;
+  --home-theme: #f59e0b;
+  --home-light: #fef3c7;
   --radius-xl: 24px;
   --radius-lg: 18px;
   --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
   --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.35);
   --shadow-prayer: 0 0 20px rgba(99, 102, 241, 0.35);
   --shadow-aqeedah: 0 0 20px rgba(2, 132, 199, 0.35);
+  --shadow-home: 0 0 20px rgba(245, 158, 11, 0.35);
 }
 
 * {
@@ -161,10 +164,10 @@ body {
   50% { transform: scale(1.05); box-shadow: 0 4px 14px rgba(245, 158, 11, 0.7); }
 }
 
-/* شريط التبديل بين الأقسام الثلاثة */
+/* شريط التبديل بين الأقسام الرئيسية */
 .main-nav-tabs {
   display: flex;
-  max-width: 800px;
+  max-width: 1040px;
   width: 100%;
   margin: 10px auto 0 auto;
   padding: 0 16px;
@@ -180,13 +183,21 @@ body {
   padding: 10px 12px;
   border-radius: var(--radius-lg);
   border: 2px solid transparent;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
   font-size: 0.95rem;
   font-weight: 800;
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.nav-tab-btn.active-home {
+  background: white;
+  color: #b45309;
+  border-color: var(--home-theme);
+  box-shadow: var(--shadow-home);
+  transform: translateY(-2px);
 }
 
 .nav-tab-btn.active-azkar {
@@ -215,7 +226,7 @@ body {
 
 /* الحاوية الرئيسية */
 .main-container {
-  max-width: 800px;
+  max-width: 1040px;
   width: 100%;
   margin: 0 auto;
   padding: 12px 16px 110px 16px;
@@ -233,6 +244,429 @@ body {
 
 .app-section.hidden {
   display: none !important;
+}
+
+/* ==================== 0. شاشة البداية والـ 3 كروت الكبيرة ==================== */
+.home-hero-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%);
+  border: 2px solid #fde68a;
+  border-radius: var(--radius-xl);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-hero-avatar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.home-hero-avatar {
+  font-size: 3.8rem;
+  background: white;
+  width: 82px;
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+  border: 3px solid #fde68a;
+  animation: bounceSlow 3s infinite ease-in-out;
+}
+
+.home-hero-tag {
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 1px solid #fde68a;
+  white-space: nowrap;
+}
+
+.home-hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.home-hero-title {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #78350f;
+  line-height: 1.25;
+}
+
+.highlight-hero-name {
+  color: #0284c7;
+  background: linear-gradient(120deg, rgba(2, 132, 199, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.home-hero-subtitle {
+  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.home-quick-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.quick-stat-badge {
+  background: white;
+  border: 1px solid #fde68a;
+  border-radius: 14px;
+  padding: 5px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #92400e;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.quick-stat-badge b {
+  color: #b45309;
+  font-weight: 900;
+}
+
+/* شبكة الكروت الثلاثة الكبيرة للأقسام */
+.home-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 4px;
+}
+
+@media (min-width: 820px) {
+  .home-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    align-items: stretch;
+  }
+}
+
+/* تصميم الكارت الكبير */
+.home-card {
+  position: relative;
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 24px 20px;
+  box-shadow: var(--shadow-soft);
+  border: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.home-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.12), 0 10px 15px -5px rgba(0, 0, 0, 0.05);
+}
+
+.home-card:active {
+  transform: scale(0.98);
+}
+
+.card-glow-bg {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.25;
+  filter: blur(35px);
+  transition: opacity 0.3s;
+}
+
+.home-card:hover .card-glow-bg {
+  opacity: 0.55;
+}
+
+/* ألوان وسمات الكروت الثلاثة */
+.card-azkar {
+  background: linear-gradient(160deg, #ffffff 0%, #f0fdf4 45%, #dcfce7 100%);
+  border-color: #86efac;
+}
+.card-azkar .card-glow-bg {
+  background: #10b981;
+}
+.card-azkar:hover {
+  box-shadow: 0 20px 35px -5px rgba(16, 185, 129, 0.3);
+  border-color: #34d399;
+}
+
+.card-prayer {
+  background: linear-gradient(160deg, #ffffff 0%, #f5f3ff 45%, #ede9fe 100%);
+  border-color: #c4b5fd;
+}
+.card-prayer .card-glow-bg {
+  background: #6366f1;
+}
+.card-prayer:hover {
+  box-shadow: 0 20px 35px -5px rgba(99, 102, 241, 0.3);
+  border-color: #818cf8;
+}
+
+.card-aqeedah {
+  background: linear-gradient(160deg, #ffffff 0%, #f0f9ff 45%, #e0f2fe 100%);
+  border-color: #7dd3fc;
+}
+.card-aqeedah .card-glow-bg {
+  background: #0284c7;
+}
+.card-aqeedah:hover {
+  box-shadow: 0 20px 35px -5px rgba(2, 132, 199, 0.3);
+  border-color: #38bdf8;
+}
+
+/* شارة أعلى الكارت */
+.card-badge-top {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.card-azkar .card-badge-top {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+.card-prayer .card-badge-top {
+  background: #ede9fe;
+  color: #4338ca;
+  border: 1px solid #ddd6fe;
+}
+.card-aqeedah .card-badge-top {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+/* الأيقونات والمؤثرات */
+.card-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 95px;
+  margin: 4px 0 12px 0;
+}
+
+.card-main-icon {
+  font-size: 4.2rem;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.1));
+  animation: bounceSlow 3s infinite ease-in-out;
+}
+
+.card-floating-mini {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.85;
+}
+
+.f-icon-1 {
+  top: 6px;
+  right: 25%;
+  animation: floatMini1 3s infinite ease-in-out;
+}
+
+.f-icon-2 {
+  bottom: 8px;
+  left: 25%;
+  animation: floatMini2 3.5s infinite ease-in-out;
+}
+
+@keyframes floatMini1 {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.1); }
+}
+
+@keyframes floatMini2 {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(8px) scale(1.08); }
+}
+
+/* نصوص ومميزات الكارت */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.card-azkar .card-title {
+  color: #065f46;
+}
+.card-prayer .card-title {
+  color: #312e81;
+}
+.card-aqeedah .card-title {
+  color: #0c4a6e;
+}
+
+.card-desc {
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.card-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.card-features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+/* الجزء السفلي والزر */
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.card-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px 10px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #64748b;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-radius: 16px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.btn-azkar {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+.btn-prayer {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+.btn-aqeedah {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+}
+
+.home-card:hover .card-action-btn {
+  transform: scale(1.02);
+}
+
+.btn-arrow {
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.home-card:hover .btn-arrow {
+  transform: translateX(-4px);
+}
+
+/* شريط العودة للشاشة الرئيسية داخل الأقسام */
+.section-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 8px 14px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+}
+
+.btn-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  padding: 7px 14px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-back-home:hover {
+  background: #fde68a;
+  transform: translateY(-1px);
+}
+
+.btn-back-home:active {
+  transform: scale(0.95);
+}
+
+.section-top-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #374151;
 }
 
 /* ========== 1. قسم بستان الأذكار ========== */
@@ -1346,12 +1780,71 @@ body {
   75% { transform: translateX(6px); }
 }
 
-@media (max-width: 480px) {
+/* ==================== استجابة وتوافق الشاشات والهواتف المختلفة ==================== */
+
+/* الهواتف المتوسطة والصغيرة (أقل من 640px) */
+@media (max-width: 640px) {
+  .app-header {
+    padding: 8px 12px;
+  }
+  .brand-icon-img {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+  .brand-title {
+    font-size: 1.1rem;
+  }
+  .brand-greeting {
+    font-size: 0.72rem;
+  }
+  .badge {
+    padding: 4px 7px;
+    font-size: 0.75rem;
+  }
+  .icon-btn {
+    padding: 5px 8px;
+    font-size: 0.95rem;
+  }
+  .btn-install-header {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+
+  .home-hero-card {
+    padding: 18px 16px;
+    gap: 14px;
+  }
+  .home-hero-avatar {
+    width: 70px;
+    height: 70px;
+    font-size: 3.2rem;
+  }
+  .home-hero-title {
+    font-size: 1.25rem;
+  }
+  .home-hero-subtitle {
+    font-size: 0.88rem;
+  }
+
+  .home-cards-grid {
+    gap: 16px;
+  }
+  .home-card {
+    padding: 20px 16px;
+  }
+  .card-main-icon {
+    font-size: 3.6rem;
+  }
+  .card-title {
+    font-size: 1.25rem;
+  }
+
   .canvas-wrapper {
-    height: 190px;
+    height: 200px;
   }
   .dhikr-arabic, .prayer-arabic {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
   }
   .chapter-text {
     font-size: 1.35rem;
@@ -1365,9 +1858,11 @@ body {
     font-size: 1.8rem;
   }
   .nav-tab-btn {
-    font-size: 0.85rem;
-    padding: 9px 6px;
+    font-size: 0.82rem;
+    padding: 8px 6px;
+    gap: 4px;
   }
+
   .pwa-install-banner {
     flex-direction: column;
     align-items: stretch;
@@ -1383,5 +1878,135 @@ body {
   }
   .btn-pwa-install {
     flex: 1;
+  }
+}
+
+/* الهواتف الصغيرة جداً (أقل من 400px مثل iPhone SE و Galaxy A) */
+@media (max-width: 400px) {
+  .app-header {
+    padding: 6px 8px;
+  }
+  .brand {
+    gap: 6px;
+  }
+  .brand-icon-img {
+    width: 32px;
+    height: 32px;
+  }
+  .brand-title {
+    font-size: 1rem;
+  }
+  .brand-greeting {
+    font-size: 0.68rem;
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .header-badges {
+    gap: 3px;
+  }
+  .badge {
+    padding: 3px 6px;
+    font-size: 0.7rem;
+  }
+  .btn-install-header span.btn-text {
+    display: none;
+  }
+  .btn-install-header {
+    padding: 4px 7px;
+  }
+
+  .main-nav-tabs {
+    padding: 0 8px;
+    gap: 4px;
+  }
+  .nav-tab-btn {
+    font-size: 0.72rem;
+    padding: 7px 3px;
+    gap: 3px;
+  }
+
+  .home-hero-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px 12px;
+  }
+  .home-quick-stats {
+    justify-content: center;
+  }
+
+  .home-card {
+    padding: 16px 14px;
+  }
+  .card-main-icon {
+    font-size: 3.2rem;
+  }
+  .card-icon-container {
+    height: 75px;
+  }
+  .card-title {
+    font-size: 1.15rem;
+  }
+  .card-desc {
+    font-size: 0.82rem;
+  }
+  .card-action-btn {
+    padding: 10px 14px;
+    font-size: 0.92rem;
+  }
+
+  .canvas-wrapper {
+    height: 175px;
+  }
+  .dhikr-arabic, .prayer-arabic {
+    font-size: 1.2rem;
+  }
+  .chapter-text {
+    font-size: 1.25rem;
+  }
+}
+
+/* الأجهزة اللوحية والشاشات المتوسطة (641px إلى 819px) */
+@media (min-width: 641px) and (max-width: 819px) {
+  .home-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .home-card {
+    padding: 22px 20px;
+  }
+  .canvas-wrapper {
+    height: 240px;
+  }
+}
+
+/* شاشات الحواسيب واللابتوبات الكبيرة (820px فأكثر) */
+@media (min-width: 820px) {
+  .home-hero-title {
+    font-size: 1.55rem;
+  }
+  .home-card {
+    min-height: 480px;
+  }
+  .canvas-wrapper {
+    height: 260px;
+  }
+}
+
+/* توافق الشاشات ذات النوتش وأجهزة الآيفون الحديثة (iOS Safe Area) */
+@supports (padding: max(0px)) {
+  .app-header {
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-left: max(12px, env(safe-area-inset-left));
+  }
+  .main-container {
+    padding-bottom: max(110px, calc(100px + env(safe-area-inset-bottom)));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-left: max(12px, env(safe-area-inset-left));
+  }
+  .pwa-install-banner {
+    bottom: max(12px, env(safe-area-inset-bottom));
   }
 }
