@@ -1,0 +1,18 @@
+{
+  "name": "بستان الأذكار للأطفال",
+  "short_name": "بستان الأذكار",
+  "description": "تطبيق إسلامي تفاعلي مبهج لتعليم الأطفال الأذكار اليومية",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#bae6fd",
+  "theme_color": "#10b981",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

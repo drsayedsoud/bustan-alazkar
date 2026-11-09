@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>بستان الأذكار للأطفال 🌸</title>
+  
+  <meta name="description" content="تطبيق تفاعلي مبهج يعلم أطفالنا الأذكار والآداب الإسلامية بطريقة ممتعة ومحفزة">
+  <meta name="theme-color" content="#10b981">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <!-- الخطوط العربية الراقية -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- شريط الرأس -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-icon">🌱</span>
+      <div>
+        <h1 class="brand-title">بُستان الأذكار</h1>
+        <div class="brand-sub">سقيا الحسنات وغراس الجنة</div>
+      </div>
+    </div>
+
+    <div class="header-badges">
+      <div class="badge badge-coins" title="حصالة الحسنات">
+        <span>💰</span>
+        <span id="coins-count">0</span>
+      </div>
+      <div class="badge badge-streak" title="أيام المداومة">
+        <span>🔥</span>
+        <span id="streak-count">1 يوم</span>
+      </div>
+      <button type="button" class="icon-btn" id="btn-sound-toggle" title="الصوت" aria-label="تبديل الصوت">🔊</button>
+      <button type="button" class="icon-btn" id="btn-gallery" title="حديقتي" aria-label="عرض الحديقة">🏡</button>
+    </div>
+  </header>
+
+  <!-- الحاوية الرئيسية -->
+  <main class="main-container">
+
+    <!-- شاشة البستان والشجرة التفاعلية -->
+    <section class="garden-card">
+      <div class="canvas-wrapper">
+        <canvas id="tree-canvas"></canvas>
+      </div>
+      <div class="garden-stats-bar">
+        <div class="stat-item">🌸 أزهار: <b id="stat-flowers">0</b></div>
+        <div class="stat-item">🍎 ثمار: <b id="stat-fruits">0</b></div>
+        <div class="stat-item">⭐ نجوم: <b id="stat-stars">0</b></div>
+      </div>
+    </section>
+
+    <!-- شريط تصنيفات الأذكار -->
+    <nav class="categories-scroll" id="categories-scroll" aria-label="تصنيفات الأذكار">
+      <!-- توليد ديناميكي عبر JS -->
+    </nav>
+
+    <!-- بطاقة الذكر الحالية -->
+    <section class="dhikr-card">
+      <div class="card-nav">
+        <button type="button" class="nav-arrow" id="btn-prev" title="السابق" aria-label="الذكر السابق">➡️</button>
+        <span class="dhikr-badge" id="dhikr-badge">أذكار الصباح ☀️</span>
+        <button type="button" class="nav-arrow" id="btn-next" title="التالي" aria-label="الذكر التالي">⬅️</button>
+      </div>
+
+      <h2 class="dhikr-title" id="dhikr-title">اسم الذكر</h2>
+
+      <div class="dhikr-arabic-box">
+        <p class="dhikr-arabic" id="dhikr-arabic">نص الذكر الشريف مشكولاً</p>
+      </div>
+
+      <div class="dhikr-meaning" id="dhikr-meaning">
+        💡 <b>الفائدة للبطل:</b> معنى الذكر التربوي المبسط.
+      </div>
+
+      <div class="dhikr-source" id="dhikr-source">
+        📚 المصدر: حصن المسلم الصغير
+      </div>
+
+      <!-- منطقة السقي والتسبيح -->
+      <div class="action-zone">
+        <div class="counter-display">
+          <span class="counter-current" id="counter-current">0</span>
+          <span class="counter-divider">/</span>
+          <span class="counter-target" id="counter-target">3</span>
+        </div>
+
+        <div class="dots-row" id="dots-row"></div>
+
+        <button type="button" class="water-btn" id="water-action-btn" aria-label="اسقِ الشجرة وردد الذكر">
+          <span class="water-btn-icon">💧</span>
+          <span class="water-btn-label">اسقِ الشجرة</span>
+        </button>
+      </div>
+
+      <!-- أدوات مساعدة -->
+      <div class="card-tools">
+        <button type="button" class="tool-btn" id="btn-speak">
+          <span>🔊</span>
+          <span>استمع للذكر</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- كانفاس الاحتفالات والنجوم المتطايرة -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- نافذة التهنئة عند إتمام الذكر -->
+  <div class="modal-overlay" id="congrat-modal">
+    <div class="modal-card">
+      <div class="modal-icon">🎉</div>
+      <h3 class="modal-title">أحسنت يا بطل! ماشاء الله</h3>
+      <p class="modal-desc">
+        لقد أتممت الذكر المبارك وتفتحت في بستانك <b id="modal-fruit-name" style="color: #10b981;">زهرة جديدة</b>!
+      </p>
+      <div style="font-size: 1.2rem; font-weight: 800; color: #b45309; margin-bottom: 18px;">
+        ربحت في حصالتك: <span id="modal-reward-coins">+30</span> حسنة 💰
+      </div>
+      <button type="button" class="modal-btn" id="close-congrat-btn">متابعة للذكر التالي 🚀</button>
+    </div>
+  </div>
+
+  <!-- نافذة معرض حديقتي -->
+  <div class="modal-overlay" id="gallery-modal">
+    <div class="modal-card">
+      <div class="modal-icon">🏡</div>
+      <h3 class="modal-title">بُستاني الجميل</h3>
+      <p class="modal-desc">كل ذكر تردده يغرس لك خيراً ويزهر في بستانك!</p>
+      
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <div class="gallery-item-icon">🌸</div>
+          <div class="gallery-item-count" id="gal-flowers">0</div>
+          <div class="gallery-item-name">أزهار الإخلاص</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item-icon">🍎</div>
+          <div class="gallery-item-count" id="gal-apples">0</div>
+          <div class="gallery-item-name">ثمار الصباح</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item-icon">🍊</div>
+          <div class="gallery-item-count" id="gal-oranges">0</div>
+          <div class="gallery-item-name">ثمار المساء</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item-icon">⭐</div>
+          <div class="gallery-item-count" id="gal-stars">0</div>
+          <div class="gallery-item-name">نجوم التسبيح</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item-icon">💧</div>
+          <div class="gallery-item-count" id="gal-water">0</div>
+          <div class="gallery-item-name">مرات السقيا</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item-icon">💰</div>
+          <div class="gallery-item-count" id="gal-coins">0</div>
+          <div class="gallery-item-name">إجمالي الحسنات</div>
+        </div>
+      </div>
+
+      <button type="button" class="modal-btn" id="close-gallery-btn">إغلاق والعودة للبستان 🌱</button>
+    </div>
+  </div>
+
+  <!-- ملفات الجافاسكريبت بالترتيب -->
+  <script src="js/azkar-data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/tree.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
