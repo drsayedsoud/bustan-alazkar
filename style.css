@@ -1,4 +1,4 @@
-/* بستان الأذكار للأطفال - تصميم تفاعلي مبهج وطفولي */
+/* بستان الأذكار ومدرب الصلاة للأطفال - تصميم تفاعلي مبهج وطفولي */
 :root {
   --primary: #10b981;
   --primary-dark: #059669;
@@ -10,10 +10,13 @@
   --card-bg: rgba(255, 255, 255, 0.95);
   --text-dark: #1f2937;
   --text-muted: #4b5563;
+  --prayer-theme: #6366f1;
+  --prayer-light: #e0e7ff;
   --radius-xl: 24px;
   --radius-lg: 18px;
   --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
   --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.35);
+  --shadow-prayer: 0 0 20px rgba(99, 102, 241, 0.35);
 }
 
 * {
@@ -40,8 +43,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 18px;
-  background: rgba(255, 255, 255, 0.85);
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
@@ -62,32 +65,40 @@ body {
 }
 
 .brand-title {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--primary-dark);
   line-height: 1.2;
 }
 
-.brand-sub {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-weight: 600;
+.brand-greeting {
+  font-size: 0.8rem;
+  color: #1e3a8a;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.brand-greeting:hover {
+  text-decoration: underline;
 }
 
 .header-badges {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .badge {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
+  gap: 4px;
+  padding: 5px 10px;
   border-radius: 20px;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
@@ -106,15 +117,59 @@ body {
 .icon-btn {
   background: white;
   border: 1px solid #e5e7eb;
-  padding: 8px 10px;
+  padding: 6px 9px;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1rem;
   transition: transform 0.15s, background-color 0.2s;
 }
 
 .icon-btn:active {
   transform: scale(0.92);
+}
+
+/* شريط التبديل بين القسمين الرئيسيين (الأذكار والصلاة) */
+.main-nav-tabs {
+  display: flex;
+  max-width: 800px;
+  width: 100%;
+  margin: 10px auto 0 auto;
+  padding: 0 16px;
+  gap: 10px;
+}
+
+.nav-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.nav-tab-btn.active-azkar {
+  background: white;
+  color: var(--primary-dark);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+.nav-tab-btn.active-prayer {
+  background: white;
+  color: var(--prayer-theme);
+  border-color: var(--prayer-theme);
+  box-shadow: var(--shadow-prayer);
+  transform: translateY(-2px);
 }
 
 /* الحاوية الرئيسية */
@@ -128,7 +183,19 @@ body {
   gap: 14px;
 }
 
-/* شاشة البستان والشجرة */
+/* إخفاء وإظهار الأقسام */
+.app-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: opacity 0.2s ease;
+}
+
+.app-section.hidden {
+  display: none !important;
+}
+
+/* ========== تصميم قسم بستان الأذكار ========== */
 .garden-card {
   background: white;
   border-radius: var(--radius-xl);
@@ -141,7 +208,7 @@ body {
 .canvas-wrapper {
   position: relative;
   width: 100%;
-  height: 240px;
+  height: 230px;
   background: linear-gradient(180deg, #7dd3fc 0%, #e0f2fe 65%, #86efac 100%);
 }
 
@@ -173,7 +240,6 @@ body {
   font-size: 1.05rem;
 }
 
-/* شريط تصنيفات الأذكار */
 .categories-scroll {
   display: flex;
   gap: 8px;
@@ -207,7 +273,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* بطاقة الذكر المعروض */
 .dhikr-card {
   background: var(--card-bg);
   border-radius: var(--radius-xl);
@@ -256,7 +321,7 @@ body {
 }
 
 .dhikr-title {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: #1e3a8a;
 }
@@ -293,7 +358,6 @@ body {
   font-weight: 600;
 }
 
-/* منطقة التسبيح والسقي التفاعلية */
 .action-zone {
   display: flex;
   flex-direction: column;
@@ -302,10 +366,9 @@ body {
   margin-top: 6px;
 }
 
-/* زر السقي الكبير والعداد */
 .water-btn {
-  width: 110px;
-  height: 110px;
+  width: 105px;
+  height: 105px;
   border-radius: 50%;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border: 5px solid #d1fae5;
@@ -316,12 +379,11 @@ body {
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.4);
-  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.15s;
+  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .water-btn:active {
   transform: scale(0.92);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .water-btn-icon {
@@ -358,7 +420,6 @@ body {
   color: #6b7280;
 }
 
-/* نقاط التقدم */
 .dots-row {
   display: flex;
   gap: 6px;
@@ -381,7 +442,6 @@ body {
   box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
 }
 
-/* أزرار مساعدة */
 .card-tools {
   display: flex;
   justify-content: center;
@@ -409,7 +469,239 @@ body {
   transform: scale(0.95);
 }
 
-/* كانفاس الاحتفالات والنجوم */
+/* ========== 🕌 تصميم قسم تعليم الصلاة ========== */
+.prayer-header-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+  border: 2px solid #e0e7ff;
+  text-align: center;
+}
+
+.prayer-header-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--prayer-theme);
+  margin-bottom: 4px;
+}
+
+.prayer-header-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* شريط اختيار الصلوات الخمس */
+.prayers-selector {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 6px 2px;
+  scrollbar-width: none;
+}
+
+.prayers-selector::-webkit-scrollbar {
+  display: none;
+}
+
+.prayer-pill {
+  background: white;
+  border: 2px solid #e5e7eb;
+  padding: 10px 14px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 90px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.prayer-pill.active {
+  background: #ede9fe;
+  border-color: var(--prayer-theme);
+  box-shadow: var(--shadow-prayer);
+  transform: translateY(-2px);
+}
+
+.prayer-pill-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.prayer-pill-rakats {
+  font-size: 0.72rem;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.prayer-pill.active .prayer-pill-rakats {
+  background: var(--prayer-theme);
+  color: white;
+}
+
+/* تفاصيل الصلاة المختارة */
+.prayer-info-banner {
+  background: #f5f3ff;
+  border: 2px dashed #c4b5fd;
+  border-radius: var(--radius-lg);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #4338ca;
+}
+
+/* بطاقة خطوات الصلاة التفاعلية */
+.prayer-step-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  padding: 22px 18px;
+  box-shadow: var(--shadow-soft);
+  border: 2px solid #e0e7ff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: center;
+}
+
+.prayer-step-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.step-indicator {
+  background: #ede9fe;
+  color: var(--prayer-theme);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.prayer-step-icon {
+  font-size: 3.2rem;
+  animation: bounceSlow 2s infinite ease-in-out;
+}
+
+.prayer-step-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #312e81;
+}
+
+.prayer-step-action {
+  font-size: 0.95rem;
+  color: #4b5563;
+  font-weight: 700;
+  background: #faf5ff;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+
+.prayer-arabic-box {
+  background: #eef2ff;
+  border: 2px solid #c7d2fe;
+  border-radius: var(--radius-lg);
+  padding: 18px 14px;
+}
+
+.prayer-arabic {
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif;
+  font-size: 1.45rem;
+  line-height: 2;
+  color: #1e1b4b;
+  font-weight: 700;
+}
+
+.prayer-step-tip {
+  font-size: 0.85rem;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  line-height: 1.6;
+}
+
+/* شريط التقدم في الخطوات (11 خطوة) */
+.steps-progress-bar {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  margin: 6px 0;
+}
+
+.step-bar-dot {
+  flex: 1;
+  height: 6px;
+  border-radius: 4px;
+  background: #e5e7eb;
+  transition: all 0.25s ease;
+}
+
+.step-bar-dot.active {
+  background: var(--prayer-theme);
+}
+
+.step-bar-dot.completed {
+  background: #10b981;
+}
+
+/* أزرار التنقل بين خطوات الصلاة */
+.prayer-nav-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.prayer-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.prayer-btn-prev {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.prayer-btn-next {
+  background: var(--prayer-theme);
+  color: white;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.prayer-btn-complete {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+.prayer-btn:active {
+  transform: scale(0.96);
+}
+
+/* ========== النوافذ المنبثقة (Modals) ========== */
 #confetti-canvas {
   position: fixed;
   top: 0;
@@ -420,15 +712,14 @@ body {
   z-index: 100;
 }
 
-/* نوافذ منبثقة (Modals) */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -447,7 +738,7 @@ body {
 .modal-card {
   background: white;
   border-radius: var(--radius-xl);
-  max-width: 420px;
+  max-width: 440px;
   width: 100%;
   padding: 24px;
   text-align: center;
@@ -461,7 +752,7 @@ body {
 }
 
 .modal-icon {
-  font-size: 3.5rem;
+  font-size: 3.2rem;
   margin-bottom: 8px;
   animation: bounceSlow 1.5s infinite;
 }
@@ -474,7 +765,7 @@ body {
 }
 
 .modal-desc {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 18px;
@@ -490,10 +781,75 @@ body {
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+  width: 100%;
 }
 
 .modal-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
+}
+
+/* نافذة الترحيب وتسجيل اسم الطفل */
+.welcome-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: right;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #374151;
+}
+
+.form-input {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 2px solid #e5e7eb;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #f9fafb;
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  background: white;
+}
+
+.gender-select {
+  display: flex;
+  gap: 10px;
+}
+
+.gender-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 14px;
+  border: 2px solid #e5e7eb;
+  background: #f9fafb;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.gender-btn.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-dark);
 }
 
 /* معرض الحديقة (Garden Gallery) */
@@ -533,17 +889,12 @@ body {
   50% { transform: translateY(-6px); }
 }
 
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
-  50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.8); }
-}
-
 /* شاشات الهواتف الصغيرة */
 @media (max-width: 480px) {
   .canvas-wrapper {
-    height: 200px;
+    height: 190px;
   }
-  .dhikr-arabic {
+  .dhikr-arabic, .prayer-arabic {
     font-size: 1.25rem;
   }
   .water-btn {
@@ -552,5 +903,9 @@ body {
   }
   .water-btn-icon {
     font-size: 1.8rem;
+  }
+  .nav-tab-btn {
+    font-size: 0.9rem;
+    padding: 10px 8px;
   }
 }

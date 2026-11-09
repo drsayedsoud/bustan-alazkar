@@ -1,5 +1,5 @@
-// Service Worker لتشغيل بستان الأذكار بدون إنترنت
-const CACHE_NAME = 'bustan-alazkar-v1';
+// Service Worker لتشغيل بستان الأذكار ومدرب الصلاة بدون إنترنت
+const CACHE_NAME = 'bustan-alazkar-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,7 @@ const ASSETS = [
   './manifest.json',
   './icons/icon.svg',
   './js/azkar-data.js',
+  './js/prayer-data.js',
   './js/audio.js',
   './js/tree.js',
   './js/confetti.js',
