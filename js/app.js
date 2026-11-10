@@ -108,8 +108,20 @@ class AppController {
     }
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js').catch(err => {
+      navigator.serviceWorker.register('./service-worker.js').then(reg => {
+        // فحص وجود تحديثات فور فتح الصفحة
+        reg.update();
+      }).catch(err => {
         console.log('SW registration error:', err);
+      });
+
+      // إعادة تحميل الصفحة تلقائياً لمرة واحدة عند تفعيل السيرفس ووركر الجديد
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
       });
     }
   }
