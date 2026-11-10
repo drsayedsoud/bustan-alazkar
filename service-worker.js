@@ -1,11 +1,12 @@
-// Service Worker لتشغيل بستان الإيمان بدون إنترنت (أوفلاين)
-const CACHE_NAME = 'bustan-alazkar-v4';
+// Service Worker لتشغيل تطبيق البطل المسلم بدون إنترنت (أوفلاين)
+const CACHE_NAME = 'bustan-alazkar-v5';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './manifest.json',
   './icons/icon.svg',
+  './js/wake-lock.js',
   './js/azkar-data.js',
   './js/prayer-data.js',
   './js/aqeedah-data.js',

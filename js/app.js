@@ -655,7 +655,16 @@ class AppController {
     const totalSteps = PRAYER_STEPS.length;
 
     document.getElementById('step-indicator').textContent = `الخطوة ${this.currentPrayerStep + 1} من ${totalSteps}`;
-    document.getElementById('prayer-step-icon').textContent = step.icon;
+
+    // عرض صورة الحركة أو الإيموجي كبديل
+    const iconEl = document.getElementById('prayer-step-icon');
+    if (step.image) {
+      const imgSrc = PRAYER_IMAGES_PATH + step.image;
+      iconEl.innerHTML = `<img src="${imgSrc}" alt="${step.title}" class="prayer-step-img" onerror="this.parentElement.textContent='${step.icon}'">`;
+    } else {
+      iconEl.textContent = step.icon;
+    }
+
     document.getElementById('prayer-step-title').textContent = step.title;
     document.getElementById('prayer-step-action').textContent = step.action;
     document.getElementById('prayer-step-arabic').textContent = step.arabic;
@@ -960,6 +969,38 @@ class AppController {
     document.getElementById('btn-aq-prev').addEventListener('click', () => {
       this.prevAqeedahLesson();
     });
+
+    // التحكم في حجم خط القراءة في عقيدتي
+    let currentReadingSize = parseFloat(localStorage.getItem('bustan_reading_font_size') || '2.45');
+    const applyFontSize = (size) => {
+      currentReadingSize = Math.max(1.7, Math.min(size, 3.6));
+      document.documentElement.style.setProperty('--reading-font-size', `${currentReadingSize}rem`);
+      localStorage.setItem('bustan_reading_font_size', currentReadingSize.toString());
+    };
+    applyFontSize(currentReadingSize);
+
+    const btnZoomIn = document.getElementById('btn-font-zoom-in');
+    const btnZoomOut = document.getElementById('btn-font-zoom-out');
+    const btnZoomReset = document.getElementById('btn-font-reset');
+
+    if (btnZoomIn) {
+      btnZoomIn.addEventListener('click', () => {
+        sounds.playPop();
+        applyFontSize(currentReadingSize + 0.25);
+      });
+    }
+    if (btnZoomOut) {
+      btnZoomOut.addEventListener('click', () => {
+        sounds.playPop();
+        applyFontSize(currentReadingSize - 0.25);
+      });
+    }
+    if (btnZoomReset) {
+      btnZoomReset.addEventListener('click', () => {
+        sounds.playPop();
+        applyFontSize(2.45);
+      });
+    }
 
     // نوافذ التهنئة
     document.getElementById('close-congrat-btn').addEventListener('click', () => {

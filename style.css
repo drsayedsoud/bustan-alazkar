@@ -468,7 +468,26 @@ body {
   border: 1px solid #bae6fd;
 }
 
-/* الأيقونات والمؤثرات */
+/* الأيقونات والمؤثرات والصور المعبرة في الكروت */
+.card-expressive-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px 0 12px 0;
+}
+
+.expressive-svg {
+  width: 96px;
+  height: 96px;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.08));
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.home-card:hover .expressive-svg {
+  transform: scale(1.1) translateY(-3px);
+}
+
 .card-icon-container {
   display: flex;
   align-items: center;
@@ -512,16 +531,16 @@ body {
   50% { transform: translateY(8px) scale(1.08); }
 }
 
-/* نصوص ومميزات الكارت */
+/* نصوص ومميزات الكارت (مختصرة وسلسة للطفل) */
 .card-body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 14px;
 }
 
 .card-title {
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 900;
   color: #1e293b;
   line-height: 1.3;
@@ -535,6 +554,14 @@ body {
 }
 .card-aqeedah .card-title {
   color: #0c4a6e;
+}
+
+.card-tagline {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .card-desc {
@@ -1060,6 +1087,34 @@ body {
 .prayer-step-icon {
   font-size: 3.2rem;
   animation: bounceSlow 2s infinite ease-in-out;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* صورة حركة الصلاة */
+.prayer-step-img {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.18);
+  animation: bounceSlow 3s infinite ease-in-out;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  padding: 6px;
+  transition: transform 0.3s ease;
+}
+
+.prayer-step-img:hover {
+  transform: scale(1.03);
+}
+
+@media (max-width: 400px) {
+  .prayer-step-img {
+    width: 180px;
+    height: 180px;
+  }
 }
 
 .prayer-step-title {
@@ -1287,10 +1342,50 @@ body {
   animation: bounceSlow 2.5s infinite ease-in-out;
 }
 
+/* شريط تكبير وتصغير خط القراءة */
+.font-ctrl-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0f9ff;
+  border: 2px solid #bae6fd;
+  border-radius: 16px;
+  padding: 8px 14px;
+  margin-bottom: 8px;
+}
+
+.font-ctrl-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0369a1;
+}
+
+.font-ctrl-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-font-size {
+  background: white;
+  border: 2px solid #7dd3fc;
+  border-radius: 12px;
+  padding: 5px 12px;
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: #0284c7;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-font-size:active {
+  transform: scale(0.92);
+  background: #e0f2fe;
+}
+
 .chapter-title {
   font-family: 'Amiri', 'Noto Naskh Arabic', 'Traditional Arabic', serif !important;
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   color: #0f172a;
   margin: 0;
   text-align: center;
@@ -1298,33 +1393,35 @@ body {
 }
 
 .chapter-subtitle {
-  font-size: 0.85rem;
+  font-size: 1.05rem;
   color: #0284c7;
   text-align: center;
   font-weight: 800;
   background: #f0f9ff;
-  padding: 4px 12px;
-  border-radius: 12px;
+  padding: 6px 16px;
+  border-radius: 14px;
   align-self: center;
+  border: 1px solid #bae6fd;
 }
 
 .chapter-text-box {
   background: #fcfcfd;
-  border: 2px solid #f1f5f9;
-  border-radius: 20px;
-  padding: 20px 18px;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
+  border: 2px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 24px 22px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .chapter-text {
   font-family: 'Amiri', 'Noto Naskh Arabic', serif !important;
-  font-size: 1.75rem;
-  line-height: 2.35;
+  font-size: var(--reading-font-size, 2.45rem) !important;
+  line-height: 2.5 !important;
   color: #1e293b;
   text-align: right;
   margin: 0;
   font-weight: 700;
   white-space: pre-line;
+  letter-spacing: 0.3px;
 }
 
 .chapter-text b,
@@ -1847,8 +1944,8 @@ body {
     font-size: 1.3rem;
   }
   .chapter-text {
-    font-size: 1.35rem;
-    line-height: 1.95;
+    font-size: 2.1rem !important;
+    line-height: 2.35 !important;
   }
   .water-btn {
     width: 95px;
@@ -1963,7 +2060,8 @@ body {
     font-size: 1.2rem;
   }
   .chapter-text {
-    font-size: 1.25rem;
+    font-size: 1.95rem !important;
+    line-height: 2.25 !important;
   }
 }
 

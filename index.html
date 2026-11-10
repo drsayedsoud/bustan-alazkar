@@ -17,6 +17,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+  <!-- سكريبت إبقاء الشاشة مضاءة دائماً (Always-On Screen Wake Lock) -->
+  <script src="js/wake-lock.js"></script>
 </head>
 <body>
 
@@ -109,34 +111,42 @@
         </div>
       </div>
 
-      <!-- شبكة الكروت الثلاثة الكبيرة للأقسام -->
+      <!-- شبكة الكروت الثلاثة الرئيسية (مختصرين الكلام والوان مختلفة وصور معبرة) -->
       <div class="home-cards-grid">
 
-        <!-- الكارت 1: بُستان الأذكار -->
+        <!-- الكارت 1: بُستان الأذكار (أخضر زمردي مع شجرة الأذكار) -->
         <article class="home-card card-azkar" id="card-launch-azkar" role="button" tabindex="0" aria-label="الدخول إلى بستان الأذكار">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">🌿 حديقة الحسنات الحية</div>
-          <div class="card-icon-container">
-            <div class="card-main-icon">🌳</div>
-            <div class="card-floating-mini f-icon-1">🌸</div>
-            <div class="card-floating-mini f-icon-2">💧</div>
+          <div class="card-badge-top">🌸 سُقيا الحَسَنَات</div>
+          
+          <div class="card-expressive-img">
+            <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="treeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#34d399"/>
+                  <stop offset="100%" stop-color="#059669"/>
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="46" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="3"/>
+              <ellipse cx="50" cy="80" rx="32" ry="11" fill="#10b981"/>
+              <path d="M46 80 L47 56 L53 56 L54 80 Z" fill="#78350f"/>
+              <circle cx="50" cy="42" r="20" fill="url(#treeGrad)"/>
+              <circle cx="37" cy="50" r="15" fill="#10b981"/>
+              <circle cx="63" cy="50" r="15" fill="#10b981"/>
+              <circle cx="50" cy="34" r="16" fill="#6ee7b7"/>
+              <circle cx="42" cy="40" r="3.5" fill="#ef4444"/>
+              <circle cx="58" cy="43" r="3.5" fill="#f59e0b"/>
+              <circle cx="50" cy="51" r="3" fill="#f43f5e"/>
+              <path d="M50 14 C50 14 44 21 44 26 C44 29.3 46.7 32 50 32 C53.3 32 56 29.3 56 26 C56 21 50 14 50 14 Z" fill="#38bdf8"/>
+            </svg>
           </div>
+
           <div class="card-body">
             <h3 class="card-title">بُسْتَانُ الأَذْكَارِ</h3>
-            <p class="card-desc">
-              شجرة حسنات تفاعلية حيّة تنمو وتتفتح عليها الأزهار والثمار مع كل تسبيحة وسقاية! تعلّم أذكار اليوم والليلة من حصن المسلم الصغير.
-            </p>
-            <ul class="card-features">
-              <li><span>🌸</span> شجرة تفاعلية حيّة (Canvas 2D) تتفتح وتزهر</li>
-              <li><span>💧</span> زر سقاية تفاعلي وتسبيح صوتي بالتشكيل</li>
-              <li><span>☀️</span> أذكار الصباح، المساء، النوم، والطعام، والمسجد</li>
-            </ul>
+            <p class="card-tagline">اسقِ شجرتك ورَدِّدْ أذكارك كل يوم 💧</p>
           </div>
+
           <div class="card-footer">
-            <div class="card-stat-pill">
-              <span>🌸</span>
-              <span id="card-azkar-progress">0 زهرة وثمرة تم جمعها</span>
-            </div>
             <div class="card-action-btn btn-azkar">
               <span>ادخل البستان</span>
               <span class="btn-arrow">⬅️</span>
@@ -144,31 +154,38 @@
           </div>
         </article>
 
-        <!-- الكارت 2: مُدرِّب الصلاة -->
+        <!-- الكارت 2: مُدرِّب الصلاة (بنفسجي ملكي مع مسجد الصلاة الذهبي) -->
         <article class="home-card card-prayer" id="card-launch-prayer" role="button" tabindex="0" aria-label="الدخول إلى مدرب الصلاة">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">🕌 تدريب تفاعلي خطوة بخطوة</div>
-          <div class="card-icon-container">
-            <div class="card-main-icon">🕌</div>
-            <div class="card-floating-mini f-icon-1">🤲</div>
-            <div class="card-floating-mini f-icon-2">⭐</div>
+          <div class="card-badge-top">🕌 5 صلوات مفروضة</div>
+          
+          <div class="card-expressive-img">
+            <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="46" fill="#f5f3ff" stroke="#c7d2fe" stroke-width="3"/>
+              <!-- هلال ذهبي ونجوم -->
+              <path d="M65 20 A9 9 0 1 0 71 33 A7 7 0 1 1 65 20 Z" fill="#f59e0b"/>
+              <circle cx="36" cy="22" r="2" fill="#fef08a"/>
+              <circle cx="28" cy="30" r="1.5" fill="#fef08a"/>
+              <!-- مبنى المسجد -->
+              <rect x="27" y="55" width="46" height="30" rx="4" fill="#ffffff"/>
+              <!-- قبة المسجد الذهبية -->
+              <path d="M32 55 C32 37 68 37 68 55 Z" fill="#f59e0b"/>
+              <circle cx="50" cy="31" r="3" fill="#fbbf24"/>
+              <!-- باب المسجد -->
+              <path d="M44 85 L44 68 C44 64 56 64 56 68 L56 85 Z" fill="#4338ca"/>
+              <!-- مئذنة جانبية -->
+              <rect x="17" y="40" width="8" height="45" rx="2" fill="#e0e7ff"/>
+              <path d="M15 40 L21 28 L27 40 Z" fill="#f59e0b"/>
+              <circle cx="21" cy="25" r="2" fill="#fbbf24"/>
+            </svg>
           </div>
+
           <div class="card-body">
-            <h3 class="card-title">مُدَرِّبُ الصَّلَاةِ لِلصِّغَارِ</h3>
-            <p class="card-desc">
-              تعلّم كيف تصلّي صلواتك الخمس بخشوع وجمال؛ خطوة بخطوة من تكبيرة الإحرام حتى التسليم مع النطق الصوتي الصحيح ورسومات الحركات.
-            </p>
-            <ul class="card-features">
-              <li><span>🕋</span> الصلوات الخمس المفروضة وتفاصيل الركعات والجهر</li>
-              <li><span>🔊</span> نطق صوتي مشكول لكل دعاء وتكبيرة وآية</li>
-              <li><span>⭐</span> 11 خطوة تدريبية سهلة ومكافآت نجوم وحسنات</li>
-            </ul>
+            <h3 class="card-title">مُدَرِّبُ الصَّلَاةِ</h3>
+            <p class="card-tagline">تعلَّم خطوات الصلاة بخشوع وجمال 🤲</p>
           </div>
+
           <div class="card-footer">
-            <div class="card-stat-pill">
-              <span>⭐</span>
-              <span id="card-prayer-progress">0 صلوات مكتملة</span>
-            </div>
             <div class="card-action-btn btn-prayer">
               <span>تعلّم الصلاة</span>
               <span class="btn-arrow">⬅️</span>
@@ -176,31 +193,37 @@
           </div>
         </article>
 
-        <!-- الكارت 3: عقيدتي نوري -->
+        <!-- الكارت 3: عقيدتي نوري (أزرق ياقوتي مع كتاب النور) -->
         <article class="home-card card-aqeedah" id="card-launch-aqeedah" role="button" tabindex="0" aria-label="الدخول إلى قسم عقيدتي">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">📖 تدريب القراءة الذاتية الملونة</div>
-          <div class="card-icon-container">
-            <div class="card-main-icon">📖</div>
-            <div class="card-floating-mini f-icon-1">☀️</div>
-            <div class="card-floating-mini f-icon-2">🎯</div>
+          <div class="card-badge-top">📖 تدرَّب على القراءة</div>
+          
+          <div class="card-expressive-img">
+            <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="46" fill="#f0f9ff" stroke="#bae6fd" stroke-width="3"/>
+              <!-- هالة نورانية -->
+              <circle cx="50" cy="48" r="28" fill="#38bdf8" opacity="0.3"/>
+              <!-- صفحات الكتاب -->
+              <path d="M50 68 C58 63 73 64 80 69 L80 44 C73 39 58 38 50 42 Z" fill="#ffffff"/>
+              <path d="M50 68 C42 63 27 64 20 69 L20 44 C27 39 42 38 50 42 Z" fill="#f8fafc"/>
+              <path d="M50 72 C59 67 74 68 83 73 L80 68 C73 63 58 63 50 67 Z" fill="#f59e0b"/>
+              <path d="M50 72 C41 67 26 68 17 73 L20 68 C27 63 42 63 50 67 Z" fill="#d97706"/>
+              <line x1="55" y1="48" x2="72" y2="51" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="55" y1="56" x2="70" y2="59" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="28" y1="51" x2="45" y2="48" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="30" y1="59" x2="45" y2="56" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- نجمة الإيمان النورانية -->
+              <path d="M50 20 L52.5 28 L60 30 L52.5 33 L50 41 L47.5 33 L40 30 L47.5 28 Z" fill="#facc15"/>
+              <circle cx="50" cy="30" r="2.5" fill="#ffffff"/>
+            </svg>
           </div>
+
           <div class="card-body">
             <h3 class="card-title">عَقِيدَتِي نُورِي</h3>
-            <p class="card-desc">
-              12 درساً شيقاً وممتعاً لبناء عقيدة الطفل، بنظام تلوين المدود والحروف لتسهيل القراءة الذاتية، مع أسئلة ذكاء تفاعلية واحتفالات مبهجة!
-            </p>
-            <ul class="card-features">
-              <li><span>🎨</span> تلوين ذكي لأحرف المدود والتشكيل والشدة والسكون</li>
-              <li><span>🧠</span> سؤال فهم تفاعلي لكل درس مع خيارات ذكية ومكافآت</li>
-              <li><span>📚</span> 12 درساً تشمل أركان الإيمان والملائكة وحب النبي ﷺ</li>
-            </ul>
+            <p class="card-tagline">اقرأ بنفسك واكتشف أركان الإيمان ⭐</p>
           </div>
+
           <div class="card-footer">
-            <div class="card-stat-pill">
-              <span>📚</span>
-              <span id="card-aqeedah-progress">0 من 12 درساً مكتملة</span>
-            </div>
             <div class="card-action-btn btn-aqeedah">
               <span>اقرأ وتعلّم</span>
               <span class="btn-arrow">⬅️</span>
@@ -371,6 +394,16 @@
 
       <!-- بطاقة قراءة الدرس التفاعلية -->
       <article class="aqeedah-reading-card">
+        <!-- شريط تكبير وتصغير خط القراءة للبطل -->
+        <div class="font-ctrl-bar">
+          <span class="font-ctrl-label">🔍 حجم خط القراءة:</span>
+          <div class="font-ctrl-actions">
+            <button type="button" class="btn-font-size" id="btn-font-zoom-in" title="تكبير الخط">أ+ تكبير</button>
+            <button type="button" class="btn-font-size" id="btn-font-reset" title="الخط الأصلي">افتراضي</button>
+            <button type="button" class="btn-font-size" id="btn-font-zoom-out" title="تصغير الخط">أ- تصغير</button>
+          </div>
+        </div>
+
         <div class="chapter-emoji" id="aq-chapter-emoji">☀️</div>
         <span class="chapter-subtitle" id="aq-chapter-subtitle">الدَّرْسُ 1 مِنْ 12</span>
         <h3 class="chapter-title" id="aq-chapter-title">مَنْ هُوَ رَبِّي؟</h3>
