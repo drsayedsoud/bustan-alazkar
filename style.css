@@ -2108,3 +2108,23 @@ body {
     bottom: max(12px, env(safe-area-inset-bottom));
   }
 }
+
+/* تأثير نبض زر القراءة الصوتي أثناء التشغيل */
+.tool-btn.speaking-active,
+.ctrl-btn.speaking-active {
+  animation: speakingPulse 1s infinite alternate !important;
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+}
+
+@keyframes speakingPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5);
+  }
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 0 18px 4px rgba(2, 132, 199, 0.6);
+  }
+}

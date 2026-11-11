@@ -8,27 +8,29 @@
   <meta name="description" content="تطبيق البطل المسلم للأطفال: تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتدريب القراءة في العقيدة الإسلامية">
   <meta name="theme-color" content="#0284c7">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
 
   <!-- الخطوط العربية الراقية -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
   <script>
     // تنظيف فوري للكاشات القديمة
     if ('caches' in window) {
       caches.keys().then(function(keys) {
         keys.forEach(function(k) {
-          if (k !== 'bustan-alazkar-v8') caches.delete(k);
+          if (k !== 'bustan-alazkar-v9') caches.delete(k);
         });
       });
     }
   </script>
   <!-- سكريبت إبقاء الشاشة مضاءة دائماً (Always-On Screen Wake Lock) -->
-  <script src="js/wake-lock.js?v=8"></script>
+  <script src="js/wake-lock.js?v=9"></script>
 </head>
 <body>
 
@@ -603,13 +605,13 @@
     </div>
   </div>
 
-  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v8 -->
-  <script src="js/azkar-data.js?v=8"></script>
-  <script src="js/prayer-data.js?v=8"></script>
-  <script src="js/aqeedah-data.js?v=8"></script>
-  <script src="js/audio.js?v=8"></script>
-  <script src="js/tree.js?v=8"></script>
-  <script src="js/confetti.js?v=8"></script>
-  <script src="js/app.js?v=8"></script>
+  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v9 -->
+  <script src="js/azkar-data.js?v=9"></script>
+  <script src="js/prayer-data.js?v=9"></script>
+  <script src="js/aqeedah-data.js?v=9"></script>
+  <script src="js/audio.js?v=9"></script>
+  <script src="js/tree.js?v=9"></script>
+  <script src="js/confetti.js?v=9"></script>
+  <script src="js/app.js?v=9"></script>
 </body>
 </html>

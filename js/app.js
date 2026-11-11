@@ -433,7 +433,16 @@ class AppController {
     });
   }
 
+  clearAllSpeakingStyles() {
+    ['btn-speak', 'btn-prayer-speak', 'btn-aq-speak'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('speaking-active');
+    });
+  }
+
   switchTab(tab) {
+    sounds.stopSpeaking();
+    this.clearAllSpeakingStyles();
     this.activeTab = tab;
     const tabHome = document.getElementById('tab-home-btn');
     const tabAzkar = document.getElementById('tab-azkar-btn');
@@ -950,35 +959,76 @@ class AppController {
     });
 
     document.getElementById('btn-speak').addEventListener('click', () => {
+      const btn = document.getElementById('btn-speak');
       const dhikr = this.getCurrentDhikr();
-      if (dhikr) sounds.speakArabic(dhikr.arabic);
+      if (!dhikr) return;
+      if (sounds.isSpeaking && btn.classList.contains('speaking-active')) {
+        sounds.stopSpeaking();
+        btn.classList.remove('speaking-active');
+        return;
+      }
+      this.clearAllSpeakingStyles();
+      btn.classList.add('speaking-active');
+      sounds.speakArabic(dhikr.arabic, () => {
+        btn.classList.remove('speaking-active');
+      });
     });
 
     // صلاة
     document.getElementById('btn-prayer-speak').addEventListener('click', () => {
+      const btn = document.getElementById('btn-prayer-speak');
       const step = PRAYER_STEPS[this.currentPrayerStep];
-      if (step) sounds.speakArabic(step.arabic);
+      if (!step) return;
+      if (sounds.isSpeaking && btn.classList.contains('speaking-active')) {
+        sounds.stopSpeaking();
+        btn.classList.remove('speaking-active');
+        return;
+      }
+      this.clearAllSpeakingStyles();
+      btn.classList.add('speaking-active');
+      sounds.speakArabic(step.arabic, () => {
+        btn.classList.remove('speaking-active');
+      });
     });
 
     document.getElementById('btn-prayer-next').addEventListener('click', () => {
+      sounds.stopSpeaking();
+      this.clearAllSpeakingStyles();
       this.nextPrayerStep();
     });
 
     document.getElementById('btn-prayer-prev').addEventListener('click', () => {
+      sounds.stopSpeaking();
+      this.clearAllSpeakingStyles();
       this.prevPrayerStep();
     });
 
     // عقيدة
     document.getElementById('btn-aq-speak').addEventListener('click', () => {
+      const btn = document.getElementById('btn-aq-speak');
       const lesson = AQEEDAH_LESSONS[this.currentAqeedahIndex];
-      if (lesson) sounds.speakArabic(lesson.text);
+      if (!lesson) return;
+      if (sounds.isSpeaking && btn.classList.contains('speaking-active')) {
+        sounds.stopSpeaking();
+        btn.classList.remove('speaking-active');
+        return;
+      }
+      this.clearAllSpeakingStyles();
+      btn.classList.add('speaking-active');
+      sounds.speakArabic(lesson.text, () => {
+        btn.classList.remove('speaking-active');
+      });
     });
 
     document.getElementById('btn-aq-next').addEventListener('click', () => {
+      sounds.stopSpeaking();
+      this.clearAllSpeakingStyles();
       this.nextAqeedahLesson();
     });
 
     document.getElementById('btn-aq-prev').addEventListener('click', () => {
+      sounds.stopSpeaking();
+      this.clearAllSpeakingStyles();
       this.prevAqeedahLesson();
     });
 

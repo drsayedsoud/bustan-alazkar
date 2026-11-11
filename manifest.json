@@ -1,16 +1,35 @@
 {
+  "id": "/bustan-alazkar/",
   "name": "البطل المسلم للأطفال",
   "short_name": "البطل المسلم",
   "description": "تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتدريب القراءة في العقيدة الإسلامية للأطفال",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/bustan-alazkar/index.html",
+  "scope": "/bustan-alazkar/",
   "display": "standalone",
   "background_color": "#0284c7",
   "theme_color": "#0284c7",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icons/icon.svg",
+      "src": "/bustan-alazkar/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/bustan-alazkar/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/bustan-alazkar/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/bustan-alazkar/icons/icon.svg",
       "sizes": "192x192 512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"

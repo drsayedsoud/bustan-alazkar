@@ -1,19 +1,21 @@
 // Service Worker لتشغيل تطبيق البطل المسلم بدون إنترنت (أوفلاين)
-const CACHE_NAME = 'bustan-alazkar-v8';
+const CACHE_NAME = 'bustan-alazkar-v9';
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=8',
+  './style.css?v=9',
   './manifest.json',
   './icons/icon.svg',
-  './js/wake-lock.js?v=8',
-  './js/azkar-data.js?v=8',
-  './js/prayer-data.js?v=8',
-  './js/aqeedah-data.js?v=8',
-  './js/audio.js?v=8',
-  './js/tree.js?v=8',
-  './js/confetti.js?v=8',
-  './js/app.js?v=8'
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './js/wake-lock.js?v=9',
+  './js/azkar-data.js?v=9',
+  './js/prayer-data.js?v=9',
+  './js/aqeedah-data.js?v=9',
+  './js/audio.js?v=9',
+  './js/tree.js?v=9',
+  './js/confetti.js?v=9',
+  './js/app.js?v=9'
 ];
 
 self.addEventListener('install', event => {
@@ -55,6 +57,13 @@ self.addEventListener('message', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
+  const url = new URL(event.request.url);
+
+  // استثناء خدمة قراءة الصوت أونلاين من جوجل (مثل تطبيق kids) لتمر مباشرة من الشبكة بدون تخزين
+  if (url.hostname.includes('translate.googleapis.com') || url.pathname.includes('translate_tts')) {
+    return;
+  }
+
   // استراتيجية Network First لضمان تحميل أحدث نسخة دائماً عند توفر النت
   event.respondWith(
     fetch(event.request)
@@ -69,7 +78,7 @@ self.addEventListener('fetch', event => {
       })
       .catch(() => {
         // في حالة انقطاع النت (Offline): استرجاع الملفات المخزنة في الكاش
-        return caches.match(event.request).then(cachedResponse => {
+        return caches.match(event.request, { ignoreSearch: true }).then(cachedResponse => {
           if (cachedResponse) return cachedResponse;
           if (event.request.mode === 'navigate') {
             return caches.match('./index.html') || caches.match('./');
