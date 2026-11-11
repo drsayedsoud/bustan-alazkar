@@ -1,25 +1,32 @@
 // Service Worker لتشغيل تطبيق البطل المسلم بدون إنترنت (أوفلاين)
-const CACHE_NAME = 'bustan-alazkar-v7';
+const CACHE_NAME = 'bustan-alazkar-v8';
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=7',
+  './style.css?v=8',
   './manifest.json',
   './icons/icon.svg',
-  './js/wake-lock.js?v=7',
-  './js/azkar-data.js?v=7',
-  './js/prayer-data.js?v=7',
-  './js/aqeedah-data.js?v=7',
-  './js/audio.js?v=7',
-  './js/tree.js?v=7',
-  './js/confetti.js?v=7',
-  './js/app.js?v=7'
+  './js/wake-lock.js?v=8',
+  './js/azkar-data.js?v=8',
+  './js/prayer-data.js?v=8',
+  './js/aqeedah-data.js?v=8',
+  './js/audio.js?v=8',
+  './js/tree.js?v=8',
+  './js/confetti.js?v=8',
+  './js/app.js?v=8'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS);
+    caches.open(CACHE_NAME).then(async cache => {
+      // تخزين كل ملف وتفادي توقف التثبيت في حال تعثر أي ملف
+      await Promise.all(
+        ASSETS.map(url =>
+          cache.add(url).catch(err => {
+            console.warn('[SW] تعذر تخزين مؤقت لملف:', url, err);
+          })
+        )
+      );
     })
   );
   self.skipWaiting();
@@ -37,6 +44,12 @@ self.addEventListener('activate', event => {
     })
   );
   self.clients.claim();
+});
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', event => {

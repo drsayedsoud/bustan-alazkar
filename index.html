@@ -16,9 +16,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
+  <script>
+    // تنظيف فوري للكاشات القديمة
+    if ('caches' in window) {
+      caches.keys().then(function(keys) {
+        keys.forEach(function(k) {
+          if (k !== 'bustan-alazkar-v8') caches.delete(k);
+        });
+      });
+    }
+  </script>
   <!-- سكريبت إبقاء الشاشة مضاءة دائماً (Always-On Screen Wake Lock) -->
-  <script src="js/wake-lock.js?v=7"></script>
+  <script src="js/wake-lock.js?v=8"></script>
 </head>
 <body>
 
@@ -53,6 +63,7 @@
       </div>
       <button type="button" class="icon-btn" id="btn-sound-toggle" title="الصوت" aria-label="تبديل الصوت">🔊</button>
       <button type="button" class="icon-btn" id="btn-gallery" title="حديقتي" aria-label="عرض الحديقة">🏡</button>
+      <button type="button" class="icon-btn" id="btn-force-refresh" title="تحديث التطبيق ومسح الذاكرة المؤقتة" aria-label="تحديث الكاش">🔄</button>
     </div>
   </header>
 
@@ -592,13 +603,13 @@
     </div>
   </div>
 
-  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث -->
-  <script src="js/azkar-data.js?v=7"></script>
-  <script src="js/prayer-data.js?v=7"></script>
-  <script src="js/aqeedah-data.js?v=7"></script>
-  <script src="js/audio.js?v=7"></script>
-  <script src="js/tree.js?v=7"></script>
-  <script src="js/confetti.js?v=7"></script>
-  <script src="js/app.js?v=7"></script>
+  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v8 -->
+  <script src="js/azkar-data.js?v=8"></script>
+  <script src="js/prayer-data.js?v=8"></script>
+  <script src="js/aqeedah-data.js?v=8"></script>
+  <script src="js/audio.js?v=8"></script>
+  <script src="js/tree.js?v=8"></script>
+  <script src="js/confetti.js?v=8"></script>
+  <script src="js/app.js?v=8"></script>
 </body>
 </html>

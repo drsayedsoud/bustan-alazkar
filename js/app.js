@@ -1045,6 +1045,29 @@ class AppController {
       sounds.enabled = !sounds.enabled;
       soundToggle.textContent = sounds.enabled ? '🔊' : '🔇';
     });
+
+    // زر تحديث التطبيق ومسح الكاش
+    const forceRefreshBtn = document.getElementById('btn-force-refresh');
+    if (forceRefreshBtn) {
+      forceRefreshBtn.addEventListener('click', async () => {
+        sounds.playPop();
+        forceRefreshBtn.style.transition = 'transform 0.5s ease';
+        forceRefreshBtn.style.transform = 'rotate(360deg)';
+        try {
+          if ('caches' in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(k => caches.delete(k)));
+          }
+          if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(registrations.map(r => r.unregister()));
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+        window.location.href = window.location.origin + window.location.pathname + '?v8=' + Date.now();
+      });
+    }
   }
 
   openGallery() {
