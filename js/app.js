@@ -73,6 +73,9 @@ class AppController {
       }
     };
 
+    this.salawatTracker = null;
+    this._pendingSalahId = null;
+
     this.loadState();
     this.checkStreak();
   }
@@ -84,7 +87,7 @@ class AppController {
     this.setupProfileUI();
     this.setupTabNavigation();
 
-    // تجهيز الأقسام الثلاثة
+    // تجهيز الأقسام الأربعة
     this.filterAzkar(this.currentCategory);
     this.setupCategoriesUI();
     this.renderCurrentDhikr();
@@ -94,6 +97,11 @@ class AppController {
 
     this.setupAqeedahUI();
     this.renderCurrentAqeedahLesson();
+
+    if (typeof SalawatTracker !== 'undefined') {
+      this.salawatTracker = new SalawatTracker(this);
+      this.setupSalawatUI();
+    }
 
     this.setupEventListeners();
     this.setupPWAInstallation();
@@ -333,6 +341,7 @@ class AppController {
     const tabAzkar = document.getElementById('tab-azkar-btn');
     const tabPrayer = document.getElementById('tab-prayer-btn');
     const tabAqeedah = document.getElementById('tab-aqeedah-btn');
+    const tabSalawat = document.getElementById('tab-salawat-btn');
     const brandHomeLink = document.getElementById('brand-home-link');
 
     if (tabHome) {
@@ -377,10 +386,18 @@ class AppController {
       });
     }
 
-    // ربط الكروت الثلاثة الكبيرة في شاشة البداية للتنقل المباشر للأقسام
+    if (tabSalawat) {
+      tabSalawat.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('salawat');
+      });
+    }
+
+    // ربط الكروت الأربعة الكبيرة في شاشة البداية للتنقل المباشر للأقسام
     const cardAzkar = document.getElementById('card-launch-azkar');
     const cardPrayer = document.getElementById('card-launch-prayer');
     const cardAqeedah = document.getElementById('card-launch-aqeedah');
+    const cardSalawat = document.getElementById('card-launch-salawat');
 
     if (cardAzkar) {
       cardAzkar.addEventListener('click', () => {
@@ -424,6 +441,20 @@ class AppController {
       });
     }
 
+    if (cardSalawat) {
+      cardSalawat.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('salawat');
+      });
+      cardSalawat.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sounds.playPop();
+          this.switchTab('salawat');
+        }
+      });
+    }
+
     // ربط أزرار العودة للشاشة الرئيسية الموجودة أعلى كل قسم
     document.querySelectorAll('.btn-back-home').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -448,21 +479,25 @@ class AppController {
     const tabAzkar = document.getElementById('tab-azkar-btn');
     const tabPrayer = document.getElementById('tab-prayer-btn');
     const tabAqeedah = document.getElementById('tab-aqeedah-btn');
+    const tabSalawat = document.getElementById('tab-salawat-btn');
 
     const secHome = document.getElementById('section-home');
     const secAzkar = document.getElementById('section-azkar');
     const secPrayer = document.getElementById('section-prayer');
     const secAqeedah = document.getElementById('section-aqeedah');
+    const secSalawat = document.getElementById('section-salawat');
 
     if (tabHome) tabHome.className = 'nav-tab-btn';
     if (tabAzkar) tabAzkar.className = 'nav-tab-btn';
     if (tabPrayer) tabPrayer.className = 'nav-tab-btn';
     if (tabAqeedah) tabAqeedah.className = 'nav-tab-btn';
+    if (tabSalawat) tabSalawat.className = 'nav-tab-btn';
 
     if (secHome) secHome.classList.add('hidden');
     if (secAzkar) secAzkar.classList.add('hidden');
     if (secPrayer) secPrayer.classList.add('hidden');
     if (secAqeedah) secAqeedah.classList.add('hidden');
+    if (secSalawat) secSalawat.classList.add('hidden');
 
     if (tab === 'home') {
       if (tabHome) tabHome.classList.add('active-home');
@@ -478,6 +513,10 @@ class AppController {
     } else if (tab === 'aqeedah') {
       if (tabAqeedah) tabAqeedah.classList.add('active-aqeedah');
       if (secAqeedah) secAqeedah.classList.remove('hidden');
+    } else if (tab === 'salawat') {
+      if (tabSalawat) tabSalawat.classList.add('active-salawat');
+      if (secSalawat) secSalawat.classList.remove('hidden');
+      if (this.salawatTracker) this.renderSalawatSection();
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -913,6 +952,12 @@ class AppController {
       const completedCount = Object.keys(this.completedLessons || {}).length;
       cardAqeedahProgress.textContent = `${completedCount} من 12 درساً مكتملة`;
     }
+
+    const cardSalawatProgress = document.getElementById('card-salawat-progress');
+    if (cardSalawatProgress && this.salawatTracker) {
+      const done = this.salawatTracker.getTodayCount();
+      cardSalawatProgress.textContent = done > 0 ? `${done} من 5 صلوات اليوم ✅` : 'ابدأ رحلتك اليوم!';
+    }
   }
 
   restoreGardenVisuals() {
@@ -1115,9 +1160,289 @@ class AppController {
         } catch (e) {
           console.warn(e);
         }
-        window.location.href = window.location.origin + window.location.pathname + '?v8=' + Date.now();
+        window.location.href = window.location.origin + window.location.pathname + '?v10=' + Date.now();
       });
     }
+  }
+
+  // ========== 💰 قسم ميزاني ==========
+  setupSalawatUI() {
+    const btnWeek = document.getElementById('btn-salawat-week');
+    if (btnWeek) {
+      btnWeek.addEventListener('click', () => {
+        sounds.playPop();
+        this.openWeekModal();
+      });
+    }
+
+    const btnBadges = document.getElementById('btn-salawat-badges');
+    if (btnBadges) {
+      btnBadges.addEventListener('click', () => {
+        sounds.playPop();
+        this.openBadgesModal();
+      });
+    }
+
+    const btnCloseCongrat = document.getElementById('close-salawat-congrat-btn');
+    if (btnCloseCongrat) {
+      btnCloseCongrat.addEventListener('click', () => {
+        sounds.playPop();
+        document.getElementById('salawat-congrat-modal').classList.remove('active');
+      });
+    }
+
+    const btnCloseWeek = document.getElementById('close-week-modal-btn');
+    if (btnCloseWeek) {
+      btnCloseWeek.addEventListener('click', () => {
+        sounds.playPop();
+        document.getElementById('salawat-week-modal').classList.remove('active');
+      });
+    }
+
+    const btnCloseBadges = document.getElementById('close-badges-modal-btn');
+    if (btnCloseBadges) {
+      btnCloseBadges.addEventListener('click', () => {
+        sounds.playPop();
+        document.getElementById('salawat-badges-modal').classList.remove('active');
+      });
+    }
+
+    // Bottom sheet
+    const btnCancelSheet = document.getElementById('btn-sheet-cancel');
+    if (btnCancelSheet) {
+      btnCancelSheet.addEventListener('click', () => {
+        sounds.playPop();
+        document.getElementById('salawat-place-sheet').classList.add('hidden');
+        this._pendingSalahId = null;
+      });
+    }
+
+    this._pendingSalahId = null;
+  }
+
+  renderSalawatSection() {
+    if (!this.salawatTracker) return;
+    const st = this.salawatTracker;
+    const rec = st.getTodayRecord();
+    const nick = this.profile.nickname || this.profile.name || 'بطلنا';
+
+    // التاريخ
+    const now = new Date();
+    const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+    const dateEl = document.getElementById('salawat-date');
+    if (dateEl) {
+      dateEl.textContent = `${days[now.getDay()]}، ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    }
+
+    const greetingEl = document.getElementById('salawat-greeting');
+    if (greetingEl) {
+      greetingEl.textContent = `تقبّل الله يا ${nick}! 🤲`;
+    }
+
+    // إحصائيات اليوم
+    const todayCoins = st.getTodayCoins();
+    const doneCount = st.getTodayCount();
+
+    const todayCoinsEl = document.getElementById('salawat-today-coins');
+    if (todayCoinsEl) todayCoinsEl.textContent = todayCoins;
+
+    const doneCountEl = document.getElementById('salawat-done-count');
+    if (doneCountEl) doneCountEl.textContent = doneCount;
+
+    const progBar = document.getElementById('salawat-progress-bar');
+    if (progBar) progBar.style.width = `${(doneCount / 5) * 100}%`;
+
+    // الميزان الكلي
+    const totalMoneyEl = document.getElementById('salawat-total-money');
+    if (totalMoneyEl) totalMoneyEl.textContent = st.getPocketMoney();
+
+    const streakEl = document.getElementById('salawat-streak');
+    if (streakEl) streakEl.textContent = st.getStats().longestStreak;
+
+    // بناء بطاقات الصلوات الخمس
+    const grid = document.getElementById('salawat-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    SALAWAT.forEach(salah => {
+      const entry = rec[salah.id];
+      const done = entry && entry.done;
+      const place = done ? entry.place : null;
+
+      const row = document.createElement('div');
+      row.className = `salah-row ${done ? (place === 'mosque' ? 'done-mosque' : 'done-home') : ''}`;
+
+      let statusText = 'اضغط للتسجيل';
+      let rewardText = '';
+      if (done) {
+        statusText = place === 'mosque' ? '✅ صليت في المسجد 🕌' : '✅ صليت في البيت 🏠';
+        rewardText = place === 'mosque' ? '+5ج' : '+2ج';
+        if (salah.id === 'fajr') rewardText += '+1ج';
+      }
+
+      row.innerHTML = `
+        <span class="salah-icon">${salah.icon}</span>
+        <div class="salah-info">
+          <div class="salah-name">${salah.name}</div>
+          <div class="salah-status ${done ? 'done' : ''}">${statusText}</div>
+        </div>
+        ${done ? `<span class="salah-reward-badge">${rewardText} 💰</span>` : ''}
+      `;
+
+      if (!done) {
+        row.addEventListener('click', () => {
+          sounds.playPop();
+          this.openPlaceSheet(salah);
+        });
+      }
+
+      grid.appendChild(row);
+    });
+  }
+
+  openPlaceSheet(salah) {
+    this._pendingSalahId = salah.id;
+    const titleEl = document.getElementById('sheet-salah-name');
+    if (titleEl) {
+      titleEl.textContent = `صليت ${salah.name}... أين؟ ${salah.icon}`;
+    }
+
+    const sheet = document.getElementById('salawat-place-sheet');
+    if (sheet) sheet.classList.remove('hidden');
+
+    const mosqueBtn = document.getElementById('btn-choose-mosque');
+    const homeBtn = document.getElementById('btn-choose-home');
+
+    const handleChoice = (place) => {
+      if (sheet) sheet.classList.add('hidden');
+      if (this._pendingSalahId) {
+        this.recordSalahAndShow(this._pendingSalahId, place);
+        this._pendingSalahId = null;
+      }
+    };
+
+    if (mosqueBtn) mosqueBtn.onclick = () => handleChoice('mosque');
+    if (homeBtn) homeBtn.onclick = () => handleChoice('home');
+  }
+
+  recordSalahAndShow(salahId, place) {
+    if (!this.salawatTracker) return;
+    const result = this.salawatTracker.recordSalah(salahId, place);
+    if (!result) return;
+
+    sounds.playVictory();
+    sounds.playCoin();
+    this.confetti.burst(60);
+
+    // تحديث الواجهة
+    this.renderSalawatSection();
+    this.updateUI();
+
+    // إعداد modal التهنئة
+    const nick = this.profile.nickname || this.profile.name || 'بطل';
+    const nameEl = document.getElementById('salawat-congrat-name');
+    if (nameEl) nameEl.textContent = nick;
+
+    const iconEl = document.getElementById('salawat-congrat-icon');
+    if (iconEl) iconEl.textContent = (place === 'mosque' ? '🕌' : '🏠');
+
+    const descEl = document.getElementById('salawat-congrat-desc');
+    if (descEl) {
+      descEl.textContent = `صليت ${result.salah.name} في ${place === 'mosque' ? 'المسجد 🕌' : 'البيت 🏠'}`;
+    }
+
+    let rewardText = `+${result.reward}`;
+    if (result.isFajrBonus) rewardText += ' (شامل بونص الفجر +1)';
+    const rewardEl = document.getElementById('salawat-congrat-reward');
+    if (rewardEl) rewardEl.textContent = rewardText;
+
+    const totalEl = document.getElementById('salawat-congrat-total');
+    if (totalEl) totalEl.textContent = this.salawatTracker.getPocketMoney();
+
+    // شارة جديدة؟
+    const badgeEl = document.getElementById('salawat-new-badge');
+    if (badgeEl) {
+      if (result.newBadges && result.newBadges.length > 0) {
+        const b = result.newBadges[0];
+        const badgeNameEl = document.getElementById('salawat-badge-name');
+        if (badgeNameEl) badgeNameEl.textContent = `${b.icon} ${b.name}`;
+        badgeEl.classList.remove('hidden');
+      } else {
+        badgeEl.classList.add('hidden');
+      }
+    }
+
+    const congratModal = document.getElementById('salawat-congrat-modal');
+    if (congratModal) congratModal.classList.add('active');
+  }
+
+  openWeekModal() {
+    if (!this.salawatTracker) return;
+    const days7 = this.salawatTracker.getWeeklyStats();
+    const dayNames = ['أحد', 'اثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
+
+    let totalCoins = 0;
+
+    let tableHtml = '<table><thead><tr><th>الصلاة</th>';
+    days7.forEach(d => {
+      const date = new Date(d.key + 'T00:00:00');
+      tableHtml += `<th>${dayNames[date.getDay()]}<br><small>${date.getDate()}</small></th>`;
+    });
+    tableHtml += '</tr></thead><tbody>';
+
+    SALAWAT.forEach(salah => {
+      tableHtml += `<tr><td><strong>${salah.icon} ${salah.name}</strong></td>`;
+      days7.forEach(d => {
+        if (!d.record) {
+          tableHtml += '<td class="cell-missed">-</td>';
+        } else {
+          const entry = d.record[salah.id];
+          if (entry && entry.done) {
+            const cls = entry.place === 'mosque' ? 'cell-done-mosque' : 'cell-done-home';
+            const ico = entry.place === 'mosque' ? '🕌' : '🏠';
+            totalCoins += (entry.place === 'mosque' ? salah.rewardMosque : salah.rewardHome);
+            tableHtml += `<td class="${cls}">${ico}</td>`;
+          } else {
+            tableHtml += '<td class="cell-missed">⬜</td>';
+          }
+        }
+      });
+      tableHtml += '</tr>';
+    });
+
+    tableHtml += '</tbody></table>';
+
+    const gridEl = document.getElementById('week-grid');
+    if (gridEl) gridEl.innerHTML = tableHtml;
+
+    const coinsEl = document.getElementById('week-total-coins');
+    if (coinsEl) coinsEl.textContent = totalCoins;
+
+    const modal = document.getElementById('salawat-week-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  openBadgesModal() {
+    if (!this.salawatTracker) return;
+    const badges = this.salawatTracker.getBadges();
+    const grid = document.getElementById('badges-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    badges.forEach(b => {
+      const div = document.createElement('div');
+      div.className = `badge-item ${b.earned ? 'earned' : 'locked'}`;
+      div.innerHTML = `
+        <div class="badge-icon">${b.earned ? b.icon : '🔒'}</div>
+        <div class="badge-name">${b.name}</div>
+        <div class="badge-desc">${b.earned ? b.desc : (b.desc || 'لم تُفتح بعد')}</div>
+      `;
+      grid.appendChild(div);
+    });
+
+    const modal = document.getElementById('salawat-badges-modal');
+    if (modal) modal.classList.add('active');
   }
 
   openGallery() {

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>البطل المسلم للأطفال 🌟 (أذكار، صلاة، وعقيدتي)</title>
   
-  <meta name="description" content="تطبيق البطل المسلم للأطفال: تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتدريب القراءة في العقيدة الإسلامية">
+  <meta name="description" content="تطبيق البطل المسلم للأطفال: تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتتبع الصلوات الخمس (ميزاني) وتدريب القراءة في العقيدة الإسلامية">
   <meta name="theme-color" content="#0284c7">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icons/icon-192.png" type="image/png">
@@ -18,19 +18,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=10">
   <script>
     // تنظيف فوري للكاشات القديمة
     if ('caches' in window) {
       caches.keys().then(function(keys) {
         keys.forEach(function(k) {
-          if (k !== 'bustan-alazkar-v9') caches.delete(k);
+          if (k !== 'bustan-alazkar-v10') caches.delete(k);
         });
       });
     }
   </script>
   <!-- سكريبت إبقاء الشاشة مضاءة دائماً (Always-On Screen Wake Lock) -->
-  <script src="js/wake-lock.js?v=9"></script>
+  <script src="js/wake-lock.js?v=10"></script>
 </head>
 <body>
 
@@ -86,6 +86,10 @@
     <button type="button" class="nav-tab-btn" id="tab-aqeedah-btn" aria-label="عقيدتي">
       <span>📖</span>
       <span>عَقِيدَتِي</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="tab-salawat-btn" aria-label="ميزاني">
+      <span>💰</span>
+      <span>مِيزَانِي</span>
     </button>
   </nav>
 
@@ -239,6 +243,41 @@
           <div class="card-footer">
             <div class="card-action-btn btn-aqeedah">
               <span>اقرأ وتعلّم</span>
+              <span class="btn-arrow">⬅️</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- الكارت 4: ميزاني (ذهبي/برتقالي دافئ لتتبع الصلوات الخمس) -->
+        <article class="home-card card-salawat" id="card-launch-salawat" role="button" tabindex="0" aria-label="الدخول إلى ميزاني">
+          <div class="card-glow-bg"></div>
+          <div class="card-badge-top">💰 5 صلوات يومياً</div>
+
+          <div class="card-expressive-img">
+            <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="46" fill="#fffbeb" stroke="#fde68a" stroke-width="3"/>
+              <!-- حصالة ذهبية جميلة -->
+              <ellipse cx="50" cy="62" rx="28" ry="20" fill="#fbbf24"/>
+              <ellipse cx="50" cy="45" rx="20" ry="16" fill="#f59e0b"/>
+              <rect x="44" y="34" width="12" height="8" rx="4" fill="#d97706"/>
+              <rect x="46" y="30" width="8" height="6" rx="2" fill="#b45309"/>
+              <!-- عملة ذهبية مع رمز الجنيه -->
+              <circle cx="69" cy="40" r="8" fill="#facc15" stroke="#d97706" stroke-width="2"/>
+              <text x="69" y="44" text-anchor="middle" font-size="8" fill="#92400e" font-weight="bold">ج</text>
+              <text x="25" y="38" font-size="10">⭐</text>
+              <text x="72" y="62" font-size="8">✨</text>
+            </svg>
+          </div>
+
+          <div class="card-body">
+            <h3 class="card-title">مِيزَانِي</h3>
+            <p class="card-tagline">سجّل صلواتك واملأ ميزانك كل يوم 🕌</p>
+          </div>
+
+          <div class="card-footer">
+            <div id="card-salawat-progress" class="card-progress-text">ابدأ رحلتك اليوم!</div>
+            <div class="card-action-btn btn-salawat">
+              <span>افتح ميزاني</span>
               <span class="btn-arrow">⬅️</span>
             </div>
           </div>
@@ -450,6 +489,61 @@
       </article>
     </section>
 
+    <!-- ==================== 4. 💰 قسم ميزاني (تتبع الصلوات) ==================== -->
+    <section class="app-section hidden" id="section-salawat">
+
+      <!-- شريط علوي للعودة -->
+      <div class="section-top-bar">
+        <button type="button" class="btn-back-home" data-target="home" aria-label="العودة للشاشة الرئيسية">
+          <span>🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <span class="section-top-title">💰 مِيزَانِي — صلواتي وجنيهاتي</span>
+      </div>
+
+      <!-- بطاقة ملخص اليوم -->
+      <div class="salawat-today-card">
+        <div class="salawat-date" id="salawat-date">الأحد، 15 نوفمبر</div>
+        <div class="salawat-greeting" id="salawat-greeting">تقبّل الله يا بطلنا! 🤲</div>
+
+        <div class="salawat-day-summary">
+          <div class="salawat-day-coins">
+            💰 جمعت اليوم: <strong id="salawat-today-coins">0</strong> جنيه
+          </div>
+          <div class="salawat-progress-bar-wrap">
+            <div class="salawat-progress-bar" id="salawat-progress-bar" style="width:0%"></div>
+          </div>
+          <div class="salawat-progress-text">
+            <span id="salawat-done-count">0</span> من 5 صلوات ✅
+          </div>
+        </div>
+      </div>
+
+      <!-- بطاقات الصلوات الخمس -->
+      <div class="salawat-grid" id="salawat-grid">
+        <!-- تُبنى بـ JS -->
+      </div>
+
+      <!-- شريط الميزان الكلي -->
+      <div class="salawat-total-bar">
+        <div class="salawat-total-money">
+          💰 ميزاني الكلي: <strong id="salawat-total-money">0</strong> جنيه
+        </div>
+        <div class="salawat-total-streak">
+          🔥 المداومة: <strong id="salawat-streak">0</strong> يوم كامل
+        </div>
+        <div class="salawat-actions-row">
+          <button type="button" class="salawat-action-btn" id="btn-salawat-week">
+            📅 سجل الأسبوع
+          </button>
+          <button type="button" class="salawat-action-btn" id="btn-salawat-badges">
+            🏆 شاراتي
+          </button>
+        </div>
+      </div>
+
+    </section>
+
   </main>
 
   <!-- ==================== 📲 شريط اقتراح تثبيت التطبيق (PWA Banner) ==================== -->
@@ -605,13 +699,84 @@
     </div>
   </div>
 
-  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v9 -->
-  <script src="js/azkar-data.js?v=9"></script>
-  <script src="js/prayer-data.js?v=9"></script>
-  <script src="js/aqeedah-data.js?v=9"></script>
-  <script src="js/audio.js?v=9"></script>
-  <script src="js/tree.js?v=9"></script>
-  <script src="js/confetti.js?v=9"></script>
-  <script src="js/app.js?v=9"></script>
+  <!-- Bottom Sheet: اختيار مكان الصلاة -->
+  <div class="bottom-sheet-overlay hidden" id="salawat-place-sheet">
+    <div class="bottom-sheet-card">
+      <div class="bottom-sheet-handle"></div>
+      <div class="bottom-sheet-title" id="sheet-salah-name">صليت الظهر... أين؟ ☀️</div>
+      <div class="bottom-sheet-choices">
+        <button type="button" class="place-choice-btn choice-mosque" id="btn-choose-mosque">
+          <span class="place-icon">🕌</span>
+          <span class="place-name">في المسجد</span>
+          <span class="place-reward">+5 جنيه</span>
+        </button>
+        <button type="button" class="place-choice-btn choice-home" id="btn-choose-home">
+          <span class="place-icon">🏠</span>
+          <span class="place-name">في البيت</span>
+          <span class="place-reward">+2 جنيه</span>
+        </button>
+      </div>
+      <button type="button" class="bottom-sheet-cancel" id="btn-sheet-cancel">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- Modal: تهنئة بعد تسجيل الصلاة -->
+  <div class="modal-overlay" id="salawat-congrat-modal">
+    <div class="modal-card">
+      <div class="modal-icon" id="salawat-congrat-icon">🕌</div>
+      <h3 class="modal-title">تَقَبَّلَ اللهُ يَا <span id="salawat-congrat-name">بطل</span>!</h3>
+      <p class="modal-desc" id="salawat-congrat-desc">صليت العصر في المسجد 🕌</p>
+      <div class="salawat-reward-display">
+        💰 <span id="salawat-congrat-reward">+5</span> جنيه في ميزانك!
+      </div>
+      <div class="salawat-new-total">
+        ميزانك الآن: <strong id="salawat-congrat-total">0</strong> جنيه 💰
+      </div>
+      <!-- شارة جديدة (تظهر فقط لو اكتسب شارة) -->
+      <div class="salawat-new-badge hidden" id="salawat-new-badge">
+        🏆 شارة جديدة: <span id="salawat-badge-name"></span>!
+      </div>
+      <button type="button" class="modal-btn" id="close-salawat-congrat-btn">
+        👍 رائع! متابعة
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: سجل الأسبوع -->
+  <div class="modal-overlay" id="salawat-week-modal">
+    <div class="modal-card modal-card-wide">
+      <div class="modal-icon">📅</div>
+      <h3 class="modal-title">سجل الأسبوع</h3>
+      <div class="week-grid" id="week-grid">
+        <!-- تُبنى بـ JS -->
+      </div>
+      <div class="week-summary" id="week-summary">
+        💰 مجموع الأسبوع: <strong id="week-total-coins">0</strong> جنيه
+      </div>
+      <button type="button" class="modal-btn" id="close-week-modal-btn">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- Modal: شاراتي -->
+  <div class="modal-overlay" id="salawat-badges-modal">
+    <div class="modal-card">
+      <div class="modal-icon">🏆</div>
+      <h3 class="modal-title">شاراتي في الصلاة</h3>
+      <div class="badges-grid" id="badges-grid">
+        <!-- تُبنى بـ JS -->
+      </div>
+      <button type="button" class="modal-btn" id="close-badges-modal-btn">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v10 -->
+  <script src="js/azkar-data.js?v=10"></script>
+  <script src="js/prayer-data.js?v=10"></script>
+  <script src="js/aqeedah-data.js?v=10"></script>
+  <script src="js/audio.js?v=10"></script>
+  <script src="js/tree.js?v=10"></script>
+  <script src="js/confetti.js?v=10"></script>
+  <script src="js/salawat-tracker.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
 </body>
 </html>

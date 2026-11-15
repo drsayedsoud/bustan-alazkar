@@ -2128,3 +2128,444 @@ body {
     box-shadow: 0 0 18px 4px rgba(2, 132, 199, 0.6);
   }
 }
+
+
+/* ============================================================
+   💰 قسم ميزاني — تتبع الصلوات الخمس
+   ============================================================ */
+
+/* بطاقة ملخص اليوم */
+.salawat-today-card {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin: 12px 0;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
+}
+
+.salawat-date {
+  font-size: 0.9rem;
+  color: #92400e;
+  margin-bottom: 4px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.salawat-greeting {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #78350f;
+  margin-bottom: 14px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.salawat-day-coins {
+  font-size: 1rem;
+  color: #b45309;
+  margin-bottom: 10px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.salawat-progress-bar-wrap {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  height: 10px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.salawat-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  border-radius: 20px;
+  transition: width 0.6s ease;
+}
+
+.salawat-progress-text {
+  font-size: 0.85rem;
+  color: #92400e;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* شبكة الصلوات الخمس */
+.salawat-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.salah-row {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: 2px solid transparent;
+  gap: 12px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.salah-row:active {
+  transform: scale(0.98);
+}
+
+.salah-row.done-mosque {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.salah-row.done-home {
+  border-color: #6366f1;
+  background: #f5f3ff;
+}
+
+.salah-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.salah-info {
+  flex: 1;
+}
+
+.salah-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.salah-status {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.salah-status.done {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.salah-reward-badge {
+  background: #fef3c7;
+  color: #b45309;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.salah-row.done-mosque .salah-reward-badge {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.salah-row.done-home .salah-reward-badge {
+  background: #ede9fe;
+  color: #4c1d95;
+}
+
+/* شريط الميزان الكلي */
+.salawat-total-bar {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin: 12px 0;
+  color: #ffffff;
+  text-align: center;
+  font-family: 'Cairo', sans-serif;
+}
+
+.salawat-total-money {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fbbf24;
+  margin-bottom: 8px;
+}
+
+.salawat-total-streak {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 14px;
+}
+
+.salawat-actions-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.salawat-action-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+  transition: background 0.2s;
+}
+
+.salawat-action-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Bottom Sheet */
+.bottom-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bottom-sheet-overlay.hidden {
+  display: none;
+}
+
+.bottom-sheet-card {
+  background: #ffffff;
+  border-radius: 24px 24px 0 0;
+  padding: 20px;
+  width: 100%;
+  max-width: 480px;
+  animation: slideUp 0.3s ease;
+  font-family: 'Cairo', sans-serif;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.bottom-sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.bottom-sheet-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.bottom-sheet-choices {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.place-choice-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 10px;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Cairo', sans-serif;
+}
+
+.choice-mosque {
+  background: #f0fdf4;
+  border-color: #10b981;
+}
+
+.choice-mosque:hover, .choice-mosque:active {
+  background: #dcfce7;
+  transform: scale(0.98);
+}
+
+.choice-home {
+  background: #f5f3ff;
+  border-color: #6366f1;
+}
+
+.choice-home:hover, .choice-home:active {
+  background: #ede9fe;
+  transform: scale(0.98);
+}
+
+.place-icon { font-size: 2.2rem; }
+
+.place-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.place-reward {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+.bottom-sheet-cancel {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* عرض المكافأة في modal التهنئة */
+.salawat-reward-display {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #b45309;
+  margin: 10px 0 6px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.salawat-new-total {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-bottom: 10px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.salawat-new-badge {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* جدول الأسبوع */
+.modal-card-wide {
+  max-width: 95vw;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.week-grid {
+  display: block;
+  overflow-x: auto;
+  margin: 12px 0;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.week-grid table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 320px;
+}
+
+.week-grid th, .week-grid td {
+  padding: 6px 4px;
+  text-align: center;
+  border: 1px solid #f1f5f9;
+}
+
+.week-grid th { background: #f8fafc; font-weight: 700; }
+.week-grid td.cell-done-mosque { background: #d1fae5; }
+.week-grid td.cell-done-home   { background: #ede9fe; }
+.week-grid td.cell-missed      { background: #ffffff; color: #cbd5e1; }
+
+.week-summary {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 8px 0;
+  font-family: 'Cairo', sans-serif;
+  text-align: center;
+}
+
+/* شبكة الشارات */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 14px 0;
+}
+
+@media (min-width: 480px) {
+  .badges-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border-radius: 14px;
+  text-align: center;
+  font-family: 'Cairo', sans-serif;
+}
+
+.badge-item.earned {
+  background: #fef3c7;
+  border: 2px solid #fbbf24;
+}
+
+.badge-item.locked {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  opacity: 0.6;
+}
+
+.badge-icon { font-size: 1.8rem; }
+
+.badge-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.badge-desc {
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+/* كارت ميزاني في الصفحة الرئيسية */
+.card-salawat {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%);
+  border: 1.5px solid #fbbf24;
+}
+
+.card-salawat .card-title { color: #92400e; }
+.card-salawat .card-tagline { color: #b45309; }
+
+.btn-salawat {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #ffffff;
+}
+
+/* لون Tab ميزاني */
+.nav-tab-btn.active-salawat {
+  color: #d97706;
+  border-bottom: 3px solid #f59e0b;
+  font-weight: 700;
+}
