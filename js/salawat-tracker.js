@@ -23,14 +23,27 @@ const SALAWAT_BADGES = [
 ];
 
 const SALAWAT_STORAGE_KEY = 'bustan_salawat_state';
-const FAJR_BONUS = 1;
-const PERFECT_DAY_BONUS = 5;
-const PERFECT_WEEK_BONUS = 20;
+
+const DEFAULT_SALAWAT_SETTINGS = {
+  currencyName: 'جنيه',
+  rewardMosque: 5,
+  rewardHome: 2,
+  bonusFajr: 1,
+  bonusPerfectDay: 5,
+  bonusPerfectWeek: 20
+};
 
 class SalawatTracker {
   constructor(appController) {
     this.app = appController;
     this.state = this._loadState();
+  }
+
+  getSettings() {
+    if (this.app && this.app.rewardsSettings) {
+      return this.app.rewardsSettings;
+    }
+    return DEFAULT_SALAWAT_SETTINGS;
   }
 
   // ========== تحميل وحفظ البيانات ==========
@@ -120,9 +133,13 @@ class SalawatTracker {
     const salah = SALAWAT.find(s => s.id === salahId);
     if (!salah) return null;
 
-    const reward = place === 'mosque' ? salah.rewardMosque : salah.rewardHome;
+    const settings = this.getSettings();
+    const reward = place === 'mosque' 
+      ? Number(settings.rewardMosque ?? salah.rewardMosque) 
+      : Number(settings.rewardHome ?? salah.rewardHome);
     const isFajrBonus = (salahId === 'fajr');
-    const totalReward = reward + (isFajrBonus ? FAJR_BONUS : 0);
+    const fajrBonusVal = isFajrBonus ? Number(settings.bonusFajr ?? 1) : 0;
+    const totalReward = reward + fajrBonusVal;
 
     rec[salahId] = { done: true, place };
 
@@ -143,9 +160,10 @@ class SalawatTracker {
 
     const perfectDay = this._checkPerfectDay();
     if (perfectDay) {
-      this.state.pocketMoney += PERFECT_DAY_BONUS;
+      const pDayBonus = Number(settings.bonusPerfectDay ?? 5);
+      this.state.pocketMoney += pDayBonus;
       if (this.app && this.app.state) {
-        this.app.state.coins += PERFECT_DAY_BONUS;
+        this.app.state.coins += pDayBonus;
       }
       this.state.stats.perfectDays++;
       this._updateStreak();
@@ -153,9 +171,10 @@ class SalawatTracker {
 
     const perfectWeek = this._checkPerfectWeek();
     if (perfectWeek) {
-      this.state.pocketMoney += PERFECT_WEEK_BONUS;
+      const pWeekBonus = Number(settings.bonusPerfectWeek ?? 20);
+      this.state.pocketMoney += pWeekBonus;
       if (this.app && this.app.state) {
-        this.app.state.coins += PERFECT_WEEK_BONUS;
+        this.app.state.coins += pWeekBonus;
       }
     }
 
@@ -171,10 +190,12 @@ class SalawatTracker {
       place,
       reward: totalReward,
       isFajrBonus,
+      fajrBonusVal,
       perfectDay,
       perfectWeek,
       newBadges,
-      totalPocketMoney: this.state.pocketMoney
+      totalPocketMoney: this.state.pocketMoney,
+      currencyName: settings.currencyName || 'جنيه'
     };
   }
 
@@ -218,11 +239,16 @@ class SalawatTracker {
   // ========== للقراءة (UI) ==========
   getTodayCoins() {
     const rec = this._getOrCreateTodayRecord();
+    const settings = this.getSettings();
+    const rMosque = Number(settings.rewardMosque ?? 5);
+    const rHome = Number(settings.rewardHome ?? 2);
+    const bFajr = Number(settings.bonusFajr ?? 1);
+
     let total = 0;
     SALAWAT.forEach(s => {
       if (rec[s.id] && rec[s.id].done) {
-        total += (rec[s.id].place === 'mosque' ? s.rewardMosque : s.rewardHome);
-        if (s.id === 'fajr') total += FAJR_BONUS;
+        total += (rec[s.id].place === 'mosque' ? rMosque : rHome);
+        if (s.id === 'fajr') total += bFajr;
       }
     });
     return total;

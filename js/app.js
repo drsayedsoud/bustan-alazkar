@@ -1,5 +1,17 @@
 // تطبيق «البطل المسلم» للأطفال (أذكار، صلاة، وعقيدتي مع تدريب القراءة وتثبيت التطبيق)
 
+const DEFAULT_REWARDS_SETTINGS = {
+  currencyName: 'جنيه',
+  rewardMosque: 5,
+  rewardHome: 2,
+  bonusFajr: 1,
+  bonusPerfectDay: 5,
+  bonusPerfectWeek: 20,
+  rewardDhikr: 30,
+  rewardPrayerLesson: 50,
+  rewardAqeedahLesson: 25
+};
+
 // دالة تلوين حروف المد والتشكيل (طبق الأصل لتدريب القراءة في kids)
 function colorize(rawText) {
   let h = String(rawText || '')
@@ -75,6 +87,8 @@ class AppController {
 
     this.salawatTracker = null;
     this._pendingSalahId = null;
+    this.rewardsSettings = this.loadRewardsSettings();
+    this.currentEncouragementPhrase = '';
 
     this.loadState();
     this.checkStreak();
@@ -86,6 +100,7 @@ class AppController {
 
     this.setupProfileUI();
     this.setupTabNavigation();
+    this.setupSettingsUI();
 
     // تجهيز الأقسام الأربعة
     this.filterAzkar(this.currentCategory);
@@ -105,6 +120,7 @@ class AppController {
 
     this.setupEventListeners();
     this.setupPWAInstallation();
+    this.applyRewardsSettings();
     this.updateUI();
     this.restoreGardenVisuals();
     this.switchTab('home');
@@ -627,18 +643,19 @@ class AppController {
     sounds.playCoin();
     this.confetti.burst(60);
 
+    const rewardCoins = Number(this.rewardsSettings.rewardDhikr ?? dhikr.reward ?? 30);
     this.garden.addItem(dhikr.fruit);
     this.state.inventory[dhikr.fruit] = (this.state.inventory[dhikr.fruit] || 0) + 1;
-    this.state.coins += dhikr.reward;
+    this.state.coins += rewardCoins;
     this.saveState();
     this.updateUI();
 
     setTimeout(() => {
-      this.showCongratModal(dhikr);
+      this.showCongratModal(dhikr, rewardCoins);
     }, 450);
   }
 
-  showCongratModal(dhikr) {
+  showCongratModal(dhikr, customReward) {
     const fruitNames = {
       flower: 'زهرة عطرة 🌸',
       apple: 'تفاحة حمراء لذيذة 🍎',
@@ -646,8 +663,11 @@ class AppController {
       star: 'نجمة حسنات ذهبية ⭐'
     };
 
+    const rewardCoins = customReward ?? Number(this.rewardsSettings.rewardDhikr ?? dhikr.reward ?? 30);
+    const curName = this.rewardsSettings.currencyName || 'حسنة';
+
     document.getElementById('modal-fruit-name').textContent = fruitNames[dhikr.fruit] || 'ثمرة مباركة 🌱';
-    document.getElementById('modal-reward-coins').textContent = `+${dhikr.reward}`;
+    document.getElementById('modal-reward-coins').textContent = `+${rewardCoins} ${curName}`;
     document.getElementById('congrat-modal').classList.add('active');
   }
 
@@ -776,7 +796,8 @@ class AppController {
     sounds.playBloom();
     this.confetti.burst(70);
 
-    this.state.coins += 50;
+    const rewardCoins = Number(this.rewardsSettings.rewardPrayerLesson ?? 50);
+    this.state.coins += rewardCoins;
     this.state.inventory.star = (this.state.inventory.star || 0) + 1;
     this.state.inventory.prayersCompleted = (this.state.inventory.prayersCompleted || 0) + 1;
     this.garden.addItem('star');
@@ -870,7 +891,8 @@ class AppController {
 
       if (!this.completedLessons[lesson.id]) {
         this.completedLessons[lesson.id] = true;
-        this.state.coins += 25;
+        const rewardCoins = Number(this.rewardsSettings.rewardAqeedahLesson ?? 25);
+        this.state.coins += rewardCoins;
         this.state.inventory.flower = (this.state.inventory.flower || 0) + 1;
         this.state.inventory.lessonsCompleted = (this.state.inventory.lessonsCompleted || 0) + 1;
         this.garden.addItem('flower');
@@ -1207,6 +1229,28 @@ class AppController {
       });
     }
 
+    const btnSalawatSettings = document.getElementById('btn-salawat-settings');
+    if (btnSalawatSettings) {
+      btnSalawatSettings.addEventListener('click', () => {
+        sounds.playPop();
+        this.openSettingsModal();
+      });
+    }
+
+    // زر إعادة الاستماع للتشجيع الصوتي
+    const btnSpeakEnc = document.getElementById('btn-salawat-speak-encouragement');
+    if (btnSpeakEnc) {
+      btnSpeakEnc.addEventListener('click', () => {
+        if (!this.currentEncouragementPhrase) return;
+        sounds.stopSpeaking();
+        if (typeof sounds.speakOnline === 'function') {
+          sounds.speakOnline(this.currentEncouragementPhrase);
+        } else {
+          sounds.speakArabic(this.currentEncouragementPhrase);
+        }
+      });
+    }
+
     // Bottom sheet
     const btnCancelSheet = document.getElementById('btn-sheet-cancel');
     if (btnCancelSheet) {
@@ -1225,6 +1269,11 @@ class AppController {
     const st = this.salawatTracker;
     const rec = st.getTodayRecord();
     const nick = this.profile.nickname || this.profile.name || 'بطلنا';
+    const s = this.rewardsSettings;
+    const cur = s.currencyName || 'جنيه';
+    const rMosque = Number(s.rewardMosque ?? 5);
+    const rHome = Number(s.rewardHome ?? 2);
+    const bFajr = Number(s.bonusFajr ?? 1);
 
     // التاريخ
     const now = new Date();
@@ -1277,8 +1326,9 @@ class AppController {
       let rewardText = '';
       if (done) {
         statusText = place === 'mosque' ? '✅ صليت في المسجد 🕌' : '✅ صليت في البيت 🏠';
-        rewardText = place === 'mosque' ? '+5ج' : '+2ج';
-        if (salah.id === 'fajr') rewardText += '+1ج';
+        rewardText = place === 'mosque' ? `+${rMosque}` : `+${rHome}`;
+        if (salah.id === 'fajr') rewardText += `+${bFajr}`;
+        rewardText += ` ${cur}`;
       }
 
       row.innerHTML = `
@@ -1308,6 +1358,17 @@ class AppController {
       titleEl.textContent = `صليت ${salah.name}... أين؟ ${salah.icon}`;
     }
 
+    const s = this.rewardsSettings;
+    const rMosque = Number(s.rewardMosque ?? 5);
+    const rHome = Number(s.rewardHome ?? 2);
+    const cur = s.currencyName || 'جنيه';
+
+    const sheetRewMosque = document.getElementById('sheet-reward-mosque');
+    if (sheetRewMosque) sheetRewMosque.textContent = `+${rMosque} ${cur}`;
+
+    const sheetRewHome = document.getElementById('sheet-reward-home');
+    if (sheetRewHome) sheetRewHome.textContent = `+${rHome} ${cur}`;
+
     const sheet = document.getElementById('salawat-place-sheet');
     if (sheet) sheet.classList.remove('hidden');
 
@@ -1333,7 +1394,7 @@ class AppController {
 
     sounds.playVictory();
     sounds.playCoin();
-    this.confetti.burst(60);
+    this.confetti.burst(70);
 
     // تحديث الواجهة
     this.renderSalawatSection();
@@ -1341,6 +1402,7 @@ class AppController {
 
     // إعداد modal التهنئة
     const nick = this.profile.nickname || this.profile.name || 'بطل';
+    const cur = this.rewardsSettings.currencyName || 'جنيه';
     const nameEl = document.getElementById('salawat-congrat-name');
     if (nameEl) nameEl.textContent = nick;
 
@@ -1352,13 +1414,53 @@ class AppController {
       descEl.textContent = `صليت ${result.salah.name} في ${place === 'mosque' ? 'المسجد 🕌' : 'البيت 🏠'}`;
     }
 
-    let rewardText = `+${result.reward}`;
-    if (result.isFajrBonus) rewardText += ' (شامل بونص الفجر +1)';
+    let rewardText = `+${result.reward} ${cur}`;
+    if (result.isFajrBonus) {
+      const bFajr = Number(this.rewardsSettings.bonusFajr ?? 1);
+      rewardText += ` (شامل بونص الفجر +${bFajr})`;
+    }
     const rewardEl = document.getElementById('salawat-congrat-reward');
     if (rewardEl) rewardEl.textContent = rewardText;
 
     const totalEl = document.getElementById('salawat-congrat-total');
     if (totalEl) totalEl.textContent = this.salawatTracker.getPocketMoney();
+
+    // عبارات التشجيع التفاعلية المخصصة للمسجد والبيت
+    let phrase = '';
+    if (place === 'mosque') {
+      const mosquePhrases = [
+        `مَا شَاءَ اللَّهُ تَبَارَكَ اللَّهُ! أَحْسَنْتَ يَا ${nick}، صَلَّيْتَ ${result.salah.name} فِي الْمَسْجِدِ، صَلَاةُ الْجَمَاعَةِ نُورٌ وَأَجْرٌ عَظِيمٌ!`,
+        `تَقَبَّلَ اللَّهُ صَلَاتَكَ يَا بَطَلَ الْمَسْجِدِ! خُطُوَاتُكَ إِلَى بَيْتِ اللَّهِ حَسَنَاتٌ وَرِفْعَةٌ فِي الدَّرَجَاتِ!`,
+        `يَا لَهُ مِنْ بَطَلٍ مُبَارَكٍ! صَلَّيْتَ فِي الْمَسْجِدِ وَرَبِحْتَ ${result.reward} ${cur} فِي مِيزَانِكَ!`,
+        `هَنِيئاً لَكَ يَا ${nick}! قَلْبُكَ مُعَلَّقٌ بِالْمَسَاجِدِ، بَارَكَ اللَّهُ فِيكَ وَحَفِظَكَ!`
+      ];
+      phrase = mosquePhrases[Math.floor(Math.random() * mosquePhrases.length)];
+    } else {
+      const homePhrases = [
+        `تَقَبَّلَ اللَّهُ صَلَاتَكَ يَا ${nick}! صَلَاتُكَ نُورٌ لِقَلْبِكَ وَبَرَكَةٌ لِيَوْمِكَ.`,
+        `أَحْسَنْتَ يَا بَطَلَنَا! حَافَظْتَ عَلَى صَلَاتِكَ فِي وَقْتِهَا، مَاشَاءَ اللَّهُ عَلَيْكَ!`
+      ];
+      phrase = homePhrases[Math.floor(Math.random() * homePhrases.length)];
+    }
+
+    this.currentEncouragementPhrase = phrase;
+    const encCard = document.getElementById('salawat-encouragement-card');
+    const encText = document.getElementById('salawat-encouragement-text');
+    if (encCard && encText) {
+      encText.textContent = phrase;
+      encCard.style.display = 'block';
+    }
+
+    // قراءة التشجيع بصوت أونلاين عبر النت (نفس محرك تطبيق kids)
+    if (sounds.enabled) {
+      setTimeout(() => {
+        if (typeof sounds.speakOnline === 'function') {
+          sounds.speakOnline(phrase);
+        } else {
+          sounds.speakArabic(phrase);
+        }
+      }, 550);
+    }
 
     // شارة جديدة؟
     const badgeEl = document.getElementById('salawat-new-badge');
@@ -1401,7 +1503,9 @@ class AppController {
           if (entry && entry.done) {
             const cls = entry.place === 'mosque' ? 'cell-done-mosque' : 'cell-done-home';
             const ico = entry.place === 'mosque' ? '🕌' : '🏠';
-            totalCoins += (entry.place === 'mosque' ? salah.rewardMosque : salah.rewardHome);
+            const rMosque = Number(this.rewardsSettings.rewardMosque ?? salah.rewardMosque);
+            const rHome = Number(this.rewardsSettings.rewardHome ?? salah.rewardHome);
+            totalCoins += (entry.place === 'mosque' ? rMosque : rHome);
             tableHtml += `<td class="${cls}">${ico}</td>`;
           } else {
             tableHtml += '<td class="cell-missed">⬜</td>';
@@ -1443,6 +1547,162 @@ class AppController {
 
     const modal = document.getElementById('salawat-badges-modal');
     if (modal) modal.classList.add('active');
+  }
+
+  // ========== ⚙️ إدارة إعدادات المكافآت والحصالة ==========
+  loadRewardsSettings() {
+    try {
+      const raw = localStorage.getItem('bustan_rewards_settings');
+      if (raw) {
+        return Object.assign({}, DEFAULT_REWARDS_SETTINGS, JSON.parse(raw));
+      }
+    } catch (e) {
+      console.warn('Error loading rewards settings:', e);
+    }
+    return Object.assign({}, DEFAULT_REWARDS_SETTINGS);
+  }
+
+  saveRewardsSettings(newSettings) {
+    this.rewardsSettings = Object.assign({}, DEFAULT_REWARDS_SETTINGS, newSettings);
+    try {
+      localStorage.setItem('bustan_rewards_settings', JSON.stringify(this.rewardsSettings));
+    } catch (e) {
+      console.warn('Error saving rewards settings:', e);
+    }
+    this.applyRewardsSettings();
+    if (this.salawatTracker) {
+      this.renderSalawatSection();
+    }
+    this.updateUI();
+  }
+
+  applyRewardsSettings() {
+    const cur = this.rewardsSettings.currencyName || 'جنيه';
+    document.querySelectorAll('.currency-label').forEach(el => {
+      el.textContent = cur;
+    });
+
+    const sheetRewMosque = document.getElementById('sheet-reward-mosque');
+    if (sheetRewMosque) {
+      sheetRewMosque.textContent = `+${this.rewardsSettings.rewardMosque} ${cur}`;
+    }
+    const sheetRewHome = document.getElementById('sheet-reward-home');
+    if (sheetRewHome) {
+      sheetRewHome.textContent = `+${this.rewardsSettings.rewardHome} ${cur}`;
+    }
+  }
+
+  setupSettingsUI() {
+    // زر فتح الإعدادات في شريط الرأس
+    const btnSettings = document.getElementById('btn-settings');
+    if (btnSettings) {
+      btnSettings.addEventListener('click', () => {
+        sounds.playPop();
+        this.openSettingsModal();
+      });
+    }
+
+    // زر الإلغاء والإغلاق
+    const btnCloseSettings = document.getElementById('close-settings-modal-btn');
+    if (btnCloseSettings) {
+      btnCloseSettings.addEventListener('click', () => {
+        sounds.playPop();
+        this.closeSettingsModal();
+      });
+    }
+
+    // أزرار العملات السريعة
+    document.querySelectorAll('.currency-pill-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sounds.playPop();
+        const val = btn.dataset.val;
+        const curInput = document.getElementById('setting-currency');
+        if (curInput) curInput.value = val;
+        document.querySelectorAll('.currency-pill-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // زر حفظ الإعدادات
+    const btnSaveSettings = document.getElementById('btn-save-settings');
+    if (btnSaveSettings) {
+      btnSaveSettings.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.saveSettingsFromForm();
+      });
+    }
+
+    // زر استعادة الافتراضي
+    const btnResetSettings = document.getElementById('btn-reset-settings');
+    if (btnResetSettings) {
+      btnResetSettings.addEventListener('click', () => {
+        sounds.playPop();
+        this.populateSettingsForm(DEFAULT_REWARDS_SETTINGS);
+      });
+    }
+  }
+
+  openSettingsModal() {
+    this.populateSettingsForm(this.rewardsSettings);
+    const modal = document.getElementById('settings-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  closeSettingsModal() {
+    const modal = document.getElementById('settings-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  populateSettingsForm(settings) {
+    const s = settings || this.rewardsSettings;
+    const curInput = document.getElementById('setting-currency');
+    if (curInput) curInput.value = s.currencyName || 'جنيه';
+
+    document.querySelectorAll('.currency-pill-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.val === (s.currencyName || 'جنيه'));
+    });
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    };
+
+    setVal('setting-reward-mosque', s.rewardMosque ?? 5);
+    setVal('setting-reward-home', s.rewardHome ?? 2);
+    setVal('setting-bonus-fajr', s.bonusFajr ?? 1);
+    setVal('setting-bonus-day', s.bonusPerfectDay ?? 5);
+    setVal('setting-bonus-week', s.bonusPerfectWeek ?? 20);
+    setVal('setting-reward-dhikr', s.rewardDhikr ?? 30);
+    setVal('setting-reward-prayer-lesson', s.rewardPrayerLesson ?? 50);
+    setVal('setting-reward-aqeedah-lesson', s.rewardAqeedahLesson ?? 25);
+  }
+
+  saveSettingsFromForm() {
+    const curInput = document.getElementById('setting-currency');
+    const currencyName = (curInput ? curInput.value.trim() : '') || 'جنيه';
+
+    const getVal = (id, defaultVal) => {
+      const el = document.getElementById(id);
+      const val = el ? parseInt(el.value, 10) : defaultVal;
+      return isNaN(val) ? defaultVal : Math.max(0, val);
+    };
+
+    const newSettings = {
+      currencyName,
+      rewardMosque: getVal('setting-reward-mosque', 5),
+      rewardHome: getVal('setting-reward-home', 2),
+      bonusFajr: getVal('setting-bonus-fajr', 1),
+      bonusPerfectDay: getVal('setting-bonus-day', 5),
+      bonusPerfectWeek: getVal('setting-bonus-week', 20),
+      rewardDhikr: getVal('setting-reward-dhikr', 30),
+      rewardPrayerLesson: getVal('setting-reward-prayer-lesson', 50),
+      rewardAqeedahLesson: getVal('setting-reward-aqeedah-lesson', 25)
+    };
+
+    this.saveRewardsSettings(newSettings);
+    sounds.playVictory();
+    this.confetti.burst(50);
+    this.closeSettingsModal();
   }
 
   openGallery() {

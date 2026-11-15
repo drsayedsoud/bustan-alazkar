@@ -2569,3 +2569,125 @@ body {
   border-bottom: 3px solid #f59e0b;
   font-weight: 700;
 }
+
+
+/* ============================================================
+   ⚙️ نافذة إعدادات المكافآت والحصالة وتشجيع المسجد
+   ============================================================ */
+
+.modal-card-settings {
+  max-width: 520px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: right;
+  direction: rtl;
+}
+
+.modal-card-settings .modal-title,
+.modal-card-settings .modal-desc {
+  text-align: center;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+@media (min-width: 480px) {
+  .settings-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.currency-pills-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.currency-pill-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.82rem;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #334155;
+}
+
+.currency-pill-btn:hover,
+.currency-pill-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  transform: scale(1.04);
+}
+
+.settings-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.modal-btn.secondary-btn {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.modal-btn.secondary-btn:hover {
+  background: #e2e8f0;
+}
+
+/* بطاقة كلمات التشجيع الصوتية في نافذة الصلاة */
+.salawat-encouragement-card {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1.5px solid #6ee7b7;
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin: 12px 0 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+  position: relative;
+}
+
+.salawat-encouragement-badge {
+  display: inline-block;
+  background: #059669;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.salawat-encouragement-text {
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: #064e3b;
+  margin: 4px 0 8px;
+  font-weight: 700;
+}
+
+.encouragement-audio-btn {
+  background: #059669 !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-size: 0.85rem !important;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+}
+
+.encouragement-audio-btn:hover {
+  background: #047857 !important;
+  transform: scale(1.05);
+}

@@ -65,6 +65,7 @@
       </div>
       <button type="button" class="icon-btn" id="btn-sound-toggle" title="الصوت" aria-label="تبديل الصوت">🔊</button>
       <button type="button" class="icon-btn" id="btn-gallery" title="حديقتي" aria-label="عرض الحديقة">🏡</button>
+      <button type="button" class="icon-btn" id="btn-settings" title="إعدادات المكافآت والحصالة" aria-label="الإعدادات">⚙️</button>
       <button type="button" class="icon-btn" id="btn-force-refresh" title="تحديث التطبيق ومسح الذاكرة المؤقتة" aria-label="تحديث الكاش">🔄</button>
     </div>
   </header>
@@ -508,7 +509,7 @@
 
         <div class="salawat-day-summary">
           <div class="salawat-day-coins">
-            💰 جمعت اليوم: <strong id="salawat-today-coins">0</strong> جنيه
+            💰 جمعت اليوم: <strong id="salawat-today-coins">0</strong> <span class="currency-label">جنيه</span>
           </div>
           <div class="salawat-progress-bar-wrap">
             <div class="salawat-progress-bar" id="salawat-progress-bar" style="width:0%"></div>
@@ -527,7 +528,7 @@
       <!-- شريط الميزان الكلي -->
       <div class="salawat-total-bar">
         <div class="salawat-total-money">
-          💰 ميزاني الكلي: <strong id="salawat-total-money">0</strong> جنيه
+          💰 ميزاني الكلي: <strong id="salawat-total-money">0</strong> <span class="currency-label">جنيه</span>
         </div>
         <div class="salawat-total-streak">
           🔥 المداومة: <strong id="salawat-streak">0</strong> يوم كامل
@@ -538,6 +539,9 @@
           </button>
           <button type="button" class="salawat-action-btn" id="btn-salawat-badges">
             🏆 شاراتي
+          </button>
+          <button type="button" class="salawat-action-btn" id="btn-salawat-settings">
+            ⚙️ ضبط المكافآت
           </button>
         </div>
       </div>
@@ -708,12 +712,12 @@
         <button type="button" class="place-choice-btn choice-mosque" id="btn-choose-mosque">
           <span class="place-icon">🕌</span>
           <span class="place-name">في المسجد</span>
-          <span class="place-reward">+5 جنيه</span>
+          <span class="place-reward" id="sheet-reward-mosque">+5 جنيه</span>
         </button>
         <button type="button" class="place-choice-btn choice-home" id="btn-choose-home">
           <span class="place-icon">🏠</span>
           <span class="place-name">في البيت</span>
-          <span class="place-reward">+2 جنيه</span>
+          <span class="place-reward" id="sheet-reward-home">+2 جنيه</span>
         </button>
       </div>
       <button type="button" class="bottom-sheet-cancel" id="btn-sheet-cancel">إلغاء</button>
@@ -726,11 +730,22 @@
       <div class="modal-icon" id="salawat-congrat-icon">🕌</div>
       <h3 class="modal-title">تَقَبَّلَ اللهُ يَا <span id="salawat-congrat-name">بطل</span>!</h3>
       <p class="modal-desc" id="salawat-congrat-desc">صليت العصر في المسجد 🕌</p>
+
+      <!-- كلمات التشجيع الصوتية التفاعلية -->
+      <div class="salawat-encouragement-card" id="salawat-encouragement-card">
+        <div class="salawat-encouragement-badge">🌟 تشجيع البطل</div>
+        <p class="salawat-encouragement-text" id="salawat-encouragement-text"></p>
+        <button type="button" class="tool-btn encouragement-audio-btn" id="btn-salawat-speak-encouragement" style="margin: 8px auto 0; padding: 6px 14px;">
+          <span>🔊</span>
+          <span>استمع للتشجيع</span>
+        </button>
+      </div>
+
       <div class="salawat-reward-display">
-        💰 <span id="salawat-congrat-reward">+5</span> جنيه في ميزانك!
+        💰 <span id="salawat-congrat-reward">+5</span> في ميزانك!
       </div>
       <div class="salawat-new-total">
-        ميزانك الآن: <strong id="salawat-congrat-total">0</strong> جنيه 💰
+        ميزانك الآن: <strong id="salawat-congrat-total">0</strong> <span class="currency-label">جنيه</span> 💰
       </div>
       <!-- شارة جديدة (تظهر فقط لو اكتسب شارة) -->
       <div class="salawat-new-badge hidden" id="salawat-new-badge">
@@ -751,7 +766,7 @@
         <!-- تُبنى بـ JS -->
       </div>
       <div class="week-summary" id="week-summary">
-        💰 مجموع الأسبوع: <strong id="week-total-coins">0</strong> جنيه
+        💰 مجموع الأسبوع: <strong id="week-total-coins">0</strong> <span class="currency-label">جنيه</span>
       </div>
       <button type="button" class="modal-btn" id="close-week-modal-btn">إغلاق</button>
     </div>
@@ -766,6 +781,86 @@
         <!-- تُبنى بـ JS -->
       </div>
       <button type="button" class="modal-btn" id="close-badges-modal-btn">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- Modal: إعدادات المكافآت والحصالة (لأولياء الأمور) -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-card modal-card-settings">
+      <div class="modal-icon">⚙️</div>
+      <h3 class="modal-title">إعدادات المكافآت والحصالة</h3>
+      <p class="modal-desc">حدّد قيمة المكافآت المحفزة لطفلك بالعملة أو النقاط التي تفضلها:</p>
+
+      <form class="settings-form" id="settings-form" onsubmit="return false;">
+        <!-- العملة / الوحدة -->
+        <div class="form-group">
+          <label class="form-label" for="setting-currency">💵 اسم العملة / المكافأة:</label>
+          <input type="text" class="form-input" id="setting-currency" placeholder="مثال: جنيه، ريال، درهم، حسنة..." maxlength="15" value="جنيه">
+          <div class="currency-pills-row">
+            <button type="button" class="currency-pill-btn" data-val="جنيه">جنيه 🇪🇬</button>
+            <button type="button" class="currency-pill-btn" data-val="ريال">ريال 🇸🇦</button>
+            <button type="button" class="currency-pill-btn" data-val="درهم">درهم 🇦🇪</button>
+            <button type="button" class="currency-pill-btn" data-val="دينار">دينار 🇰🇼</button>
+            <button type="button" class="currency-pill-btn" data-val="حسنة">حسنة ⭐</button>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <!-- مكافأة صلاة المسجد -->
+          <div class="form-group">
+            <label class="form-label" for="setting-reward-mosque">🕌 صلاة المسجد:</label>
+            <input type="number" class="form-input" id="setting-reward-mosque" min="1" max="1000" value="5">
+          </div>
+
+          <!-- مكافأة صلاة البيت -->
+          <div class="form-group">
+            <label class="form-label" for="setting-reward-home">🏠 صلاة البيت:</label>
+            <input type="number" class="form-input" id="setting-reward-home" min="1" max="1000" value="2">
+          </div>
+
+          <!-- بونص الفجر -->
+          <div class="form-group">
+            <label class="form-label" for="setting-bonus-fajr">🌅 بونص صلاة الفجر:</label>
+            <input type="number" class="form-input" id="setting-bonus-fajr" min="0" max="1000" value="1">
+          </div>
+
+          <!-- بونص اليوم الكامل -->
+          <div class="form-group">
+            <label class="form-label" for="setting-bonus-day">💫 بونص 5 صلوات كاملة:</label>
+            <input type="number" class="form-input" id="setting-bonus-day" min="0" max="1000" value="5">
+          </div>
+
+          <!-- بونص الأسبوع -->
+          <div class="form-group">
+            <label class="form-label" for="setting-bonus-week">👑 بونص أسبوع كامل:</label>
+            <input type="number" class="form-input" id="setting-bonus-week" min="0" max="1000" value="20">
+          </div>
+
+          <!-- مكافأة الأذكار -->
+          <div class="form-group">
+            <label class="form-label" for="setting-reward-dhikr">🌿 مكافأة إتمام الذكر:</label>
+            <input type="number" class="form-input" id="setting-reward-dhikr" min="1" max="1000" value="30">
+          </div>
+
+          <!-- مكافأة درس الصلاة -->
+          <div class="form-group">
+            <label class="form-label" for="setting-reward-prayer-lesson">🤲 درس تعليم الصلاة:</label>
+            <input type="number" class="form-input" id="setting-reward-prayer-lesson" min="1" max="1000" value="50">
+          </div>
+
+          <!-- مكافأة درس العقيدة -->
+          <div class="form-group">
+            <label class="form-label" for="setting-reward-aqeedah-lesson">📖 درس العقيدة الذكي:</label>
+            <input type="number" class="form-input" id="setting-reward-aqeedah-lesson" min="1" max="1000" value="25">
+          </div>
+        </div>
+
+        <div class="settings-actions">
+          <button type="submit" class="modal-btn" id="btn-save-settings">💾 حفظ الإعدادات</button>
+          <button type="button" class="modal-btn secondary-btn" id="btn-reset-settings">🔄 استعادة الافتراضي</button>
+          <button type="button" class="bottom-sheet-cancel" id="close-settings-modal-btn">إلغاء</button>
+        </div>
+      </form>
     </div>
   </div>
 
