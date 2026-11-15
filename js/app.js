@@ -87,6 +87,8 @@ class AppController {
 
     this.salawatTracker = null;
     this._pendingSalahId = null;
+    this._pendingDateKey = null;
+    this.currentWeekOffset = 0;
     this.rewardsSettings = this.loadRewardsSettings();
     this.currentEncouragementPhrase = '';
 
@@ -1182,13 +1184,104 @@ class AppController {
         } catch (e) {
           console.warn(e);
         }
-        window.location.href = window.location.origin + window.location.pathname + '?v10=' + Date.now();
+        window.location.href = window.location.origin + window.location.pathname + '?v11=' + Date.now();
       });
     }
   }
 
   // ========== 💰 قسم ميزاني ==========
   setupSalawatUI() {
+    // التنقل بين الأسابيع في جدول الصلوات
+    const btnPrevWeek = document.getElementById('btn-prev-week');
+    if (btnPrevWeek) {
+      btnPrevWeek.addEventListener('click', () => {
+        sounds.playPop();
+        this.currentWeekOffset--;
+        this.renderSalawatSection();
+      });
+    }
+
+    const btnNextWeek = document.getElementById('btn-next-week');
+    if (btnNextWeek) {
+      btnNextWeek.addEventListener('click', () => {
+        sounds.playPop();
+        this.currentWeekOffset++;
+        this.renderSalawatSection();
+      });
+    }
+
+    const btnCurrentWeek = document.getElementById('btn-current-week');
+    if (btnCurrentWeek) {
+      btnCurrentWeek.addEventListener('click', () => {
+        sounds.playPop();
+        this.currentWeekOffset = 0;
+        this.renderSalawatSection();
+      });
+    }
+
+    // Modal تسجيل المكان / الفائتة
+    const btnMosque = document.getElementById('btn-choose-mosque');
+    if (btnMosque) {
+      btnMosque.addEventListener('click', () => {
+        if (!this._pendingSalahId) return;
+        const salahId = this._pendingSalahId;
+        const dateKey = this._pendingDateKey;
+        this.closePlaceModal();
+        this.recordSalahAndShow(salahId, 'mosque', dateKey);
+      });
+    }
+
+    const btnHome = document.getElementById('btn-choose-home');
+    if (btnHome) {
+      btnHome.addEventListener('click', () => {
+        if (!this._pendingSalahId) return;
+        const salahId = this._pendingSalahId;
+        const dateKey = this._pendingDateKey;
+        this.closePlaceModal();
+        this.recordSalahAndShow(salahId, 'home', dateKey);
+      });
+    }
+
+    const btnMissed = document.getElementById('btn-choose-missed');
+    if (btnMissed) {
+      btnMissed.addEventListener('click', () => {
+        if (!this._pendingSalahId) return;
+        const salahId = this._pendingSalahId;
+        const dateKey = this._pendingDateKey;
+        this.closePlaceModal();
+        this.recordSalahAndShow(salahId, 'missed', dateKey);
+      });
+    }
+
+    const btnClear = document.getElementById('btn-choose-clear');
+    if (btnClear) {
+      btnClear.addEventListener('click', () => {
+        if (!this._pendingSalahId) return;
+        const salahId = this._pendingSalahId;
+        const dateKey = this._pendingDateKey;
+        this.closePlaceModal();
+        this.recordSalahAndShow(salahId, 'clear', dateKey);
+      });
+    }
+
+    const btnCancelChoice = document.getElementById('btn-choice-cancel');
+    if (btnCancelChoice) {
+      btnCancelChoice.addEventListener('click', () => {
+        sounds.playPop();
+        this.closePlaceModal();
+      });
+    }
+
+    const placeModalOverlay = document.getElementById('salawat-place-modal');
+    if (placeModalOverlay) {
+      placeModalOverlay.addEventListener('click', (e) => {
+        if (e.target === placeModalOverlay) {
+          sounds.playPop();
+          this.closePlaceModal();
+        }
+      });
+    }
+
     const btnWeek = document.getElementById('btn-salawat-week');
     if (btnWeek) {
       btnWeek.addEventListener('click', () => {
@@ -1210,6 +1303,16 @@ class AppController {
       btnCloseCongrat.addEventListener('click', () => {
         sounds.playPop();
         document.getElementById('salawat-congrat-modal').classList.remove('active');
+      });
+    }
+
+    const congratModalOverlay = document.getElementById('salawat-congrat-modal');
+    if (congratModalOverlay) {
+      congratModalOverlay.addEventListener('click', (e) => {
+        if (e.target === congratModalOverlay) {
+          sounds.playPop();
+          congratModalOverlay.classList.remove('active');
+        }
       });
     }
 
@@ -1251,17 +1354,65 @@ class AppController {
       });
     }
 
-    // Bottom sheet
-    const btnCancelSheet = document.getElementById('btn-sheet-cancel');
-    if (btnCancelSheet) {
-      btnCancelSheet.addEventListener('click', () => {
-        sounds.playPop();
-        document.getElementById('salawat-place-sheet').classList.add('hidden');
-        this._pendingSalahId = null;
-      });
+    this._pendingSalahId = null;
+    this._pendingDateKey = null;
+  }
+
+  openPlaceModal(salah, targetDateKey = null, dayLabel = '') {
+    if (!this.salawatTracker) return;
+    const dateKey = targetDateKey || this.salawatTracker._today();
+    this._pendingSalahId = salah.id;
+    this._pendingDateKey = dateKey;
+
+    const iconEl = document.getElementById('choice-salah-icon');
+    if (iconEl) iconEl.textContent = salah.icon;
+
+    const titleEl = document.getElementById('choice-salah-title');
+    if (titleEl) {
+      const isToday = (dateKey === this.salawatTracker._today());
+      titleEl.textContent = `تسجيل صلاة ${salah.name}` + (isToday ? ' (اليوم)' : (dayLabel ? ` (${dayLabel})` : ''));
     }
 
+    const subtitleEl = document.getElementById('choice-salah-subtitle');
+    if (subtitleEl) {
+      subtitleEl.textContent = `أين أدّيت صلاة ${salah.name} يا بطلنا؟ 🤲`;
+    }
+
+    const s = this.rewardsSettings;
+    const rMosque = Number(s.rewardMosque ?? 5);
+    const rHome = Number(s.rewardHome ?? 2);
+    const bFajr = Number(s.bonusFajr ?? 1);
+    const cur = s.currencyName || 'جنيه';
+    const isFajr = (salah.id === 'fajr');
+
+    const rewMosqueEl = document.getElementById('sheet-reward-mosque');
+    if (rewMosqueEl) rewMosqueEl.textContent = `+${rMosque + (isFajr ? bFajr : 0)} ${cur}`;
+
+    const rewHomeEl = document.getElementById('sheet-reward-home');
+    if (rewHomeEl) rewHomeEl.textContent = `+${rHome + (isFajr ? bFajr : 0)} ${cur}`;
+
+    // إظهار زر المسح إذا كانت الصلاة مسجلة بالفعل في هذا التاريخ
+    const history = this.salawatTracker.state.history || {};
+    const rec = history[dateKey];
+    const isRecorded = rec && rec[salah.id] && (rec[salah.id].done || rec[salah.id].missed);
+    const btnClear = document.getElementById('btn-choose-clear');
+    if (btnClear) {
+      if (isRecorded) {
+        btnClear.classList.remove('hidden');
+      } else {
+        btnClear.classList.add('hidden');
+      }
+    }
+
+    const modal = document.getElementById('salawat-place-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  closePlaceModal() {
+    const modal = document.getElementById('salawat-place-modal');
+    if (modal) modal.classList.remove('active');
     this._pendingSalahId = null;
+    this._pendingDateKey = null;
   }
 
   renderSalawatSection() {
@@ -1275,7 +1426,7 @@ class AppController {
     const rHome = Number(s.rewardHome ?? 2);
     const bFajr = Number(s.bonusFajr ?? 1);
 
-    // التاريخ
+    // التاريخ الحالي
     const now = new Date();
     const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
     const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
@@ -1309,89 +1460,163 @@ class AppController {
     const streakEl = document.getElementById('salawat-streak');
     if (streakEl) streakEl.textContent = st.getStats().longestStreak;
 
-    // بناء بطاقات الصلوات الخمس
-    const grid = document.getElementById('salawat-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-
-    SALAWAT.forEach(salah => {
-      const entry = rec[salah.id];
-      const done = entry && entry.done;
-      const place = done ? entry.place : null;
-
-      const row = document.createElement('div');
-      row.className = `salah-row ${done ? (place === 'mosque' ? 'done-mosque' : 'done-home') : ''}`;
-
-      let statusText = 'اضغط للتسجيل';
-      let rewardText = '';
-      if (done) {
-        statusText = place === 'mosque' ? '✅ صليت في المسجد 🕌' : '✅ صليت في البيت 🏠';
-        rewardText = place === 'mosque' ? `+${rMosque}` : `+${rHome}`;
-        if (salah.id === 'fajr') rewardText += `+${bFajr}`;
-        rewardText += ` ${cur}`;
-      }
-
-      row.innerHTML = `
-        <span class="salah-icon">${salah.icon}</span>
-        <div class="salah-info">
-          <div class="salah-name">${salah.name}</div>
-          <div class="salah-status ${done ? 'done' : ''}">${statusText}</div>
-        </div>
-        ${done ? `<span class="salah-reward-badge">${rewardText} 💰</span>` : ''}
-      `;
-
-      if (!done) {
-        row.addEventListener('click', () => {
-          sounds.playPop();
-          this.openPlaceSheet(salah);
-        });
-      }
-
-      grid.appendChild(row);
-    });
-  }
-
-  openPlaceSheet(salah) {
-    this._pendingSalahId = salah.id;
-    const titleEl = document.getElementById('sheet-salah-name');
-    if (titleEl) {
-      titleEl.textContent = `صليت ${salah.name}... أين؟ ${salah.icon}`;
+    // ================= جدول الصلوات الأسبوعي التفاعلي =================
+    const weekSchedule = st.getWeekSchedule(this.currentWeekOffset);
+    const weekRangeEl = document.getElementById('week-range-label');
+    if (weekRangeEl) {
+      weekRangeEl.textContent = (this.currentWeekOffset === 0 ? '🌟 الأسبوع الحالي: ' : '') + weekSchedule.rangeLabel;
     }
 
-    const s = this.rewardsSettings;
-    const rMosque = Number(s.rewardMosque ?? 5);
-    const rHome = Number(s.rewardHome ?? 2);
-    const cur = s.currencyName || 'جنيه';
-
-    const sheetRewMosque = document.getElementById('sheet-reward-mosque');
-    if (sheetRewMosque) sheetRewMosque.textContent = `+${rMosque} ${cur}`;
-
-    const sheetRewHome = document.getElementById('sheet-reward-home');
-    if (sheetRewHome) sheetRewHome.textContent = `+${rHome} ${cur}`;
-
-    const sheet = document.getElementById('salawat-place-sheet');
-    if (sheet) sheet.classList.remove('hidden');
-
-    const mosqueBtn = document.getElementById('btn-choose-mosque');
-    const homeBtn = document.getElementById('btn-choose-home');
-
-    const handleChoice = (place) => {
-      if (sheet) sheet.classList.add('hidden');
-      if (this._pendingSalahId) {
-        this.recordSalahAndShow(this._pendingSalahId, place);
-        this._pendingSalahId = null;
+    const btnCurrentWeek = document.getElementById('btn-current-week');
+    if (btnCurrentWeek) {
+      if (this.currentWeekOffset !== 0) {
+        btnCurrentWeek.classList.remove('hidden');
+      } else {
+        btnCurrentWeek.classList.add('hidden');
       }
-    };
+    }
 
-    if (mosqueBtn) mosqueBtn.onclick = () => handleChoice('mosque');
-    if (homeBtn) homeBtn.onclick = () => handleChoice('home');
+    // بطاقات إحصائيات الأسبوع
+    const statMosqueEl = document.getElementById('stat-week-mosque');
+    if (statMosqueEl) statMosqueEl.textContent = weekSchedule.stats.totalMosque;
+
+    const statHomeEl = document.getElementById('stat-week-home');
+    if (statHomeEl) statHomeEl.textContent = weekSchedule.stats.totalHome;
+
+    const statMissedEl = document.getElementById('stat-week-missed');
+    if (statMissedEl) statMissedEl.textContent = weekSchedule.stats.totalMissed;
+
+    const statCoinsEl = document.getElementById('stat-week-coins');
+    if (statCoinsEl) statCoinsEl.textContent = weekSchedule.stats.totalCoins;
+
+    // بناء الجدول الأسبوعي
+    const tableWrap = document.getElementById('salawat-week-table-wrap');
+    if (tableWrap) {
+      let tblHtml = '<table class="salawat-week-table"><thead><tr>';
+      tblHtml += '<th class="col-sticky-salah">الصلاة</th>';
+      weekSchedule.days.forEach(d => {
+        const thCls = d.isToday ? 'col-today-header' : '';
+        tblHtml += `<th class="${thCls}">${d.dayName}<br><span class="col-date">${d.dayNumber} ${d.monthName}</span>${d.isToday ? ' <span class="today-tag">اليوم</span>' : ''}</th>`;
+      });
+      tblHtml += '</tr></thead><tbody>';
+
+      SALAWAT.forEach(salah => {
+        tblHtml += `<tr><td class="col-sticky-salah"><span class="table-salah-icon">${salah.icon}</span> ${salah.name}</td>`;
+        weekSchedule.days.forEach(d => {
+          const p = d.prayers[salah.id];
+          const tdCls = d.isToday ? 'col-today-cell' : '';
+          let cellState = 'cell-state-future';
+          let iconHtml = '⏳';
+          let tagHtml = 'قادمة';
+          let rewardHtml = '';
+
+          if (p.status === 'done') {
+            cellState = (p.place === 'mosque') ? 'cell-state-mosque' : 'cell-state-home';
+            iconHtml = (p.place === 'mosque') ? '✅ 🕌' : '✅ 🏠';
+            tagHtml = (p.place === 'mosque') ? 'مسجد' : 'بيت';
+            rewardHtml = `<span class="week-cell-reward">+${p.reward} ${cur}</span>`;
+          } else if (p.status === 'missed') {
+            cellState = 'cell-state-missed';
+            iconHtml = '❌';
+            tagHtml = 'لم تُصلَّ';
+          } else if (p.status === 'pending') {
+            cellState = 'cell-state-pending';
+            iconHtml = '➕';
+            tagHtml = 'سجّل الآن';
+          }
+
+          tblHtml += `
+            <td class="${tdCls}">
+              <button type="button" class="week-cell-btn ${cellState}" data-salah="${salah.id}" data-date="${d.dateKey}" data-day="${d.dayName}" title="${salah.name} - ${d.dayName}">
+                <span class="week-cell-icon">${iconHtml}</span>
+                <span class="week-cell-tag">${tagHtml}</span>
+                ${rewardHtml}
+              </button>
+            </td>
+          `;
+        });
+        tblHtml += '</tr>';
+      });
+
+      tblHtml += '</tbody></table>';
+      tableWrap.innerHTML = tblHtml;
+
+      // ربط أحداث النقر على كل خلايا الجدول الأسبوعي
+      tableWrap.querySelectorAll('.week-cell-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const salahId = btn.getAttribute('data-salah');
+          const dateKey = btn.getAttribute('data-date');
+          const dayName = btn.getAttribute('data-day');
+          const salahObj = SALAWAT.find(s => s.id === salahId);
+          if (salahObj) {
+            sounds.playPop();
+            this.openPlaceModal(salahObj, dateKey, dayName);
+          }
+        });
+      });
+    }
+
+    // ================= بناء بطاقات صلوات اليوم السريعة =================
+    const grid = document.getElementById('salawat-grid');
+    if (grid) {
+      grid.innerHTML = '';
+      SALAWAT.forEach(salah => {
+        const entry = rec[salah.id];
+        const done = entry && entry.done;
+        const missed = entry && entry.missed;
+        const place = done ? entry.place : null;
+
+        const row = document.createElement('div');
+        let stateClass = '';
+        if (done) stateClass = (place === 'mosque' ? 'done-mosque' : 'done-home');
+        else if (missed) stateClass = 'done-missed';
+        row.className = `salah-row ${stateClass}`;
+
+        let statusText = 'اضغط للتسجيل';
+        let rewardText = '';
+        if (done) {
+          statusText = place === 'mosque' ? '✅ صليت في المسجد 🕌' : '✅ صليت في البيت 🏠';
+          rewardText = place === 'mosque' ? `+${rMosque}` : `+${rHome}`;
+          if (salah.id === 'fajr') rewardText += `+${bFajr}`;
+          rewardText += ` ${cur}`;
+        } else if (missed) {
+          statusText = '❌ لم تُصلَّ (فاتت)';
+        }
+
+        row.innerHTML = `
+          <span class="salah-icon">${salah.icon}</span>
+          <div class="salah-info">
+            <div class="salah-name">${salah.name}</div>
+            <div class="salah-status ${done ? 'done' : (missed ? 'missed' : '')}">${statusText}</div>
+          </div>
+          ${done ? `<span class="salah-reward-badge">${rewardText} 💰</span>` : ''}
+          ${missed ? `<span class="salah-reward-badge missed-badge">❌ فاتت</span>` : ''}
+        `;
+
+        row.addEventListener('click', () => {
+          sounds.playPop();
+          this.openPlaceModal(salah, st._today(), 'اليوم');
+        });
+
+        grid.appendChild(row);
+      });
+    }
   }
 
-  recordSalahAndShow(salahId, place) {
+  recordSalahAndShow(salahId, action, targetDateKey = null) {
     if (!this.salawatTracker) return;
-    const result = this.salawatTracker.recordSalah(salahId, place);
+    const dateKey = targetDateKey || this.salawatTracker._today();
+    const result = this.salawatTracker.recordSalah(salahId, action, dateKey);
     if (!result) return;
 
+    if (action === 'clear' || action === 'missed') {
+      sounds.playPop();
+      this.renderSalawatSection();
+      this.updateUI();
+      return;
+    }
+
+    // إشعار بالنجاح وتشجيع تفاعلي
     sounds.playVictory();
     sounds.playCoin();
     this.confetti.burst(70);
@@ -1407,11 +1632,11 @@ class AppController {
     if (nameEl) nameEl.textContent = nick;
 
     const iconEl = document.getElementById('salawat-congrat-icon');
-    if (iconEl) iconEl.textContent = (place === 'mosque' ? '🕌' : '🏠');
+    if (iconEl) iconEl.textContent = (action === 'mosque' ? '🕌' : '🏠');
 
     const descEl = document.getElementById('salawat-congrat-desc');
     if (descEl) {
-      descEl.textContent = `صليت ${result.salah.name} في ${place === 'mosque' ? 'المسجد 🕌' : 'البيت 🏠'}`;
+      descEl.textContent = `صليت ${result.salah.name} في ${action === 'mosque' ? 'المسجد 🕌' : 'البيت 🏠'}`;
     }
 
     let rewardText = `+${result.reward} ${cur}`;
@@ -1427,7 +1652,7 @@ class AppController {
 
     // عبارات التشجيع التفاعلية المخصصة للمسجد والبيت
     let phrase = '';
-    if (place === 'mosque') {
+    if (action === 'mosque') {
       const mosquePhrases = [
         `مَا شَاءَ اللَّهُ تَبَارَكَ اللَّهُ! أَحْسَنْتَ يَا ${nick}، صَلَّيْتَ ${result.salah.name} فِي الْمَسْجِدِ، صَلَاةُ الْجَمَاعَةِ نُورٌ وَأَجْرٌ عَظِيمٌ!`,
         `تَقَبَّلَ اللَّهُ صَلَاتَكَ يَا بَطَلَ الْمَسْجِدِ! خُطُوَاتُكَ إِلَى بَيْتِ اللَّهِ حَسَنَاتٌ وَرِفْعَةٌ فِي الدَّرَجَاتِ!`,

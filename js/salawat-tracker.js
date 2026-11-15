@@ -84,97 +84,236 @@ class SalawatTracker {
     }
   }
 
-  // ========== مساعدات التاريخ ==========
+  // ========== مساعدات التاريخ والأسابيع ==========
   _today() {
     return new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
   }
 
   _getOrCreateTodayRecord() {
-    const today = this._today();
-    if (!this.state.history[today]) {
-      this.state.history[today] = {
-        fajr:    { done: false, place: null },
-        dhuhr:   { done: false, place: null },
-        asr:     { done: false, place: null },
-        maghrib: { done: false, place: null },
-        isha:    { done: false, place: null }
+    return this.getOrCreateDateRecord(this._today());
+  }
+
+  getOrCreateDateRecord(dateKey) {
+    if (!this.state.history[dateKey]) {
+      this.state.history[dateKey] = {
+        fajr:    { done: false, missed: false, place: null },
+        dhuhr:   { done: false, missed: false, place: null },
+        asr:     { done: false, missed: false, place: null },
+        maghrib: { done: false, missed: false, place: null },
+        isha:    { done: false, missed: false, place: null }
       };
     }
-    return this.state.history[today];
+    return this.state.history[dateKey];
   }
 
-  _getLast7Days() {
-    const days = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      const key = d.toISOString().split('T')[0];
-      days.push({ key, record: this.state.history[key] || null });
+  // حساب الأيام السبعة لأسبوع محدد (يبدأ من السبت وينتهي بالجمعة)
+  getWeekSchedule(weekOffset = 0) {
+    const now = new Date();
+    // إزاحة الأسابيع
+    now.setDate(now.getDate() + (weekOffset * 7));
+
+    // في التقويم الإسلامي والعربي يبدأ الأسبوع يوم السبت
+    // في JS: الأحد = 0، الإثنين = 1، ...، السبت = 6
+    const jsDay = now.getDay();
+    const dayFromSaturday = (jsDay + 1) % 7; // السبت = 0، الأحد = 1، ...، الجمعة = 6
+
+    const saturday = new Date(now);
+    saturday.setDate(now.getDate() - dayFromSaturday);
+
+    const weekDays = [];
+    const dayNames = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
+    const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+    const todayStr = this._today();
+
+    const settings = this.getSettings();
+    const rMosque = Number(settings.rewardMosque ?? 5);
+    const rHome = Number(settings.rewardHome ?? 2);
+    const bFajr = Number(settings.bonusFajr ?? 1);
+
+    let weekMosqueCount = 0;
+    let weekHomeCount = 0;
+    let weekMissedCount = 0;
+    let weekCoins = 0;
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(saturday);
+      d.setDate(saturday.getDate() + i);
+      const dateKey = d.toISOString().split('T')[0];
+
+      const isToday = (dateKey === todayStr);
+      const isPast = (dateKey < todayStr);
+      const isFuture = (dateKey > todayStr);
+
+      const record = this.state.history[dateKey] || null;
+
+      // حساب حالة كل صلاة من الصلوات الخمس في هذا اليوم
+      const prayersStatus = {};
+      SALAWAT.forEach(salah => {
+        const entry = record ? record[salah.id] : null;
+        const extraFajr = (salah.id === 'fajr') ? bFajr : 0;
+
+        if (entry && entry.done) {
+          const place = entry.place || 'home';
+          const rew = (place === 'mosque' ? rMosque : rHome) + extraFajr;
+          prayersStatus[salah.id] = {
+            status: 'done',
+            place,
+            icon: place === 'mosque' ? '✅ 🕌' : '✅ 🏠',
+            badgeText: place === 'mosque' ? 'مسجد' : 'بيت',
+            reward: rew,
+            text: place === 'mosque' ? 'صليت بالمسجد' : 'صليت بالبيت'
+          };
+          if (place === 'mosque') weekMosqueCount++;
+          else weekHomeCount++;
+          weekCoins += rew;
+        } else if (entry && entry.missed) {
+          prayersStatus[salah.id] = {
+            status: 'missed',
+            place: null,
+            icon: '❌',
+            badgeText: 'لم تُصلَّ',
+            reward: 0,
+            text: 'لم تُصلَّ'
+          };
+          weekMissedCount++;
+        } else if (isPast) {
+          // يوم ماضي انتهى بدون تسجيل الصلاة = علامة خطأ (فائتة)
+          prayersStatus[salah.id] = {
+            status: 'missed',
+            place: null,
+            icon: '❌',
+            badgeText: 'لم تُصلَّ',
+            reward: 0,
+            text: 'فاتت الصلاة'
+          };
+          weekMissedCount++;
+        } else if (isToday) {
+          prayersStatus[salah.id] = {
+            status: 'pending',
+            place: null,
+            icon: '➕',
+            badgeText: 'سجّل الآن',
+            reward: 0,
+            text: 'اضغط للتسجيل'
+          };
+        } else {
+          // يوم قادم
+          prayersStatus[salah.id] = {
+            status: 'future',
+            place: null,
+            icon: '⏳',
+            badgeText: 'قادمة',
+            reward: 0,
+            text: 'في انتظار وقتها'
+          };
+        }
+      });
+
+      weekDays.push({
+        date: d,
+        dateKey,
+        dayName: dayNames[i],
+        dayNumber: d.getDate(),
+        monthName: monthNames[d.getMonth()],
+        isToday,
+        isPast,
+        isFuture,
+        prayers: prayersStatus
+      });
     }
-    return days;
+
+    const firstDay = weekDays[0];
+    const lastDay = weekDays[6];
+    const rangeLabel = `${firstDay.dayName} ${firstDay.dayNumber} ${firstDay.monthName} — ${lastDay.dayName} ${lastDay.dayNumber} ${lastDay.monthName}`;
+
+    return {
+      weekOffset,
+      rangeLabel,
+      days: weekDays,
+      stats: {
+        totalMosque: weekMosqueCount,
+        totalHome: weekHomeCount,
+        totalMissed: weekMissedCount,
+        totalDone: weekMosqueCount + weekHomeCount,
+        totalCoins: weekCoins
+      }
+    };
   }
 
-  // ========== المنطق الأساسي ==========
+  // ========== المنطق الأساسي لتسجيل الصلاة ==========
   getTodayRecord() {
     return this._getOrCreateTodayRecord();
   }
 
-  isSalahDone(salahId) {
-    const rec = this._getOrCreateTodayRecord();
+  isSalahDone(salahId, targetDateKey = null) {
+    const rec = this.getOrCreateDateRecord(targetDateKey || this._today());
     return rec[salahId] && rec[salahId].done;
   }
 
-  recordSalah(salahId, place) {
-    // place = 'mosque' أو 'home'
-    const rec = this._getOrCreateTodayRecord();
-
-    if (rec[salahId] && rec[salahId].done) return null;
-
+  recordSalah(salahId, action, targetDateKey = null) {
+    // action: 'mosque' | 'home' | 'missed' | 'clear'
+    const dateKey = targetDateKey || this._today();
+    const rec = this.getOrCreateDateRecord(dateKey);
+    const prevEntry = rec[salahId] ? Object.assign({}, rec[salahId]) : { done: false, place: null };
     const salah = SALAWAT.find(s => s.id === salahId);
     if (!salah) return null;
 
     const settings = this.getSettings();
-    const reward = place === 'mosque' 
-      ? Number(settings.rewardMosque ?? salah.rewardMosque) 
-      : Number(settings.rewardHome ?? salah.rewardHome);
+    const rMosque = Number(settings.rewardMosque ?? salah.rewardMosque);
+    const rHome = Number(settings.rewardHome ?? salah.rewardHome);
     const isFajrBonus = (salahId === 'fajr');
     const fajrBonusVal = isFajrBonus ? Number(settings.bonusFajr ?? 1) : 0;
-    const totalReward = reward + fajrBonusVal;
 
-    rec[salahId] = { done: true, place };
-
-    this.state.pocketMoney += totalReward;
-    if (place === 'mosque') {
-      this.state.stats.totalMosque++;
-    } else {
-      this.state.stats.totalHome++;
-    }
-    if (salahId === 'fajr') {
-      this.state.stats.totalFajr++;
+    // حساب المكافأة السابقة إذا كانت الصلاة مسبقاً مسجلة done
+    let prevReward = 0;
+    if (prevEntry.done) {
+      prevReward = (prevEntry.place === 'mosque' ? rMosque : rHome) + fajrBonusVal;
+      if (prevEntry.place === 'mosque') this.state.stats.totalMosque = Math.max(0, this.state.stats.totalMosque - 1);
+      if (prevEntry.place === 'home') this.state.stats.totalHome = Math.max(0, this.state.stats.totalHome - 1);
+      if (salahId === 'fajr') this.state.stats.totalFajr = Math.max(0, this.state.stats.totalFajr - 1);
     }
 
-    // إضافة للحسنات العامة في التطبيق أيضاً
+    let newReward = 0;
+    if (action === 'mosque' || action === 'home') {
+      newReward = (action === 'mosque' ? rMosque : rHome) + fajrBonusVal;
+      rec[salahId] = { done: true, missed: false, place: action };
+      if (action === 'mosque') this.state.stats.totalMosque++;
+      if (action === 'home') this.state.stats.totalHome++;
+      if (salahId === 'fajr') this.state.stats.totalFajr++;
+    } else if (action === 'missed') {
+      rec[salahId] = { done: false, missed: true, place: null };
+    } else if (action === 'clear') {
+      rec[salahId] = { done: false, missed: false, place: null };
+    }
+
+    const deltaCoins = newReward - prevReward;
+    this.state.pocketMoney = Math.max(0, this.state.pocketMoney + deltaCoins);
     if (this.app && this.app.state) {
-      this.app.state.coins = (this.app.state.coins || 0) + totalReward;
+      this.app.state.coins = Math.max(0, (this.app.state.coins || 0) + deltaCoins);
     }
 
-    const perfectDay = this._checkPerfectDay();
-    if (perfectDay) {
-      const pDayBonus = Number(settings.bonusPerfectDay ?? 5);
-      this.state.pocketMoney += pDayBonus;
-      if (this.app && this.app.state) {
-        this.app.state.coins += pDayBonus;
+    let perfectDay = false;
+    let perfectWeek = false;
+
+    if (action === 'mosque' || action === 'home') {
+      perfectDay = this._checkPerfectDayForDate(dateKey);
+      if (perfectDay && !prevEntry.done) {
+        const pDayBonus = Number(settings.bonusPerfectDay ?? 5);
+        this.state.pocketMoney += pDayBonus;
+        if (this.app && this.app.state) {
+          this.app.state.coins += pDayBonus;
+        }
+        this.state.stats.perfectDays++;
+        this._updateStreak();
       }
-      this.state.stats.perfectDays++;
-      this._updateStreak();
-    }
 
-    const perfectWeek = this._checkPerfectWeek();
-    if (perfectWeek) {
-      const pWeekBonus = Number(settings.bonusPerfectWeek ?? 20);
-      this.state.pocketMoney += pWeekBonus;
-      if (this.app && this.app.state) {
-        this.app.state.coins += pWeekBonus;
+      perfectWeek = this._checkPerfectWeek();
+      if (perfectWeek && !prevEntry.done) {
+        const pWeekBonus = Number(settings.bonusPerfectWeek ?? 20);
+        this.state.pocketMoney += pWeekBonus;
+        if (this.app && this.app.state) {
+          this.app.state.coins += pWeekBonus;
+        }
       }
     }
 
@@ -187,21 +326,29 @@ class SalawatTracker {
 
     return {
       salah,
-      place,
-      reward: totalReward,
+      action,
+      place: (action === 'mosque' || action === 'home') ? action : null,
+      reward: newReward,
+      deltaCoins,
       isFajrBonus,
       fajrBonusVal,
       perfectDay,
       perfectWeek,
       newBadges,
       totalPocketMoney: this.state.pocketMoney,
-      currencyName: settings.currencyName || 'جنيه'
+      currencyName: settings.currencyName || 'جنيه',
+      dateKey
     };
   }
 
-  _checkPerfectDay() {
-    const rec = this._getOrCreateTodayRecord();
+  _checkPerfectDayForDate(dateKey) {
+    const rec = this.state.history[dateKey];
+    if (!rec) return false;
     return SALAWAT.every(s => rec[s.id] && rec[s.id].done);
+  }
+
+  _checkPerfectDay() {
+    return this._checkPerfectDayForDate(this._today());
   }
 
   _checkPerfectWeek() {

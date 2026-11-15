@@ -18,13 +18,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=11">
   <script>
     // تنظيف فوري للكاشات القديمة
     if ('caches' in window) {
       caches.keys().then(function(keys) {
         keys.forEach(function(k) {
-          if (k !== 'bustan-alazkar-v10') caches.delete(k);
+          if (k !== 'bustan-alazkar-v11') caches.delete(k);
         });
       });
     }
@@ -515,14 +515,59 @@
             <div class="salawat-progress-bar" id="salawat-progress-bar" style="width:0%"></div>
           </div>
           <div class="salawat-progress-text">
-            <span id="salawat-done-count">0</span> من 5 صلوات ✅
+            <span id="salawat-done-count">0</span> من 5 صلوات اليوم ✅
           </div>
         </div>
       </div>
 
-      <!-- بطاقات الصلوات الخمس -->
-      <div class="salawat-grid" id="salawat-grid">
-        <!-- تُبنى بـ JS -->
+      <!-- ================= لوحة جدول الصلوات الأسبوعي ================= -->
+      <div class="salawat-week-board">
+        <!-- شريط التنقل بين الأسابيع -->
+        <div class="week-nav-bar">
+          <button type="button" class="week-nav-btn" id="btn-prev-week" title="الأسبوع السابق">◀️ السابق</button>
+          <div class="week-title-badge">
+            <span class="week-title-main" id="week-range-label">الأسبوع الحالي</span>
+            <button type="button" class="btn-current-week-pill hidden" id="btn-current-week">العودة للأسبوع الحالي 🌟</button>
+          </div>
+          <button type="button" class="week-nav-btn" id="btn-next-week" title="الأسبوع التالي">التالي ▶️</button>
+        </div>
+
+        <!-- ملخص إحصائيات الأسبوع المعروض -->
+        <div class="week-stats-row">
+          <div class="week-stat-pill pill-mosque" title="الصلوات المؤداة في المسجد">
+            <span>🕌 في المسجد:</span> <strong id="stat-week-mosque">0</strong>
+          </div>
+          <div class="week-stat-pill pill-home" title="الصلوات المؤداة في البيت">
+            <span>🏠 في البيت:</span> <strong id="stat-week-home">0</strong>
+          </div>
+          <div class="week-stat-pill pill-missed" title="الصلوات التي لم تُصلَّ">
+            <span>❌ لم تُصلَّ:</span> <strong id="stat-week-missed">0</strong>
+          </div>
+          <div class="week-stat-pill pill-coins" title="إجمالي الجنيهات المكتسبة هذا الأسبوع">
+            <span>💰 الأسبوع:</span> <strong id="stat-week-coins">0</strong> <span class="currency-label">جنيه</span>
+          </div>
+        </div>
+
+        <!-- الجدول الأسبوعي التفاعلي الكامل -->
+        <div class="salawat-week-table-wrap" id="salawat-week-table-wrap">
+          <!-- يُبنى تلقائياً بواسطة JavaScript -->
+        </div>
+
+        <!-- دليل الرموز والعلامات -->
+        <div class="table-legend-bar">
+          <span class="legend-item"><span class="legend-sym sym-mosque">✅ 🕌</span> صلاة المسجد</span>
+          <span class="legend-item"><span class="legend-sym sym-home">✅ 🏠</span> صلاة البيت</span>
+          <span class="legend-item"><span class="legend-sym sym-missed">❌</span> لم تُصلَّ</span>
+          <span class="legend-item"><span class="legend-sym sym-pending">➕</span> اضغط للتسجيل</span>
+        </div>
+      </div>
+
+      <!-- صلوات اليوم السريعة -->
+      <div class="salawat-today-section">
+        <h3 class="salawat-section-heading">🌟 صلوات اليوم (سريعة التسجيل)</h3>
+        <div class="salawat-grid" id="salawat-grid">
+          <!-- تُبنى بـ JS -->
+        </div>
       </div>
 
       <!-- شريط الميزان الكلي -->
@@ -534,9 +579,6 @@
           🔥 المداومة: <strong id="salawat-streak">0</strong> يوم كامل
         </div>
         <div class="salawat-actions-row">
-          <button type="button" class="salawat-action-btn" id="btn-salawat-week">
-            📅 سجل الأسبوع
-          </button>
           <button type="button" class="salawat-action-btn" id="btn-salawat-badges">
             🏆 شاراتي
           </button>
@@ -703,24 +745,51 @@
     </div>
   </div>
 
-  <!-- Bottom Sheet: اختيار مكان الصلاة -->
-  <div class="bottom-sheet-overlay hidden" id="salawat-place-sheet">
-    <div class="bottom-sheet-card">
-      <div class="bottom-sheet-handle"></div>
-      <div class="bottom-sheet-title" id="sheet-salah-name">صليت الظهر... أين؟ ☀️</div>
-      <div class="bottom-sheet-choices">
-        <button type="button" class="place-choice-btn choice-mosque" id="btn-choose-mosque">
-          <span class="place-icon">🕌</span>
-          <span class="place-name">في المسجد</span>
-          <span class="place-reward" id="sheet-reward-mosque">+5 جنيه</span>
+  <!-- Modal: اختيار مكان الصلاة أو تسجيلها كفائتة (متجاوب 100% مع جميع الهواتف) -->
+  <div class="modal-overlay" id="salawat-place-modal">
+    <div class="modal-card modal-card-choice">
+      <div class="modal-icon" id="choice-salah-icon">🕌</div>
+      <h3 class="modal-title" id="choice-salah-title">تسجيل صلاة الظهر</h3>
+      <p class="modal-desc" id="choice-salah-subtitle">أين أدّيت الصلاة يا بطلنا؟</p>
+
+      <div class="place-choices-vertical">
+        <button type="button" class="choice-action-btn choice-btn-mosque" id="btn-choose-mosque">
+          <div class="choice-btn-icon">🕌</div>
+          <div class="choice-btn-text">
+            <span class="choice-btn-title">صَلَّيْتُ فِي الْمَسْجِدِ</span>
+            <span class="choice-btn-sub">صلاة الجماعة نور وبركة</span>
+          </div>
+          <span class="choice-btn-reward" id="sheet-reward-mosque">+5 جنيه</span>
         </button>
-        <button type="button" class="place-choice-btn choice-home" id="btn-choose-home">
-          <span class="place-icon">🏠</span>
-          <span class="place-name">في البيت</span>
-          <span class="place-reward" id="sheet-reward-home">+2 جنيه</span>
+
+        <button type="button" class="choice-action-btn choice-btn-home" id="btn-choose-home">
+          <div class="choice-btn-icon">🏠</div>
+          <div class="choice-btn-text">
+            <span class="choice-btn-title">صَلَّيْتُ فِي الْبَيْتِ</span>
+            <span class="choice-btn-sub">تقبّل الله صلاتك وبِرك</span>
+          </div>
+          <span class="choice-btn-reward" id="sheet-reward-home">+2 جنيه</span>
+        </button>
+
+        <button type="button" class="choice-action-btn choice-btn-missed" id="btn-choose-missed">
+          <div class="choice-btn-icon">❌</div>
+          <div class="choice-btn-text">
+            <span class="choice-btn-title">لَمْ أُصَلِّهَا (فَاتَتْنِي)</span>
+            <span class="choice-btn-sub">تسجيل الصلاة كفائتة بعلامة (❌)</span>
+          </div>
+          <span class="choice-btn-tag">علامة ❌</span>
+        </button>
+
+        <button type="button" class="choice-action-btn choice-btn-clear hidden" id="btn-choose-clear">
+          <div class="choice-btn-icon">🗑️</div>
+          <div class="choice-btn-text">
+            <span class="choice-btn-title">مسح التسجيل الحالي</span>
+            <span class="choice-btn-sub">إعادة تعيين هذه الصلاة</span>
+          </div>
         </button>
       </div>
-      <button type="button" class="bottom-sheet-cancel" id="btn-sheet-cancel">إلغاء</button>
+
+      <button type="button" class="modal-btn secondary-btn" id="btn-choice-cancel" style="margin-top: 14px; width: 100%;">✕ إغلاق</button>
     </div>
   </div>
 
@@ -864,14 +933,14 @@
     </div>
   </div>
 
-  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v10 -->
-  <script src="js/azkar-data.js?v=10"></script>
-  <script src="js/prayer-data.js?v=10"></script>
-  <script src="js/aqeedah-data.js?v=10"></script>
-  <script src="js/audio.js?v=10"></script>
-  <script src="js/tree.js?v=10"></script>
-  <script src="js/confetti.js?v=10"></script>
-  <script src="js/salawat-tracker.js?v=10"></script>
-  <script src="js/app.js?v=10"></script>
+  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v11 -->
+  <script src="js/azkar-data.js?v=11"></script>
+  <script src="js/prayer-data.js?v=11"></script>
+  <script src="js/aqeedah-data.js?v=11"></script>
+  <script src="js/audio.js?v=11"></script>
+  <script src="js/tree.js?v=11"></script>
+  <script src="js/confetti.js?v=11"></script>
+  <script src="js/salawat-tracker.js?v=11"></script>
+  <script src="js/app.js?v=11"></script>
 </body>
 </html>

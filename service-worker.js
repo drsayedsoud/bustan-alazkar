@@ -1,22 +1,22 @@
 // Service Worker لتشغيل تطبيق البطل المسلم بدون إنترنت (أوفلاين)
-const CACHE_NAME = 'bustan-alazkar-v10';
+const CACHE_NAME = 'bustan-alazkar-v11';
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=10',
+  './style.css?v=11',
   './manifest.json',
   './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './js/wake-lock.js?v=10',
-  './js/azkar-data.js?v=10',
-  './js/prayer-data.js?v=10',
-  './js/aqeedah-data.js?v=10',
-  './js/audio.js?v=10',
-  './js/tree.js?v=10',
-  './js/confetti.js?v=10',
-  './js/salawat-tracker.js?v=10',
-  './js/app.js?v=10'
+  './js/wake-lock.js?v=11',
+  './js/azkar-data.js?v=11',
+  './js/prayer-data.js?v=11',
+  './js/aqeedah-data.js?v=11',
+  './js/audio.js?v=11',
+  './js/tree.js?v=11',
+  './js/confetti.js?v=11',
+  './js/salawat-tracker.js?v=11',
+  './js/app.js?v=11'
 ];
 
 self.addEventListener('install', event => {
