@@ -2620,29 +2620,47 @@ body {
   border: 1px solid #fde68a;
 }
 
-/* حاوية الجدول الأسبوعي ذات التمرير السلس */
+/* حاوية الجدول الأسبوعي ذات التمرير السلس والمدعومة باللمس لجميع الهواتف */
 .salawat-week-table-wrap {
+  position: relative;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: 16px;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   margin-bottom: 12px;
   background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #f1f5f9;
+}
+
+.salawat-week-table-wrap::-webkit-scrollbar {
+  height: 6px;
+}
+
+.salawat-week-table-wrap::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.salawat-week-table-wrap::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
 }
 
 .salawat-week-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  min-width: 620px;
+  min-width: 590px;
   text-align: center;
   font-size: 0.84rem;
+  direction: rtl;
 }
 
 .salawat-week-table th,
 .salawat-week-table td {
-  padding: 10px 6px;
+  padding: 8px 4px;
   border-bottom: 1px solid #f1f5f9;
   border-left: 1px solid #f1f5f9;
 }
@@ -2651,7 +2669,9 @@ body {
   background: #f8fafc;
   font-weight: 800;
   color: #334155;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  min-width: 68px;
+  width: 70px;
 }
 
 .salawat-week-table thead th.col-today-header {
@@ -2660,28 +2680,65 @@ body {
   border-top: 3px solid #f59e0b;
 }
 
-.salawat-week-table td.col-today-cell {
-  background: rgba(254, 243, 199, 0.25);
+.salawat-week-table thead th .col-date {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 600;
 }
 
-/* عمود أسماء الصلوات الثابت على اليمين */
+.salawat-week-table thead th.col-today-header .col-date {
+  color: #b45309;
+}
+
+.salawat-week-table td.col-today-cell {
+  background: rgba(254, 243, 199, 0.28);
+}
+
+/* عمود أسماء الصلوات الثابت على اليمين لجميع الهواتف */
 .salawat-week-table th.col-sticky-salah,
 .salawat-week-table td.col-sticky-salah {
+  position: -webkit-sticky;
   position: sticky;
   right: 0;
-  z-index: 4;
+  z-index: 5;
   background: #ffffff;
-  border-left: 2px solid #e2e8f0;
-  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.04);
+  border-left: 2px solid #cbd5e1;
+  box-shadow: -3px 0 8px rgba(0, 0, 0, 0.07);
   font-weight: 800;
-  min-width: 95px;
+  min-width: 88px;
+  max-width: 100px;
+  width: 92px;
   text-align: right;
-  padding-right: 10px;
+  padding-right: 8px;
+  padding-left: 4px;
+  white-space: nowrap;
 }
 
 .salawat-week-table thead th.col-sticky-salah {
   background: #f1f5f9;
-  z-index: 6;
+  z-index: 7;
+}
+
+/* تنبيه السحب الأفقي للجدول على الموبايل */
+.table-swipe-hint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1px dashed #7dd3fc;
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin-bottom: 8px;
+  text-align: center;
+  animation: pulseSwipeHint 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseSwipeHint {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.015); }
 }
 
 /* زر خلية الصلاة في الجدول */
@@ -3086,4 +3143,304 @@ body {
 .encouragement-audio-btn:hover {
   background: #047857 !important;
   transform: scale(1.05);
+}
+
+/* =================== زر وبطاقة مشاركة الواتساب =================== */
+.btn-share-wa {
+  background: #25d366 !important;
+  border-color: #20ba5a !important;
+  color: white !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 9px !important;
+  box-shadow: 0 2px 6px rgba(37, 211, 102, 0.35);
+}
+
+.btn-share-wa:hover {
+  background: #20ba5a !important;
+  transform: scale(1.06);
+}
+
+.btn-share-wa svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.btn-share-wa-modal {
+  background: linear-gradient(135deg, #25d366 0%, #16a34a 100%) !important;
+  color: #ffffff !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
+}
+
+.btn-share-wa-modal svg {
+  fill: currentColor;
+}
+
+/* بطاقة المشاركة في الصفحة الرئيسية */
+.home-share-banner {
+  margin-top: 22px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #86efac;
+  border-radius: 20px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.12);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.home-share-banner:hover {
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.2);
+}
+
+.share-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.share-banner-icon {
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  border-radius: 50%;
+  background: #25d366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
+
+.share-banner-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: white;
+}
+
+.share-banner-title {
+  margin: 0 0 4px 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #14532d;
+}
+
+.share-banner-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #166534;
+  line-height: 1.45;
+}
+
+.btn-whatsapp-share-action {
+  background: linear-gradient(135deg, #25d366 0%, #16a34a 100%);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.btn-whatsapp-share-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.45);
+}
+
+.btn-whatsapp-share-action:active {
+  transform: scale(0.96);
+}
+
+.btn-whatsapp-share-action svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+@media (max-width: 640px) {
+  .home-share-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px 14px;
+  }
+  .share-banner-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  .btn-whatsapp-share-action {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* =================== تجاوب جدول الصلوات وشاشات الهواتف =================== */
+@media (max-width: 768px) {
+  .table-swipe-hint {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .salawat-week-board {
+    padding: 12px 8px;
+    border-radius: 16px;
+  }
+
+  .week-nav-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .week-title-badge {
+    grid-column: 1 / -1;
+    order: -1;
+    margin-bottom: 2px;
+  }
+
+  .week-title-main {
+    font-size: 0.88rem;
+  }
+
+  .week-nav-btn {
+    padding: 7px 10px;
+    font-size: 0.8rem;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .week-stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .week-stat-pill {
+    padding: 5px 6px;
+    font-size: 0.72rem;
+    justify-content: center;
+    border-radius: 10px;
+  }
+
+  .salawat-week-table-wrap {
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+
+  .salawat-week-table th.col-sticky-salah,
+  .salawat-week-table td.col-sticky-salah {
+    min-width: 82px;
+    width: 84px;
+    font-size: 0.78rem;
+    padding-right: 6px;
+    padding-left: 2px;
+  }
+
+  .table-salah-icon {
+    font-size: 0.95rem;
+  }
+
+  .salawat-week-table thead th {
+    font-size: 0.76rem;
+    min-width: 64px;
+    width: 66px;
+    padding: 6px 2px;
+  }
+
+  .week-cell-btn {
+    min-height: 48px;
+    padding: 3px 1px;
+    border-radius: 10px;
+  }
+
+  .week-cell-icon {
+    font-size: 1.15rem;
+  }
+
+  .week-cell-tag {
+    font-size: 0.64rem;
+  }
+
+  .week-cell-reward {
+    font-size: 0.58rem;
+    padding: 1px 3px;
+  }
+
+  .table-legend-bar {
+    gap: 6px;
+    justify-content: center;
+    font-size: 0.7rem;
+  }
+
+  .legend-item {
+    padding: 2px 6px;
+  }
+
+  .modal-card-choice {
+    padding: 18px 14px;
+    border-radius: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .choice-action-btn {
+    padding: 10px 12px;
+    gap: 10px;
+    border-radius: 14px;
+  }
+
+  .choice-btn-icon {
+    font-size: 1.8rem;
+  }
+
+  .choice-btn-title {
+    font-size: 0.95rem;
+  }
+
+  .choice-btn-sub {
+    font-size: 0.7rem;
+  }
+
+  .choice-btn-reward {
+    font-size: 0.78rem;
+    padding: 2px 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .salawat-week-table th.col-sticky-salah,
+  .salawat-week-table td.col-sticky-salah {
+    min-width: 76px;
+    width: 78px;
+    font-size: 0.74rem;
+  }
+
+  .week-cell-btn {
+    min-height: 44px;
+  }
+
+  .week-cell-icon {
+    font-size: 1.05rem;
+  }
 }

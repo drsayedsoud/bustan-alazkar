@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>البطل المسلم للأطفال 🌟 (أذكار، صلاة، وعقيدتي)</title>
   
-  <meta name="description" content="تطبيق البطل المسلم للأطفال: تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتتبع الصلوات الخمس (ميزاني) وتدريب القراءة في العقيدة الإسلامية">
+  <meta name="description" content="تطبيق البطل المسلم للأطفال: تطبيق إسلامي تفاعلي شامل يجمع بين بستان الأذكار وتعليم الصلاة وتتبع الصلوات الخمس (صلواتي) وتدريب القراءة في العقيدة الإسلامية">
   <meta name="theme-color" content="#0284c7">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icons/icon-192.png" type="image/png">
@@ -18,19 +18,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
   <script>
     // تنظيف فوري للكاشات القديمة
     if ('caches' in window) {
       caches.keys().then(function(keys) {
         keys.forEach(function(k) {
-          if (k !== 'bustan-alazkar-v11') caches.delete(k);
+          if (k !== 'bustan-alazkar-v12') caches.delete(k);
         });
       });
     }
   </script>
   <!-- سكريبت إبقاء الشاشة مضاءة دائماً (Always-On Screen Wake Lock) -->
-  <script src="js/wake-lock.js?v=10"></script>
+  <script src="js/wake-lock.js?v=12"></script>
 </head>
 <body>
 
@@ -63,6 +63,11 @@
         <span>🔥</span>
         <span id="streak-count">1 يوم</span>
       </div>
+      <button type="button" class="icon-btn btn-share-wa" id="btn-header-share-wa" title="مشاركة التطبيق عبر واتساب 💬" aria-label="مشاركة عبر واتساب">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+          <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2ZM12.05 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.07 16.3C4.24 14.98 3.8 13.47 3.8 11.91C3.8 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.25 14.87 13 14.75C12.75 14.62 11.7 14.28 10.45 13.16C9.48 12.3 8.82 11.23 8.63 10.98C8.44 10.73 8.61 10.6 8.74 10.47C8.85 10.36 8.99 10.18 9.11 10.04C9.24 9.9 9.28 9.79 9.36 9.63C9.45 9.46 9.4 9.32 9.34 9.2C9.28 9.07 8.79 7.87 8.58 7.38C8.38 6.9 8.18 6.96 8.03 6.95C7.89 6.94 7.72 6.94 7.56 6.94C7.39 6.94 7.12 7 6.89 7.25C6.66 7.5 6.01 8.11 6.01 9.35C6.01 10.59 6.91 11.79 7.04 11.96C7.16 12.13 8.81 14.68 11.33 15.77C11.93 16.03 12.4 16.18 12.76 16.3C13.37 16.49 13.92 16.46 14.36 16.4C14.85 16.33 15.87 15.78 16.08 15.19C16.29 14.6 16.29 14.1 16.22 13.99C16.16 13.88 16 13.82 15.75 13.7L16.57 14.39Z"/>
+        </svg>
+      </button>
       <button type="button" class="icon-btn" id="btn-sound-toggle" title="الصوت" aria-label="تبديل الصوت">🔊</button>
       <button type="button" class="icon-btn" id="btn-gallery" title="حديقتي" aria-label="عرض الحديقة">🏡</button>
       <button type="button" class="icon-btn" id="btn-settings" title="إعدادات المكافآت والحصالة" aria-label="الإعدادات">⚙️</button>
@@ -88,9 +93,9 @@
       <span>📖</span>
       <span>عَقِيدَتِي</span>
     </button>
-    <button type="button" class="nav-tab-btn" id="tab-salawat-btn" aria-label="ميزاني">
-      <span>💰</span>
-      <span>مِيزَانِي</span>
+    <button type="button" class="nav-tab-btn" id="tab-salawat-btn" aria-label="صلواتي">
+      <span>🕌</span>
+      <span>صَلَوَاتِي</span>
     </button>
   </nav>
 
@@ -249,10 +254,10 @@
           </div>
         </article>
 
-        <!-- الكارت 4: ميزاني (ذهبي/برتقالي دافئ لتتبع الصلوات الخمس) -->
-        <article class="home-card card-salawat" id="card-launch-salawat" role="button" tabindex="0" aria-label="الدخول إلى ميزاني">
+        <!-- الكارت 4: صلواتي (تتبع الصلوات الخمس بجدول تفاعلي) -->
+        <article class="home-card card-salawat" id="card-launch-salawat" role="button" tabindex="0" aria-label="الدخول إلى صلواتي">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">💰 5 صلوات يومياً</div>
+          <div class="card-badge-top">🕌 5 صلوات يومياً</div>
 
           <div class="card-expressive-img">
             <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -271,19 +276,40 @@
           </div>
 
           <div class="card-body">
-            <h3 class="card-title">مِيزَانِي</h3>
-            <p class="card-tagline">سجّل صلواتك واملأ ميزانك كل يوم 🕌</p>
+            <h3 class="card-title">صَلَوَاتِي</h3>
+            <p class="card-tagline">سجّل صلواتك الخمس في البيت والمسجد واكسب مكافآتك 🕌</p>
           </div>
 
           <div class="card-footer">
             <div id="card-salawat-progress" class="card-progress-text">ابدأ رحلتك اليوم!</div>
             <div class="card-action-btn btn-salawat">
-              <span>افتح ميزاني</span>
+              <span>افتح صلواتي</span>
               <span class="btn-arrow">⬅️</span>
             </div>
           </div>
         </article>
 
+      </div>
+
+      <!-- بطاقة مشاركة التطبيق عبر واتساب (انشر الخير واكسب الأجر) -->
+      <div class="home-share-banner">
+        <div class="share-banner-content">
+          <div class="share-banner-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2ZM12.05 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.07 16.3C4.24 14.98 3.8 13.47 3.8 11.91C3.8 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.25 14.87 13 14.75C12.75 14.62 11.7 14.28 10.45 13.16C9.48 12.3 8.82 11.23 8.63 10.98C8.44 10.73 8.61 10.6 8.74 10.47C8.85 10.36 8.99 10.18 9.11 10.04C9.24 9.9 9.28 9.79 9.36 9.63C9.45 9.46 9.4 9.32 9.34 9.2C9.28 9.07 8.79 7.87 8.58 7.38C8.38 6.9 8.18 6.96 8.03 6.95C7.89 6.94 7.72 6.94 7.56 6.94C7.39 6.94 7.12 7 6.89 7.25C6.66 7.5 6.01 8.11 6.01 9.35C6.01 10.59 6.91 11.79 7.04 11.96C7.16 12.13 8.81 14.68 11.33 15.77C11.93 16.03 12.4 16.18 12.76 16.3C13.37 16.49 13.92 16.46 14.36 16.4C14.85 16.33 15.87 15.78 16.08 15.19C16.29 14.6 16.29 14.1 16.22 13.99C16.16 13.88 16 13.82 15.75 13.7L16.57 14.39Z"/>
+            </svg>
+          </div>
+          <div class="share-banner-texts">
+            <h4 class="share-banner-title">انْشُرِ الخَيْرَ مَعَ أَحْبَابِكَ 💬💚</h4>
+            <p class="share-banner-desc">شارك رابط تطبيق «البطل المسلم» عبر واتساب ليتعلم أطفال المسلمين الصلاة والأذكار ولك مثل أجرهم إن شاء الله!</p>
+          </div>
+        </div>
+        <button type="button" class="btn-whatsapp-share-action" id="btn-share-whatsapp-home">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2ZM12.05 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.07 16.3C4.24 14.98 3.8 13.47 3.8 11.91C3.8 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.25 14.87 13 14.75C12.75 14.62 11.7 14.28 10.45 13.16C9.48 12.3 8.82 11.23 8.63 10.98C8.44 10.73 8.61 10.6 8.74 10.47C8.85 10.36 8.99 10.18 9.11 10.04C9.24 9.9 9.28 9.79 9.36 9.63C9.45 9.46 9.4 9.32 9.34 9.2C9.28 9.07 8.79 7.87 8.58 7.38C8.38 6.9 8.18 6.96 8.03 6.95C7.89 6.94 7.72 6.94 7.56 6.94C7.39 6.94 7.12 7 6.89 7.25C6.66 7.5 6.01 8.11 6.01 9.35C6.01 10.59 6.91 11.79 7.04 11.96C7.16 12.13 8.81 14.68 11.33 15.77C11.93 16.03 12.4 16.18 12.76 16.3C13.37 16.49 13.92 16.46 14.36 16.4C14.85 16.33 15.87 15.78 16.08 15.19C16.29 14.6 16.29 14.1 16.22 13.99C16.16 13.88 16 13.82 15.75 13.7L16.57 14.39Z"/>
+          </svg>
+          <span>مشاركة عبر واتساب</span>
+        </button>
       </div>
     </section>
 
@@ -490,7 +516,7 @@
       </article>
     </section>
 
-    <!-- ==================== 4. 💰 قسم ميزاني (تتبع الصلوات) ==================== -->
+    <!-- ==================== 4. 🕌 قسم صلواتي (تتبع الصلوات) ==================== -->
     <section class="app-section hidden" id="section-salawat">
 
       <!-- شريط علوي للعودة -->
@@ -499,7 +525,7 @@
           <span>🏠</span>
           <span>الرئيسية</span>
         </button>
-        <span class="section-top-title">💰 مِيزَانِي — صلواتي وجنيهاتي</span>
+        <span class="section-top-title">🕌 صَلَوَاتِي — جدول صلواتي ومكافآتي</span>
       </div>
 
       <!-- بطاقة ملخص اليوم -->
@@ -548,6 +574,11 @@
           </div>
         </div>
 
+        <!-- تنبيه سحب الجدول أفقياً على الهواتف -->
+        <div class="table-swipe-hint">
+          <span>👈 اسحب الجدول أفقياً لمتابعة وتسجيل باقي الأيام 👉</span>
+        </div>
+
         <!-- الجدول الأسبوعي التفاعلي الكامل -->
         <div class="salawat-week-table-wrap" id="salawat-week-table-wrap">
           <!-- يُبنى تلقائياً بواسطة JavaScript -->
@@ -573,7 +604,7 @@
       <!-- شريط الميزان الكلي -->
       <div class="salawat-total-bar">
         <div class="salawat-total-money">
-          💰 ميزاني الكلي: <strong id="salawat-total-money">0</strong> <span class="currency-label">جنيه</span>
+          💰 رصيد صلواتي: <strong id="salawat-total-money">0</strong> <span class="currency-label">جنيه</span>
         </div>
         <div class="salawat-total-streak">
           🔥 المداومة: <strong id="salawat-streak">0</strong> يوم كامل
@@ -926,6 +957,10 @@
 
         <div class="settings-actions">
           <button type="submit" class="modal-btn" id="btn-save-settings">💾 حفظ الإعدادات</button>
+          <button type="button" class="modal-btn btn-share-wa-modal" id="btn-share-whatsapp-settings">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2ZM12.05 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.07 16.3C4.24 14.98 3.8 13.47 3.8 11.91C3.8 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.25 14.87 13 14.75C12.75 14.62 11.7 14.28 10.45 13.16C9.48 12.3 8.82 11.23 8.63 10.98C8.44 10.73 8.61 10.6 8.74 10.47C8.85 10.36 8.99 10.18 9.11 10.04C9.24 9.9 9.28 9.79 9.36 9.63C9.45 9.46 9.4 9.32 9.34 9.2C9.28 9.07 8.79 7.87 8.58 7.38C8.38 6.9 8.18 6.96 8.03 6.95C7.89 6.94 7.72 6.94 7.56 6.94C7.39 6.94 7.12 7 6.89 7.25C6.66 7.5 6.01 8.11 6.01 9.35C6.01 10.59 6.91 11.79 7.04 11.96C7.16 12.13 8.81 14.68 11.33 15.77C11.93 16.03 12.4 16.18 12.76 16.3C13.37 16.49 13.92 16.46 14.36 16.4C14.85 16.33 15.87 15.78 16.08 15.19C16.29 14.6 16.29 14.1 16.22 13.99C16.16 13.88 16 13.82 15.75 13.7L16.57 14.39Z"/></svg>
+            <span>مشاركة التطبيق عبر واتساب 💬</span>
+          </button>
           <button type="button" class="modal-btn secondary-btn" id="btn-reset-settings">🔄 استعادة الافتراضي</button>
           <button type="button" class="bottom-sheet-cancel" id="close-settings-modal-btn">إلغاء</button>
         </div>
@@ -933,14 +968,14 @@
     </div>
   </div>
 
-  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v11 -->
-  <script src="js/azkar-data.js?v=11"></script>
-  <script src="js/prayer-data.js?v=11"></script>
-  <script src="js/aqeedah-data.js?v=11"></script>
-  <script src="js/audio.js?v=11"></script>
-  <script src="js/tree.js?v=11"></script>
-  <script src="js/confetti.js?v=11"></script>
-  <script src="js/salawat-tracker.js?v=11"></script>
-  <script src="js/app.js?v=11"></script>
+  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v12 -->
+  <script src="js/azkar-data.js?v=12"></script>
+  <script src="js/prayer-data.js?v=12"></script>
+  <script src="js/aqeedah-data.js?v=12"></script>
+  <script src="js/audio.js?v=12"></script>
+  <script src="js/tree.js?v=12"></script>
+  <script src="js/confetti.js?v=12"></script>
+  <script src="js/salawat-tracker.js?v=12"></script>
+  <script src="js/app.js?v=12"></script>
 </body>
 </html>

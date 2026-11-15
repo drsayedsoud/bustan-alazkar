@@ -1184,12 +1184,49 @@ class AppController {
         } catch (e) {
           console.warn(e);
         }
-        window.location.href = window.location.origin + window.location.pathname + '?v11=' + Date.now();
+        window.location.href = window.location.origin + window.location.pathname + '?v12=' + Date.now();
       });
+    }
+
+    // أزرار مشاركة التطبيق عبر واتساب
+    const btnHeaderShareWa = document.getElementById('btn-header-share-wa');
+    if (btnHeaderShareWa) {
+      btnHeaderShareWa.addEventListener('click', () => this.shareAppViaWhatsApp());
+    }
+
+    const btnHomeShareWa = document.getElementById('btn-share-whatsapp-home');
+    if (btnHomeShareWa) {
+      btnHomeShareWa.addEventListener('click', () => this.shareAppViaWhatsApp());
+    }
+
+    const btnSettingsShareWa = document.getElementById('btn-share-whatsapp-settings');
+    if (btnSettingsShareWa) {
+      btnSettingsShareWa.addEventListener('click', () => this.shareAppViaWhatsApp());
     }
   }
 
-  // ========== 💰 قسم ميزاني ==========
+  shareAppViaWhatsApp() {
+    sounds.playPop();
+    const appUrl = 'https://bustan-alazkar.vercel.app/';
+    const shareText = 
+`🌟 *تطبيق «البَطَلُ المُسْلِم» للأطفال* 🌟
+تطبيق إسلامي تفاعلي مميز ومجاني يُحبّب أبناءنا في الطاعات ويدربهم عليها يومياً:
+
+🌿 *بُستان الأذكار:* أذكار الصباح والمساء وشجرة الحسنات التفاعلية
+🕌 *تعلّم الصلاة:* خطوات الوضوء والصلاة خطوة بخطوة بالصور التوضيحية والصوت
+📖 *عَقِيدَتِي نُورِي:* أركان الإيمان وتدريب القراءة السليمة بالتشكيل
+💰 *صَلَوَاتِي:* تتبع الصلوات الخمس بجدول أسبوعي تفاعلي ومكافآت تشجيعية
+
+📲 *افتح التطبيق وثبّته مباشرة على هاتفك (مجاناً بدون متجر):*
+${appUrl}
+
+«مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ» 🤲💚`;
+
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+    window.open(waUrl, '_blank');
+  }
+
+  // ========== 🕌 قسم صلواتي ==========
   setupSalawatUI() {
     // التنقل بين الأسابيع في جدول الصلوات
     const btnPrevWeek = document.getElementById('btn-prev-week');
@@ -1395,12 +1432,45 @@ class AppController {
     const history = this.salawatTracker.state.history || {};
     const rec = history[dateKey];
     const isRecorded = rec && rec[salah.id] && (rec[salah.id].done || rec[salah.id].missed);
+    const btnMosque = document.getElementById('btn-choose-mosque');
+    if (btnMosque) {
+      btnMosque.onclick = () => {
+        sounds.playPop();
+        this.closePlaceModal();
+        this.recordSalahAndShow(salah.id, 'mosque', dateKey);
+      };
+    }
+
+    const btnHome = document.getElementById('btn-choose-home');
+    if (btnHome) {
+      btnHome.onclick = () => {
+        sounds.playPop();
+        this.closePlaceModal();
+        this.recordSalahAndShow(salah.id, 'home', dateKey);
+      };
+    }
+
+    const btnMissed = document.getElementById('btn-choose-missed');
+    if (btnMissed) {
+      btnMissed.onclick = () => {
+        sounds.playPop();
+        this.closePlaceModal();
+        this.recordSalahAndShow(salah.id, 'missed', dateKey);
+      };
+    }
+
     const btnClear = document.getElementById('btn-choose-clear');
     if (btnClear) {
       if (isRecorded) {
         btnClear.classList.remove('hidden');
+        btnClear.onclick = () => {
+          sounds.playPop();
+          this.closePlaceModal();
+          this.recordSalahAndShow(salah.id, 'clear', dateKey);
+        };
       } else {
         btnClear.classList.add('hidden');
+        btnClear.onclick = null;
       }
     }
 
@@ -1411,8 +1481,6 @@ class AppController {
   closePlaceModal() {
     const modal = document.getElementById('salawat-place-modal');
     if (modal) modal.classList.remove('active');
-    this._pendingSalahId = null;
-    this._pendingDateKey = null;
   }
 
   renderSalawatSection() {
@@ -1540,6 +1608,14 @@ class AppController {
 
       tblHtml += '</tbody></table>';
       tableWrap.innerHTML = tblHtml;
+
+      // التمرير التلقائي السلس إلى عمود اليوم على شاشات الهواتف
+      const todayTh = tableWrap.querySelector('.col-today-header');
+      if (todayTh && this.currentWeekOffset === 0) {
+        setTimeout(() => {
+          todayTh.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }, 120);
+      }
 
       // ربط أحداث النقر على كل خلايا الجدول الأسبوعي
       tableWrap.querySelectorAll('.week-cell-btn').forEach(btn => {

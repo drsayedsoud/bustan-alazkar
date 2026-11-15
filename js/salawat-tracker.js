@@ -85,8 +85,30 @@ class SalawatTracker {
   }
 
   // ========== مساعدات التاريخ والأسابيع ==========
+  _formatDate(d) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   _today() {
-    return new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    return this._formatDate(new Date());
+  }
+
+  _getLast7Days() {
+    const days = [];
+    const now = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      const key = this._formatDate(d);
+      days.push({
+        key,
+        record: this.state.history[key] || null
+      });
+    }
+    return days;
   }
 
   _getOrCreateTodayRecord() {
@@ -138,7 +160,7 @@ class SalawatTracker {
     for (let i = 0; i < 7; i++) {
       const d = new Date(saturday);
       d.setDate(saturday.getDate() + i);
-      const dateKey = d.toISOString().split('T')[0];
+      const dateKey = this._formatDate(d);
 
       const isToday = (dateKey === todayStr);
       const isPast = (dateKey < todayStr);
