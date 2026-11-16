@@ -65,6 +65,16 @@ class AppController {
     this.currentPrayerIndex = 0;
     this.currentPrayerStep = 0;
 
+    // حالة الوضوء
+    this.currentWuduStep = 0;
+
+    // حالة أذكار الصباح والمساء
+    this.currentMeType = 'morning';
+    this.meCounts = {};
+
+    // الوضع الليلي
+    this.currentTheme = localStorage.getItem('bustan_theme') || 'light';
+
     // حالة العقيدة
     this.currentAqeedahIndex = 0;
     this.completedLessons = {};
@@ -97,12 +107,15 @@ class AppController {
   }
 
   init() {
+    this.initTheme();
     this.garden = new GardenTree('tree-canvas');
     this.confetti = new ConfettiEngine('confetti-canvas');
 
     this.setupProfileUI();
     this.setupTabNavigation();
     this.setupSettingsUI();
+    this.setupWuduUI();
+    this.setupMorningEveningUI();
 
     // تجهيز الأقسام الأربعة
     this.filterAzkar(this.currentCategory);
@@ -122,10 +135,28 @@ class AppController {
 
     this.setupEventListeners();
     this.setupPWAInstallation();
+    this.setupBackSwipeGesture();
+
+    // تهيئة سجل التصفح والرجوع (Browser & Gesture Back)
+    try {
+      history.replaceState({ tab: 'home' }, '');
+    } catch (e) {}
+
+    window.addEventListener('popstate', (e) => {
+      if (this.closeOpenModalsOrSidebar()) {
+        try {
+          history.pushState({ tab: this.activeTab }, '', '#' + this.activeTab);
+        } catch (err) {}
+        return;
+      }
+      const targetTab = (e.state && e.state.tab) ? e.state.tab : 'home';
+      this.switchTab(targetTab, false);
+    });
+
     this.applyRewardsSettings();
     this.updateUI();
     this.restoreGardenVisuals();
-    this.switchTab('home');
+    this.switchTab('home', false);
 
     if (!this.profile.name) {
       setTimeout(() => {
@@ -353,11 +384,13 @@ class AppController {
     this.confetti.burst(50);
   }
 
-  // ========== التبديل بين الشاشة الرئيسية والأقسام الثلاثة ==========
+  // ========== التبديل بين الشاشة الرئيسية والأقسام ==========
   setupTabNavigation() {
     const tabHome = document.getElementById('tab-home-btn');
-    const tabAzkar = document.getElementById('tab-azkar-btn');
+    const tabWudu = document.getElementById('tab-wudu-btn');
     const tabPrayer = document.getElementById('tab-prayer-btn');
+    const tabMorningEvening = document.getElementById('tab-morning-evening-btn');
+    const tabAzkar = document.getElementById('tab-azkar-btn');
     const tabAqeedah = document.getElementById('tab-aqeedah-btn');
     const tabSalawat = document.getElementById('tab-salawat-btn');
     const brandHomeLink = document.getElementById('brand-home-link');
@@ -366,6 +399,20 @@ class AppController {
       tabHome.addEventListener('click', () => {
         sounds.playPop();
         this.switchTab('home');
+      });
+    }
+
+    if (tabWudu) {
+      tabWudu.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('wudu');
+      });
+    }
+
+    if (tabMorningEvening) {
+      tabMorningEvening.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('morning_evening');
       });
     }
 
@@ -411,11 +458,13 @@ class AppController {
       });
     }
 
-    // ربط الكروت الأربعة الكبيرة في شاشة البداية للتنقل المباشر للأقسام
+    // ربط الكروت في شاشة البداية للتنقل المباشر للأقسام
     const cardAzkar = document.getElementById('card-launch-azkar');
     const cardPrayer = document.getElementById('card-launch-prayer');
     const cardAqeedah = document.getElementById('card-launch-aqeedah');
     const cardSalawat = document.getElementById('card-launch-salawat');
+    const cardWudu = document.getElementById('card-launch-wudu');
+    const cardME = document.getElementById('card-launch-morning-evening');
 
     if (cardAzkar) {
       cardAzkar.addEventListener('click', () => {
@@ -427,6 +476,34 @@ class AppController {
           e.preventDefault();
           sounds.playPop();
           this.switchTab('azkar');
+        }
+      });
+    }
+
+    if (cardWudu) {
+      cardWudu.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('wudu');
+      });
+      cardWudu.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sounds.playPop();
+          this.switchTab('wudu');
+        }
+      });
+    }
+
+    if (cardME) {
+      cardME.addEventListener('click', () => {
+        sounds.playPop();
+        this.switchTab('morning_evening');
+      });
+      cardME.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          sounds.playPop();
+          this.switchTab('morning_evening');
         }
       });
     }
@@ -473,6 +550,71 @@ class AppController {
       });
     }
 
+    // ربط القائمة الجانبية (Sidebar Drawer)
+    const btnSidebarToggle = document.getElementById('btn-sidebar-toggle');
+    const btnSidebarClose = document.getElementById('btn-sidebar-close');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    if (btnSidebarToggle) {
+      btnSidebarToggle.addEventListener('click', () => {
+        this.openSidebar();
+      });
+    }
+
+    if (btnSidebarClose) {
+      btnSidebarClose.addEventListener('click', () => {
+        sounds.playPop();
+        this.closeSidebar();
+      });
+    }
+
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', () => {
+        this.closeSidebar();
+      });
+    }
+
+    document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sounds.playPop();
+        const target = btn.dataset.nav;
+        this.closeSidebar();
+        if (target) this.switchTab(target);
+      });
+    });
+
+    const sidebarBtnSettings = document.getElementById('sidebar-btn-settings');
+    if (sidebarBtnSettings) {
+      sidebarBtnSettings.addEventListener('click', () => {
+        sounds.playPop();
+        this.closeSidebar();
+        this.openSettingsModal();
+      });
+    }
+
+    const sidebarBtnShare = document.getElementById('sidebar-btn-share');
+    if (sidebarBtnShare) {
+      sidebarBtnShare.addEventListener('click', () => {
+        this.closeSidebar();
+        this.shareAppViaWhatsApp();
+      });
+    }
+
+    // أزرار تبديل الوضع الليلي والنهاري
+    const btnThemeToggle = document.getElementById('btn-theme-toggle');
+    if (btnThemeToggle) {
+      btnThemeToggle.addEventListener('click', () => {
+        this.toggleTheme();
+      });
+    }
+
+    const sidebarBtnTheme = document.getElementById('sidebar-btn-theme');
+    if (sidebarBtnTheme) {
+      sidebarBtnTheme.addEventListener('click', () => {
+        this.toggleTheme();
+      });
+    }
+
     // ربط أزرار العودة للشاشة الرئيسية الموجودة أعلى كل قسم
     document.querySelectorAll('.btn-back-home').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -482,52 +624,121 @@ class AppController {
     });
   }
 
+  openSidebar() {
+    sounds.playPop();
+    const sidebar = document.getElementById('app-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar) sidebar.classList.remove('sidebar-closed');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+
+  closeSidebar() {
+    const sidebar = document.getElementById('app-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar) sidebar.classList.add('sidebar-closed');
+    if (overlay) overlay.classList.add('hidden');
+  }
+
+  initTheme() {
+    const saved = localStorage.getItem('bustan_theme') || 'light';
+    this.setTheme(saved);
+  }
+
+  setTheme(theme) {
+    this.currentTheme = theme;
+    localStorage.setItem('bustan_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    const iconHeader = document.getElementById('btn-theme-toggle');
+    const iconSidebar = document.getElementById('sidebar-theme-icon');
+    const iconText = theme === 'dark' ? '☀️' : '🌙';
+    if (iconHeader) iconHeader.textContent = iconText;
+    if (iconSidebar) iconSidebar.textContent = iconText;
+  }
+
+  toggleTheme() {
+    sounds.playPop();
+    const next = this.currentTheme === 'dark' ? 'light' : 'dark';
+    this.setTheme(next);
+  }
+
   clearAllSpeakingStyles() {
-    ['btn-speak', 'btn-prayer-speak', 'btn-aq-speak'].forEach(id => {
+    ['btn-speak', 'btn-prayer-speak', 'btn-aq-speak', 'btn-wudu-speak'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.remove('speaking-active');
     });
   }
 
-  switchTab(tab) {
+  switchTab(tab, pushHistory = true) {
     sounds.stopSpeaking();
     this.clearAllSpeakingStyles();
+
+    if (pushHistory && tab !== this.activeTab) {
+      try {
+        history.pushState({ tab: tab }, '', '#' + tab);
+      } catch (e) {}
+    }
+
     this.activeTab = tab;
+
     const tabHome = document.getElementById('tab-home-btn');
-    const tabAzkar = document.getElementById('tab-azkar-btn');
+    const tabWudu = document.getElementById('tab-wudu-btn');
     const tabPrayer = document.getElementById('tab-prayer-btn');
+    const tabMorningEvening = document.getElementById('tab-morning-evening-btn');
+    const tabAzkar = document.getElementById('tab-azkar-btn');
     const tabAqeedah = document.getElementById('tab-aqeedah-btn');
     const tabSalawat = document.getElementById('tab-salawat-btn');
 
     const secHome = document.getElementById('section-home');
-    const secAzkar = document.getElementById('section-azkar');
+    const secWudu = document.getElementById('section-wudu');
     const secPrayer = document.getElementById('section-prayer');
+    const secMorningEvening = document.getElementById('section-morning-evening');
+    const secAzkar = document.getElementById('section-azkar');
     const secAqeedah = document.getElementById('section-aqeedah');
     const secSalawat = document.getElementById('section-salawat');
 
     if (tabHome) tabHome.className = 'nav-tab-btn';
-    if (tabAzkar) tabAzkar.className = 'nav-tab-btn';
+    if (tabWudu) tabWudu.className = 'nav-tab-btn';
     if (tabPrayer) tabPrayer.className = 'nav-tab-btn';
+    if (tabMorningEvening) tabMorningEvening.className = 'nav-tab-btn';
+    if (tabAzkar) tabAzkar.className = 'nav-tab-btn';
     if (tabAqeedah) tabAqeedah.className = 'nav-tab-btn';
     if (tabSalawat) tabSalawat.className = 'nav-tab-btn';
 
     if (secHome) secHome.classList.add('hidden');
-    if (secAzkar) secAzkar.classList.add('hidden');
+    if (secWudu) secWudu.classList.add('hidden');
     if (secPrayer) secPrayer.classList.add('hidden');
+    if (secMorningEvening) secMorningEvening.classList.add('hidden');
+    if (secAzkar) secAzkar.classList.add('hidden');
     if (secAqeedah) secAqeedah.classList.add('hidden');
     if (secSalawat) secSalawat.classList.add('hidden');
+
+    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.nav === tab);
+    });
 
     if (tab === 'home') {
       if (tabHome) tabHome.classList.add('active-home');
       if (secHome) secHome.classList.remove('hidden');
       this.updateUI();
+    } else if (tab === 'wudu') {
+      if (tabWudu) tabWudu.classList.add('active-wudu');
+      if (secWudu) secWudu.classList.remove('hidden');
+      this.renderCurrentWuduStep();
+    } else if (tab === 'prayer') {
+      if (tabPrayer) tabPrayer.classList.add('active-prayer');
+      if (secPrayer) secPrayer.classList.remove('hidden');
+    } else if (tab === 'morning_evening') {
+      if (tabMorningEvening) tabMorningEvening.classList.add('active-morning-evening');
+      if (secMorningEvening) secMorningEvening.classList.remove('hidden');
+      this.renderMorningEveningSection();
     } else if (tab === 'azkar') {
       if (tabAzkar) tabAzkar.classList.add('active-azkar');
       if (secAzkar) secAzkar.classList.remove('hidden');
       if (this.garden) this.garden.resize();
-    } else if (tab === 'prayer') {
-      if (tabPrayer) tabPrayer.classList.add('active-prayer');
-      if (secPrayer) secPrayer.classList.remove('hidden');
     } else if (tab === 'aqeedah') {
       if (tabAqeedah) tabAqeedah.classList.add('active-aqeedah');
       if (secAqeedah) secAqeedah.classList.remove('hidden');
@@ -538,6 +749,61 @@ class AppController {
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // دعم إيماءات اللمس من جانب الشاشة (Backstroke Swipe & System Back)
+  setupBackSwipeGesture() {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isEdgeSwipe = false;
+
+    window.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      const screenWidth = window.innerWidth;
+
+      // فحص إن كانت اللمسة بدأت بالقرب من حافة الشاشة (اليمنى أو اليسرى بمقدار 55 بكسل)
+      if (touchStartX > screenWidth - 55 || touchStartX < 55) {
+        isEdgeSwipe = true;
+      } else {
+        isEdgeSwipe = false;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      if (!isEdgeSwipe) return;
+      if (!e.changedTouches.length) return;
+      const t = e.changedTouches[0];
+      const diffX = t.clientX - touchStartX;
+      const diffY = t.clientY - touchStartY;
+
+      // حركة أفقية ملحوظة كإيماءة رجوع (أكثر من 60 بكسل أفقياً وأقل من 65 رأسياً)
+      if (Math.abs(diffX) > 60 && Math.abs(diffY) < 65) {
+        if (this.closeOpenModalsOrSidebar()) {
+          return;
+        }
+        if (this.activeTab !== 'home') {
+          sounds.playPop();
+          this.switchTab('home');
+        }
+      }
+    }, { passive: true });
+  }
+
+  closeOpenModalsOrSidebar() {
+    const sidebar = document.getElementById('app-sidebar');
+    if (sidebar && !sidebar.classList.contains('sidebar-closed')) {
+      this.closeSidebar();
+      return true;
+    }
+    const activeModal = document.querySelector('.modal-overlay.active, .bottom-sheet-overlay.active');
+    if (activeModal) {
+      activeModal.classList.remove('active');
+      return true;
+    }
+    return false;
   }
 
   // ========== 🌿 قسم بستان الأذكار ==========
@@ -689,6 +955,265 @@ class AppController {
     this.currentDhikrIndex = (this.currentDhikrIndex - 1 + this.filteredAzkar.length) % this.filteredAzkar.length;
     this.currentDhikrCount = 0;
     this.renderCurrentDhikr();
+  }
+
+  // ========== 💧 قسم تعليم الوضوء للصغار ==========
+  setupWuduUI() {
+    const prevBtn = document.getElementById('btn-wudu-prev');
+    const nextBtn = document.getElementById('btn-wudu-next');
+    const audioBtn = document.getElementById('btn-wudu-speak');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        this.prevWuduStep();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        this.nextWuduStep();
+      });
+    }
+
+    if (audioBtn) {
+      audioBtn.addEventListener('click', () => {
+        this.speakCurrentWuduStep();
+      });
+    }
+  }
+
+  renderCurrentWuduStep() {
+    if (typeof WUDU_STEPS === 'undefined' || !WUDU_STEPS.length) return;
+    const step = WUDU_STEPS[this.currentWuduStep];
+    const total = WUDU_STEPS.length;
+
+    const indEl = document.getElementById('wudu-step-indicator');
+    if (indEl) indEl.textContent = `الخطوة ${this.currentWuduStep + 1} من ${total}`;
+
+    const ruleEl = document.getElementById('wudu-rule-badge');
+    if (ruleEl) ruleEl.textContent = step.rule || 'سُنَّة';
+
+    const repeatEl = document.getElementById('wudu-repeat-badge');
+    if (repeatEl) repeatEl.textContent = step.repeat || 'مرة واحدة';
+
+    const titleEl = document.getElementById('wudu-step-title');
+    if (titleEl) titleEl.textContent = step.title;
+
+    const actionEl = document.getElementById('wudu-step-action');
+    if (actionEl) actionEl.textContent = step.action;
+
+    const arabicEl = document.getElementById('wudu-step-arabic');
+    if (arabicEl) arabicEl.textContent = step.arabic;
+
+    const meaningEl = document.getElementById('wudu-step-meaning');
+    if (meaningEl) meaningEl.textContent = step.meaning;
+
+    const tipEl = document.getElementById('wudu-step-tip');
+    if (tipEl) tipEl.innerHTML = `💡 <b>نصيحة للبطل:</b> ${step.tip}`;
+
+    // صورة أو إيموجي الخطوة
+    const imgContainer = document.getElementById('wudu-img-container');
+    if (imgContainer) {
+      const imgSrc = WUDU_IMAGES_PATH + step.image;
+      imgContainer.innerHTML = `
+        <img src="${imgSrc}" alt="${step.title}" class="wudu-step-img" onerror="this.style.display='none'; document.getElementById('wudu-fallback-icon').style.display='flex';">
+        <div class="wudu-img-placeholder" id="wudu-fallback-icon" style="display: none;">
+          <span class="wudu-img-placeholder-icon">${step.icon}</span>
+          <span style="font-size: 0.95rem; font-weight: 700; color: #0891b2;">${step.title}</span>
+        </div>
+      `;
+    }
+
+    // مؤشر النقاط
+    const bar = document.getElementById('wudu-progress-bar');
+    if (bar) {
+      bar.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('div');
+        dot.className = `step-bar-dot ${i === this.currentWuduStep ? 'active' : (i < this.currentWuduStep ? 'completed' : '')}`;
+        bar.appendChild(dot);
+      }
+    }
+
+    const prevBtn = document.getElementById('btn-wudu-prev');
+    const nextBtn = document.getElementById('btn-wudu-next');
+
+    if (prevBtn) {
+      prevBtn.style.visibility = this.currentWuduStep === 0 ? 'hidden' : 'visible';
+    }
+
+    if (nextBtn) {
+      if (this.currentWuduStep === total - 1) {
+        nextBtn.textContent = 'أتممتُ الوضوء بحمد الله! 🌟';
+        nextBtn.className = 'wudu-btn wudu-btn-complete';
+      } else {
+        nextBtn.textContent = 'الخطوة التالية ⬅️';
+        nextBtn.className = 'wudu-btn wudu-btn-next';
+      }
+    }
+  }
+
+  nextWuduStep() {
+    if (typeof WUDU_STEPS === 'undefined') return;
+    const total = WUDU_STEPS.length;
+    if (this.currentWuduStep < total - 1) {
+      this.currentWuduStep++;
+      sounds.playPop();
+      this.renderCurrentWuduStep();
+    } else {
+      this.onWuduCompleted();
+    }
+  }
+
+  prevWuduStep() {
+    if (this.currentWuduStep > 0) {
+      this.currentWuduStep--;
+      sounds.playPop();
+      this.renderCurrentWuduStep();
+    }
+  }
+
+  speakCurrentWuduStep() {
+    if (typeof WUDU_STEPS === 'undefined') return;
+    const step = WUDU_STEPS[this.currentWuduStep];
+    const textToSpeak = `${step.action}. ${step.arabic}. ${step.meaning}`;
+    sounds.stopSpeaking();
+    sounds.speakText(textToSpeak, () => {}, () => {});
+  }
+
+  onWuduCompleted() {
+    sounds.playVictory();
+    sounds.playCoin();
+    this.confetti.burst(60);
+    this.state.coins += 30;
+    this.saveState();
+    this.updateUI();
+    alert('مبارك يا بطل! 🎉 لقد أتممت خطوات الوضوء الصحيحة وحصلت على +30 حسنة في حصالتك! وضوءك نور وطهارة صلاتك مقبولة إن شاء الله. 💧✨');
+    this.currentWuduStep = 0;
+    this.renderCurrentWuduStep();
+    this.switchTab('home');
+  }
+
+  // ========== ☀️ قسم أذكار الصباح والمساء ==========
+  setupMorningEveningUI() {
+    const btnM = document.getElementById('btn-me-morning');
+    const btnE = document.getElementById('btn-me-evening');
+
+    if (btnM) {
+      btnM.addEventListener('click', () => {
+        sounds.playPop();
+        this.currentMeType = 'morning';
+        this.renderMorningEveningSection();
+      });
+    }
+
+    if (btnE) {
+      btnE.addEventListener('click', () => {
+        sounds.playPop();
+        this.currentMeType = 'evening';
+        this.renderMorningEveningSection();
+      });
+    }
+  }
+
+  renderMorningEveningSection() {
+    const btnM = document.getElementById('btn-me-morning');
+    const btnE = document.getElementById('btn-me-evening');
+    if (btnM && btnE) {
+      btnM.classList.toggle('active', this.currentMeType === 'morning');
+      btnE.classList.toggle('active', this.currentMeType === 'evening');
+    }
+
+    const data = this.currentMeType === 'morning' ? (typeof MORNING_AZKAR_DATA !== 'undefined' ? MORNING_AZKAR_DATA : []) : (typeof EVENING_AZKAR_DATA !== 'undefined' ? EVENING_AZKAR_DATA : []);
+    const container = document.getElementById('me-cards-list');
+    if (!container) return;
+
+    let completed = 0;
+    data.forEach(item => {
+      const c = this.meCounts[item.id] || 0;
+      if (c >= item.target) completed++;
+    });
+
+    const percent = data.length ? Math.round((completed / data.length) * 100) : 0;
+    const progressText = document.getElementById('me-progress-text');
+    const progressFill = document.getElementById('me-progress-fill');
+    const progressPercent = document.getElementById('me-progress-percent');
+
+    if (progressText) progressText.textContent = `إنجازك: ${completed} من ${data.length} أذكار`;
+    if (progressFill) progressFill.style.width = `${percent}%`;
+    if (progressPercent) progressPercent.textContent = `${percent}%`;
+
+    container.innerHTML = '';
+    data.forEach(item => {
+      const currentCount = this.meCounts[item.id] || 0;
+      const isDone = currentCount >= item.target;
+
+      const card = document.createElement('div');
+      card.className = `me-card ${isDone ? 'completed' : ''}`;
+
+      card.innerHTML = `
+        <div class="me-card-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.5rem;">${item.icon || '☀️'}</span>
+            <span class="me-card-title">${item.title}</span>
+          </div>
+          <span style="font-size: 0.8rem; font-weight: 800; color: #10b981; background: rgba(16, 185, 129, 0.15); padding: 3px 10px; border-radius: 20px;">+${item.reward} حسنة</span>
+        </div>
+
+        <div class="me-arabic">${item.arabic}</div>
+        <div class="me-virtue">💡 <b>الفضل والبركة:</b> ${item.virtue}</div>
+
+        <div class="me-card-footer">
+          <button type="button" class="wudu-audio-btn me-speak-btn" data-id="${item.id}" style="margin: 0;">
+            <span>🔊</span>
+            <span>استمع</span>
+          </button>
+          <button type="button" class="me-counter-btn ${isDone ? 'done' : ''}" data-id="${item.id}">
+            <span>${isDone ? 'أتممتَ الذكر ✅' : 'ردّد وسَبِّح 💧'}</span>
+            <span style="font-size: 1.15rem; font-weight: 900;">${currentCount} / ${item.target}</span>
+          </button>
+        </div>
+      `;
+
+      const speakBtn = card.querySelector('.me-speak-btn');
+      speakBtn.onclick = () => {
+        sounds.stopSpeaking();
+        sounds.speakText(item.arabic, () => {}, () => {});
+      };
+
+      const countBtn = card.querySelector('.me-counter-btn');
+      countBtn.onclick = () => {
+        if (isDone) {
+          sounds.playPop();
+          return;
+        }
+        sounds.playWaterDrop();
+        if (navigator.vibrate) navigator.vibrate(30);
+
+        const newCount = (this.meCounts[item.id] || 0) + 1;
+        this.meCounts[item.id] = newCount;
+
+        if (newCount >= item.target) {
+          sounds.playCoin();
+          this.state.coins += item.reward;
+          this.saveState();
+          this.updateUI();
+
+          const nowDone = data.filter(d => (this.meCounts[d.id] || 0) >= d.target).length;
+          if (nowDone === data.length) {
+            sounds.playVictory();
+            this.confetti.burst(70);
+            this.state.coins += 50;
+            this.saveState();
+            this.updateUI();
+            alert(`هنيئاً لك يا بطل! 🌟 لقد أتممت ${this.currentMeType === 'morning' ? 'أذكار الصباح' : 'أذكار المساء'} كاملة ونلت حصن الحفظ الإلهي وبونص +50 حسنة! 🎉`);
+          }
+        }
+        this.renderMorningEveningSection();
+      };
+
+      container.appendChild(card);
+    });
   }
 
   // ========== 🕌 قسم تعليم الصلاة ==========

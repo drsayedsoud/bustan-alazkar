@@ -3444,3 +3444,834 @@ body {
     font-size: 1.05rem;
   }
 }
+
+
+/* ==========================================================================
+   🌙 1. الوضع الليلي (Dark Mode Theme)
+   ========================================================================== */
+[data-theme="dark"] {
+  --sky-top: #0b1329;
+  --sky-bottom: #1e293b;
+  --card-bg: rgba(30, 41, 59, 0.95);
+  --text-dark: #f8fafc;
+  --text-muted: #cbd5e1;
+  --primary: #10b981;
+  --primary-dark: #059669;
+  --primary-light: #064e3b;
+  --accent: #f59e0b;
+  --accent-light: #78350f;
+  --prayer-theme: #818cf8;
+  --prayer-light: #312e81;
+  --aqeedah-theme: #38bdf8;
+  --aqeedah-light: #0c4a6e;
+  --wudu-theme: #22d3ee;
+  --wudu-light: #164e63;
+  --home-theme: #fbbf24;
+  --home-light: #78350f;
+  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] body {
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  color: var(--text-dark);
+}
+
+[data-theme="dark"] .app-header {
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom: 2px solid rgba(51, 65, 85, 0.6);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .brand-title {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .brand-greeting {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(71, 85, 105, 0.7);
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .icon-btn {
+  background: rgba(51, 65, 85, 0.7);
+  border-color: rgba(71, 85, 105, 0.8);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .icon-btn:hover {
+  background: rgba(71, 85, 105, 0.9);
+}
+
+[data-theme="dark"] .main-nav-tabs {
+  background: rgba(15, 23, 42, 0.92);
+  border-color: rgba(51, 65, 85, 0.6);
+}
+
+[data-theme="dark"] .nav-tab-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .nav-tab-btn.active-home,
+[data-theme="dark"] .nav-tab-btn.active-wudu,
+[data-theme="dark"] .nav-tab-btn.active-prayer,
+[data-theme="dark"] .nav-tab-btn.active-morning-evening,
+[data-theme="dark"] .nav-tab-btn.active-azkar,
+[data-theme="dark"] .nav-tab-btn.active-aqeedah,
+[data-theme="dark"] .nav-tab-btn.active-salawat {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .home-hero-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+  border-color: rgba(51, 65, 85, 0.7);
+}
+
+[data-theme="dark"] .home-hero-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .home-hero-subtitle {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .quick-stat-badge {
+  background: rgba(51, 65, 85, 0.6);
+  border-color: rgba(71, 85, 105, 0.6);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .home-card {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(51, 65, 85, 0.6);
+}
+
+[data-theme="dark"] .home-card .card-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .home-card .card-tagline {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .prayer-step-card,
+[data-theme="dark"] .wudu-step-card,
+[data-theme="dark"] .azkar-card,
+[data-theme="dark"] .me-card,
+[data-theme="dark"] .aqeedah-lesson-card {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(51, 65, 85, 0.6);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .prayer-step-arabic,
+[data-theme="dark"] .wudu-step-arabic,
+[data-theme="dark"] .me-arabic {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #fef08a;
+}
+
+[data-theme="dark"] .prayer-step-tip,
+[data-theme="dark"] .wudu-step-tip,
+[data-theme="dark"] .me-virtue {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .modal-card,
+[data-theme="dark"] .modal-card-choice,
+[data-theme="dark"] .modal-card-settings {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid rgba(71, 85, 105, 0.6);
+}
+
+[data-theme="dark"] .modal-title {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .modal-desc {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .bottom-sheet-content {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+/* ==========================================================================
+   ☰ 2. القائمة الجانبية المنسدلة (Sidebar Drawer)
+   ========================================================================== */
+.btn-hamburger {
+  font-size: 1.25rem;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid rgba(2, 132, 199, 0.2);
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+}
+
+.btn-hamburger:hover {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+  display: none !important;
+}
+
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 310px;
+  max-width: 86vw;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 35px rgba(0, 0, 0, 0.25);
+  transform: translateX(0);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  border-left: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.app-sidebar.sidebar-closed {
+  transform: translateX(105%);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-brand img {
+  width: 40px;
+  height: 40px;
+}
+
+.sidebar-brand h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+[data-theme="dark"] .sidebar-brand h2 {
+  color: #38bdf8;
+}
+
+.sidebar-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+.sidebar-profile-card {
+  margin: 14px 16px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.12));
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+[data-theme="dark"] .sidebar-profile-card {
+  background: rgba(51, 65, 85, 0.6);
+  border-color: rgba(71, 85, 105, 0.7);
+}
+
+.sidebar-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-profile-avatar {
+  font-size: 2.2rem;
+}
+
+.sidebar-profile-name {
+  font-weight: 800;
+  font-size: 0.98rem;
+  color: var(--text-dark);
+}
+
+.sidebar-profile-title {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.sidebar-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  flex: 1;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: right;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(16, 185, 129, 0.12);
+  transform: translateX(-4px);
+}
+
+.sidebar-nav-item.active {
+  background: var(--primary);
+  color: white !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.sidebar-nav-icon {
+  font-size: 1.35rem;
+  width: 28px;
+  text-align: center;
+}
+
+.sidebar-nav-label {
+  flex: 1;
+}
+
+.sidebar-nav-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(245, 158, 11, 0.2);
+  color: #b45309;
+  font-weight: 800;
+}
+
+.sidebar-nav-item.active .sidebar-nav-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.sidebar-footer {
+  padding: 14px 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--text-dark);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sidebar-action-btn:hover {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+/* ==========================================================================
+   💧 3. قسم تعليم الوضوء للصغار (#section-wudu)
+   ========================================================================== */
+.wudu-banner {
+  background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+  color: white;
+  border-radius: var(--radius-xl);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.35);
+}
+
+.wudu-banner-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.wudu-banner-desc {
+  font-size: 0.9rem;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+.wudu-step-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+  border: 2px solid rgba(6, 182, 212, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.wudu-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.wudu-rule-badge {
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(6, 182, 212, 0.15);
+  color: #0891b2;
+}
+
+.wudu-repeat-badge {
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+}
+
+.wudu-img-container {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #f0fdfa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 15px rgba(6, 182, 212, 0.15);
+  border: 2px solid rgba(6, 182, 212, 0.25);
+  position: relative;
+}
+
+[data-theme="dark"] .wudu-img-container {
+  background: #0f172a;
+}
+
+.wudu-step-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+.wudu-img-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #0891b2;
+  text-align: center;
+  padding: 20px;
+}
+
+.wudu-img-placeholder-icon {
+  font-size: 5.5rem;
+  animation: floatBounce 2.5s infinite ease-in-out;
+}
+
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.wudu-step-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0e7490;
+}
+
+[data-theme="dark"] .wudu-step-title {
+  color: #38bdf8;
+}
+
+.wudu-step-action {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.65;
+}
+
+.wudu-step-arabic {
+  background: #f0fdfa;
+  border: 2px dashed #99f6e4;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  font-family: 'Amiri', serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #0f766e;
+  text-align: center;
+  line-height: 1.85;
+}
+
+.wudu-step-meaning {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.wudu-step-tip {
+  background: #fefce8;
+  border-right: 4px solid #facc15;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  color: #854d0e;
+  line-height: 1.6;
+}
+
+.wudu-audio-btn {
+  background: #ecfeff;
+  border: 2px solid #a5f3fc;
+  color: #0891b2;
+  border-radius: var(--radius-lg);
+  padding: 10px 14px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  transition: all 0.2s;
+}
+
+[data-theme="dark"] .wudu-audio-btn {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #22d3ee;
+}
+
+.wudu-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.wudu-btn {
+  flex: 1;
+  padding: 13px 18px;
+  border-radius: var(--radius-lg);
+  border: none;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.wudu-btn-prev {
+  background: #e2e8f0;
+  color: #475569;
+  flex: 0 0 auto;
+  min-width: 110px;
+}
+
+[data-theme="dark"] .wudu-btn-prev {
+  background: #334155;
+  color: #cbd5e1;
+}
+
+.wudu-btn-next {
+  background: #06b6d4;
+  color: white;
+  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35);
+}
+
+.wudu-btn-complete {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+/* ==========================================================================
+   ☀️ 4. قسم أذكار الصباح والمساء (#section-morning-evening)
+   ========================================================================== */
+.me-type-switcher {
+  display: flex;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50px;
+  padding: 6px;
+  box-shadow: var(--shadow-soft);
+  gap: 8px;
+  max-width: 440px;
+  width: 100%;
+  margin: 0 auto 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+[data-theme="dark"] .me-type-switcher {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(51, 65, 85, 0.6);
+}
+
+.me-type-btn {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 50px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 1.02rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.me-type-btn.active.type-morning {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: white;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+}
+
+.me-type-btn.active.type-evening {
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  color: white;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+}
+
+.me-progress-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.me-progress-bar-wrap {
+  flex: 1;
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .me-progress-bar-wrap {
+  background: #334155;
+}
+
+.me-progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #10b981, #06b6d4);
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.me-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.me-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-soft);
+  border: 2px solid rgba(148, 163, 184, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.me-card.completed {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.06);
+}
+
+.me-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.me-card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.me-arabic {
+  font-family: 'Amiri', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.85;
+  background: rgba(248, 250, 252, 0.8);
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  text-align: justify;
+}
+
+.me-virtue {
+  font-size: 0.9rem;
+  color: #0369a1;
+  background: #f0f9ff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  line-height: 1.5;
+  border-right: 3px solid #0284c7;
+}
+
+.me-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.me-counter-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transition: all 0.15s ease;
+}
+
+.me-counter-btn:active {
+  transform: scale(0.94);
+}
+
+.me-counter-btn.done {
+  background: #64748b;
+  cursor: default;
+  box-shadow: none;
+}
+
+
+/* ==========================================================================
+   🌟 شاشة البداية المبسطة بدون تشتيت للأطفال (.simplified-hero & .simple-grid)
+   ========================================================================== */
+.simplified-hero {
+  padding: 16px 20px;
+  gap: 10px;
+}
+
+.simplified-hero .home-hero-title {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+}
+
+.simple-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.card-icon-big {
+  font-size: 3.6rem;
+  text-align: center;
+  margin: 8px 0 2px;
+  animation: floatBounce 3s infinite ease-in-out;
+}
+
+@media (max-width: 640px) {
+  .simple-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card-icon-big {
+    font-size: 3rem;
+  }
+}

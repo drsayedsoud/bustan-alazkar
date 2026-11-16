@@ -18,37 +18,124 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
   <script>
     // تنظيف فوري للكاشات القديمة
     if ('caches' in window) {
       caches.keys().then(function(keys) {
         keys.forEach(function(k) {
-          if (k !== 'bustan-alazkar-v13') caches.delete(k);
+          if (k !== 'bustan-alazkar-v14') caches.delete(k);
         });
       });
     }
   </script>
   <!-- سكريبت إبقاء الشاشة مضاءة دائماً (Always-On Screen Wake Lock) -->
-  <script src="js/wake-lock.js?v=13"></script>
+  <script src="js/wake-lock.js?v=14"></script>
 </head>
 <body>
 
+  <!-- طبقة التعتيم للقائمة الجانبية المنسدلة -->
+  <div class="sidebar-overlay hidden" id="sidebar-overlay"></div>
+
+  <!-- ☰ القائمة الجانبية الشاملة (Sidebar Drawer) -->
+  <aside class="app-sidebar sidebar-closed" id="app-sidebar" aria-label="القائمة الجانبية">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <img src="icons/icon.svg" alt="شعار البطل">
+        <h2>البَطَلُ المُسْلِم</h2>
+      </div>
+      <button type="button" class="sidebar-close-btn" id="btn-sidebar-close" aria-label="إغلاق القائمة">✕</button>
+    </div>
+
+    <!-- كارت ملخص البطل الصغير -->
+    <div class="sidebar-profile-card">
+      <div class="sidebar-profile-info">
+        <span class="sidebar-profile-avatar" id="sidebar-avatar">👦</span>
+        <div>
+          <div class="sidebar-profile-name" id="sidebar-name">البطل الصغير</div>
+          <div class="sidebar-profile-title">مداوم على الصلاة والأذكار 🌟</div>
+        </div>
+      </div>
+      <div class="badge badge-coins" title="حصالة الحسنات">
+        <span>💰</span>
+        <span id="sidebar-coins">0</span>
+      </div>
+    </div>
+
+    <!-- روابط أقسام التطبيق الشاملة -->
+    <nav class="sidebar-nav-list" aria-label="أقسام القائمة">
+      <button type="button" class="sidebar-nav-item active" data-nav="home">
+        <span class="sidebar-nav-icon">🏠</span>
+        <span class="sidebar-nav-label">الرئيسية</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" data-nav="wudu">
+        <span class="sidebar-nav-icon">💧</span>
+        <span class="sidebar-nav-label">تعلّم الوضوء</span>
+        <span class="sidebar-nav-badge">جديد ✨</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" data-nav="prayer">
+        <span class="sidebar-nav-icon">🕌</span>
+        <span class="sidebar-nav-label">مُدرِّب الصلاة</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" data-nav="morning_evening">
+        <span class="sidebar-nav-icon">☀️</span>
+        <span class="sidebar-nav-label">أذكار الصباح والمساء</span>
+        <span class="sidebar-nav-badge">جديد 🌸</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" data-nav="azkar">
+        <span class="sidebar-nav-icon">🌿</span>
+        <span class="sidebar-nav-label">بُستان الأذكار</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" data-nav="aqeedah">
+        <span class="sidebar-nav-icon">📖</span>
+        <span class="sidebar-nav-label">عَقِيدَتِي نُورِي</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" data-nav="salawat">
+        <span class="sidebar-nav-icon">🕌</span>
+        <span class="sidebar-nav-label">صَلَوَاتِي (الميزان الأسبوعي)</span>
+      </button>
+    </nav>
+
+    <!-- أدوات وإعدادات إضافية -->
+    <div class="sidebar-footer">
+      <button type="button" class="sidebar-action-btn" id="sidebar-btn-theme">
+        <span>الوضع الليلي / النهاري</span>
+        <span id="sidebar-theme-icon">🌙</span>
+      </button>
+      <button type="button" class="sidebar-action-btn" id="sidebar-btn-settings">
+        <span>⚙️ إعدادات المكافآت</span>
+        <span>⚙️</span>
+      </button>
+      <button type="button" class="sidebar-action-btn" id="sidebar-btn-share">
+        <span>💬 مشاركة مع الأصدقاء</span>
+        <span>📲</span>
+      </button>
+    </div>
+  </aside>
+
   <!-- شريط الرأس -->
   <header class="app-header">
-    <div class="brand" id="brand-home-link" role="button" tabindex="0" title="العودة للشاشة الرئيسية">
-      <img src="icons/icon.svg" class="brand-icon-img" alt="شعار البطل المسلم">
-      <div>
-        <h1 class="brand-title">البَطَلُ المُسْلِم</h1>
-        <div class="brand-greeting" id="header-greeting" title="اضغط لتعديل الاسم">
-          <span id="greeting-avatar">👦</span>
-          <span id="greeting-text">أهلاً بالبطل الصغير</span>
-          <span style="font-size: 0.75rem; opacity: 0.7;">✏️</span>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <button type="button" class="icon-btn btn-hamburger" id="btn-sidebar-toggle" title="القائمة الجانبية الشاملة" aria-label="فتح القائمة">
+        ☰
+      </button>
+      <div class="brand" id="brand-home-link" role="button" tabindex="0" title="العودة للشاشة الرئيسية">
+        <img src="icons/icon.svg" class="brand-icon-img" alt="شعار البطل المسلم">
+        <div>
+          <h1 class="brand-title">البَطَلُ المُسْلِم</h1>
+          <div class="brand-greeting" id="header-greeting" title="اضغط لتعديل الاسم">
+            <span id="greeting-avatar">👦</span>
+            <span id="greeting-text">أهلاً بالبطل الصغير</span>
+            <span style="font-size: 0.75rem; opacity: 0.7;">✏️</span>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="header-badges">
+      <!-- زر تبديل الوضع الليلي والنهاري السريع -->
+      <button type="button" class="icon-btn btn-theme-toggle" id="btn-theme-toggle" title="تبديل الوضع الليلي / النهاري" aria-label="تبديل الوضع الليلي">🌙</button>
+
       <!-- زر تثبيت التطبيق السريع في شريط الرأس -->
       <button type="button" class="btn-install-header hidden" id="btn-header-install" title="تثبيت التطبيق على جهازك">
         <span>📲</span>
@@ -81,13 +168,21 @@
       <span>🏠</span>
       <span>الرئيسية</span>
     </button>
-    <button type="button" class="nav-tab-btn" id="tab-azkar-btn" aria-label="بستان الأذكار">
-      <span>🌿</span>
-      <span>بُستان الأذكار</span>
+    <button type="button" class="nav-tab-btn" id="tab-wudu-btn" aria-label="تعلّم الوضوء">
+      <span>💧</span>
+      <span>الوضوء</span>
     </button>
     <button type="button" class="nav-tab-btn" id="tab-prayer-btn" aria-label="تعلّم الصلاة">
       <span>🕌</span>
-      <span>تعلّم الصلاة</span>
+      <span>الصلاة</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="tab-morning-evening-btn" aria-label="أذكار الصباح والمساء">
+      <span>☀️</span>
+      <span>الصباح والمساء</span>
+    </button>
+    <button type="button" class="nav-tab-btn" id="tab-azkar-btn" aria-label="بستان الأذكار">
+      <span>🌿</span>
+      <span>بُستان الأذكار</span>
     </button>
     <button type="button" class="nav-tab-btn" id="tab-aqeedah-btn" aria-label="عقيدتي">
       <span>📖</span>
@@ -102,10 +197,10 @@
   <!-- الحاوية الرئيسية -->
   <main class="main-container">
 
-    <!-- ==================== 0. شاشة البداية (الـ 3 كروت الكبيرة) ==================== -->
+    <!-- ==================== 0. شاشة البداية المبسطة للبطل الصغير ==================== -->
     <section class="app-section" id="section-home">
-      <!-- بطاقة ترحيب وتشجيع للبطل -->
-      <div class="home-hero-card">
+      <!-- بطاقة ترحيب مبهجة ومبسطة للطفل -->
+      <div class="home-hero-card simplified-hero">
         <div class="home-hero-avatar-wrap">
           <span class="home-hero-avatar" id="home-hero-avatar">👦</span>
           <span class="home-hero-tag">🌟 بطل اليوم</span>
@@ -114,9 +209,6 @@
           <h2 class="home-hero-title">
             أَهْلاً بِكَ يَا <span id="home-hero-name" class="highlight-hero-name">بَطَلَنَا الصَّغِير</span>! 🚀
           </h2>
-          <p class="home-hero-subtitle">
-            اختر مغامرتك الإيمانية الممتعة اليوم؛ ردد الأذكار، تعلّم الصلاة، واقرأ في العقيدة لتربح الحسنات وتعمّر بستانك الجميل:
-          </p>
           <div class="home-quick-stats">
             <div class="quick-stat-badge">
               <span>💰</span>
@@ -128,86 +220,41 @@
             </div>
             <div class="quick-stat-badge">
               <span>🌱</span>
-              <span>أزهار وثمار: <b id="home-stat-tree">0</b></span>
+              <span>الثمار: <b id="home-stat-tree">0</b></span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- شبكة الكروت الثلاثة الرئيسية (مختصرين الكلام والوان مختلفة وصور معبرة) -->
-      <div class="home-cards-grid">
+      <!-- شبكة مغامرات البطل الستة الكبيرة والمبسطة بدون أي تشتيت -->
+      <div class="home-cards-grid simple-grid">
 
-        <!-- الكارت 1: بُستان الأذكار (أخضر زمردي مع شجرة الأذكار) -->
-        <article class="home-card card-azkar" id="card-launch-azkar" role="button" tabindex="0" aria-label="الدخول إلى بستان الأذكار">
+        <!-- 1. تعلّم الوضوء -->
+        <article class="home-card card-wudu" id="card-launch-wudu" role="button" tabindex="0" aria-label="الدخول إلى تعلّم الوضوء">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">🌸 سُقيا الحَسَنَات</div>
-          
-          <div class="card-expressive-img">
-            <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="treeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#34d399"/>
-                  <stop offset="100%" stop-color="#059669"/>
-                </linearGradient>
-              </defs>
-              <circle cx="50" cy="50" r="46" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="3"/>
-              <ellipse cx="50" cy="80" rx="32" ry="11" fill="#10b981"/>
-              <path d="M46 80 L47 56 L53 56 L54 80 Z" fill="#78350f"/>
-              <circle cx="50" cy="42" r="20" fill="url(#treeGrad)"/>
-              <circle cx="37" cy="50" r="15" fill="#10b981"/>
-              <circle cx="63" cy="50" r="15" fill="#10b981"/>
-              <circle cx="50" cy="34" r="16" fill="#6ee7b7"/>
-              <circle cx="42" cy="40" r="3.5" fill="#ef4444"/>
-              <circle cx="58" cy="43" r="3.5" fill="#f59e0b"/>
-              <circle cx="50" cy="51" r="3" fill="#f43f5e"/>
-              <path d="M50 14 C50 14 44 21 44 26 C44 29.3 46.7 32 50 32 C53.3 32 56 29.3 56 26 C56 21 50 14 50 14 Z" fill="#38bdf8"/>
-            </svg>
-          </div>
-
+          <div class="card-badge-top">💧 طهارة ونور</div>
+          <div class="card-icon-big">🧼</div>
           <div class="card-body">
-            <h3 class="card-title">بُسْتَانُ الأَذْكَارِ</h3>
-            <p class="card-tagline">اسقِ شجرتك ورَدِّدْ أذكارك كل يوم 💧</p>
+            <h3 class="card-title">تَعَلَّمِ الْوُضُوءَ</h3>
+            <p class="card-tagline">خطوات الوضوء الصحيحة بالصور 💧</p>
           </div>
-
           <div class="card-footer">
-            <div class="card-action-btn btn-azkar">
-              <span>ادخل البستان</span>
+            <div class="card-action-btn" style="background: #06b6d4; color: white;">
+              <span>ابدأ الآن</span>
               <span class="btn-arrow">⬅️</span>
             </div>
           </div>
         </article>
 
-        <!-- الكارت 2: مُدرِّب الصلاة (بنفسجي ملكي مع مسجد الصلاة الذهبي) -->
+        <!-- 2. مُدرِّب الصلاة -->
         <article class="home-card card-prayer" id="card-launch-prayer" role="button" tabindex="0" aria-label="الدخول إلى مدرب الصلاة">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">🕌 5 صلوات مفروضة</div>
-          
-          <div class="card-expressive-img">
-            <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="46" fill="#f5f3ff" stroke="#c7d2fe" stroke-width="3"/>
-              <!-- هلال ذهبي ونجوم -->
-              <path d="M65 20 A9 9 0 1 0 71 33 A7 7 0 1 1 65 20 Z" fill="#f59e0b"/>
-              <circle cx="36" cy="22" r="2" fill="#fef08a"/>
-              <circle cx="28" cy="30" r="1.5" fill="#fef08a"/>
-              <!-- مبنى المسجد -->
-              <rect x="27" y="55" width="46" height="30" rx="4" fill="#ffffff"/>
-              <!-- قبة المسجد الذهبية -->
-              <path d="M32 55 C32 37 68 37 68 55 Z" fill="#f59e0b"/>
-              <circle cx="50" cy="31" r="3" fill="#fbbf24"/>
-              <!-- باب المسجد -->
-              <path d="M44 85 L44 68 C44 64 56 64 56 68 L56 85 Z" fill="#4338ca"/>
-              <!-- مئذنة جانبية -->
-              <rect x="17" y="40" width="8" height="45" rx="2" fill="#e0e7ff"/>
-              <path d="M15 40 L21 28 L27 40 Z" fill="#f59e0b"/>
-              <circle cx="21" cy="25" r="2" fill="#fbbf24"/>
-            </svg>
-          </div>
-
+          <div class="card-badge-top">🕌 5 صلوات</div>
+          <div class="card-icon-big">🤲</div>
           <div class="card-body">
             <h3 class="card-title">مُدَرِّبُ الصَّلَاةِ</h3>
-            <p class="card-tagline">تعلَّم خطوات الصلاة بخشوع وجمال 🤲</p>
+            <p class="card-tagline">تعلّم الصلاة والخشوع خطوة بخطوة 🕌</p>
           </div>
-
           <div class="card-footer">
             <div class="card-action-btn btn-prayer">
               <span>تعلّم الصلاة</span>
@@ -216,36 +263,49 @@
           </div>
         </article>
 
-        <!-- الكارت 3: عقيدتي نوري (أزرق ياقوتي مع كتاب النور) -->
+        <!-- 3. أذكار الصباح والمساء -->
+        <article class="home-card card-morning-evening" id="card-launch-morning-evening" role="button" tabindex="0" aria-label="الدخول إلى أذكار الصباح والمساء">
+          <div class="card-glow-bg"></div>
+          <div class="card-badge-top">☀️ حصنك اليومي</div>
+          <div class="card-icon-big">🌅</div>
+          <div class="card-body">
+            <h3 class="card-title">أَذْكَارُ الصَّبَاحِ وَالمَسَاءِ</h3>
+            <p class="card-tagline">ردّد أذكارك واحفظ يومك بحصن الله 🛡️</p>
+          </div>
+          <div class="card-footer">
+            <div class="card-action-btn" style="background: #f59e0b; color: white;">
+              <span>ردّد الأذكار</span>
+              <span class="btn-arrow">⬅️</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. بُستان الأذكار -->
+        <article class="home-card card-azkar" id="card-launch-azkar" role="button" tabindex="0" aria-label="الدخول إلى بستان الأذكار">
+          <div class="card-glow-bg"></div>
+          <div class="card-badge-top">🌸 سُقيا الشجرة</div>
+          <div class="card-icon-big">🌳</div>
+          <div class="card-body">
+            <h3 class="card-title">بُسْتَانُ الأَذْكَارِ</h3>
+            <p class="card-tagline">اسقِ شجرتك ورَدِّدْ تسابيحك كل يوم 🌱</p>
+          </div>
+          <div class="card-footer">
+            <div class="card-action-btn btn-azkar">
+              <span>ادخل البستان</span>
+              <span class="btn-arrow">⬅️</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- 5. عقيدتي نوري -->
         <article class="home-card card-aqeedah" id="card-launch-aqeedah" role="button" tabindex="0" aria-label="الدخول إلى قسم عقيدتي">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">📖 تدرَّب على القراءة</div>
-          
-          <div class="card-expressive-img">
-            <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="46" fill="#f0f9ff" stroke="#bae6fd" stroke-width="3"/>
-              <!-- هالة نورانية -->
-              <circle cx="50" cy="48" r="28" fill="#38bdf8" opacity="0.3"/>
-              <!-- صفحات الكتاب -->
-              <path d="M50 68 C58 63 73 64 80 69 L80 44 C73 39 58 38 50 42 Z" fill="#ffffff"/>
-              <path d="M50 68 C42 63 27 64 20 69 L20 44 C27 39 42 38 50 42 Z" fill="#f8fafc"/>
-              <path d="M50 72 C59 67 74 68 83 73 L80 68 C73 63 58 63 50 67 Z" fill="#f59e0b"/>
-              <path d="M50 72 C41 67 26 68 17 73 L20 68 C27 63 42 63 50 67 Z" fill="#d97706"/>
-              <line x1="55" y1="48" x2="72" y2="51" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="55" y1="56" x2="70" y2="59" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="28" y1="51" x2="45" y2="48" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="30" y1="59" x2="45" y2="56" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
-              <!-- نجمة الإيمان النورانية -->
-              <path d="M50 20 L52.5 28 L60 30 L52.5 33 L50 41 L47.5 33 L40 30 L47.5 28 Z" fill="#facc15"/>
-              <circle cx="50" cy="30" r="2.5" fill="#ffffff"/>
-            </svg>
-          </div>
-
+          <div class="card-badge-top">📖 تدرَّب واقرأ</div>
+          <div class="card-icon-big">⭐</div>
           <div class="card-body">
             <h3 class="card-title">عَقِيدَتِي نُورِي</h3>
-            <p class="card-tagline">اقرأ بنفسك واكتشف أركان الإيمان ⭐</p>
+            <p class="card-tagline">اقرأ بنفسك واكتشف أركان الإيمان 📖</p>
           </div>
-
           <div class="card-footer">
             <div class="card-action-btn btn-aqeedah">
               <span>اقرأ وتعلّم</span>
@@ -254,62 +314,23 @@
           </div>
         </article>
 
-        <!-- الكارت 4: صلواتي (تتبع الصلوات الخمس بجدول تفاعلي) -->
+        <!-- 6. صلواتي وميزاني -->
         <article class="home-card card-salawat" id="card-launch-salawat" role="button" tabindex="0" aria-label="الدخول إلى صلواتي">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">🕌 5 صلوات يومياً</div>
-
-          <div class="card-expressive-img">
-            <svg class="expressive-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="46" fill="#fffbeb" stroke="#fde68a" stroke-width="3"/>
-              <!-- حصالة ذهبية جميلة -->
-              <ellipse cx="50" cy="62" rx="28" ry="20" fill="#fbbf24"/>
-              <ellipse cx="50" cy="45" rx="20" ry="16" fill="#f59e0b"/>
-              <rect x="44" y="34" width="12" height="8" rx="4" fill="#d97706"/>
-              <rect x="46" y="30" width="8" height="6" rx="2" fill="#b45309"/>
-              <!-- عملة ذهبية مع رمز الجنيه -->
-              <circle cx="69" cy="40" r="8" fill="#facc15" stroke="#d97706" stroke-width="2"/>
-              <text x="69" y="44" text-anchor="middle" font-size="8" fill="#92400e" font-weight="bold">ج</text>
-              <text x="25" y="38" font-size="10">⭐</text>
-              <text x="72" y="62" font-size="8">✨</text>
-            </svg>
-          </div>
-
+          <div class="card-badge-top">💰 حصالة الصلوات</div>
+          <div class="card-icon-big">🪙</div>
           <div class="card-body">
-            <h3 class="card-title">صَلَوَاتِي</h3>
-            <p class="card-tagline">سجّل صلواتك الخمس في البيت والمسجد واكسب مكافآتك 🕌</p>
+            <h3 class="card-title">صَلَوَاتِي وَمِيزَانِي</h3>
+            <p class="card-tagline">سجّل صلواتك في البيت والمسجد واكسب 💰</p>
           </div>
-
           <div class="card-footer">
-            <div id="card-salawat-progress" class="card-progress-text">ابدأ رحلتك اليوم!</div>
             <div class="card-action-btn btn-salawat">
-              <span>افتح صلواتي</span>
+              <span>افتح ميزاني</span>
               <span class="btn-arrow">⬅️</span>
             </div>
           </div>
         </article>
 
-      </div>
-
-      <!-- بطاقة مشاركة التطبيق عبر واتساب (انشر الخير واكسب الأجر) -->
-      <div class="home-share-banner">
-        <div class="share-banner-content">
-          <div class="share-banner-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2ZM12.05 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.07 16.3C4.24 14.98 3.8 13.47 3.8 11.91C3.8 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.25 14.87 13 14.75C12.75 14.62 11.7 14.28 10.45 13.16C9.48 12.3 8.82 11.23 8.63 10.98C8.44 10.73 8.61 10.6 8.74 10.47C8.85 10.36 8.99 10.18 9.11 10.04C9.24 9.9 9.28 9.79 9.36 9.63C9.45 9.46 9.4 9.32 9.34 9.2C9.28 9.07 8.79 7.87 8.58 7.38C8.38 6.9 8.18 6.96 8.03 6.95C7.89 6.94 7.72 6.94 7.56 6.94C7.39 6.94 7.12 7 6.89 7.25C6.66 7.5 6.01 8.11 6.01 9.35C6.01 10.59 6.91 11.79 7.04 11.96C7.16 12.13 8.81 14.68 11.33 15.77C11.93 16.03 12.4 16.18 12.76 16.3C13.37 16.49 13.92 16.46 14.36 16.4C14.85 16.33 15.87 15.78 16.08 15.19C16.29 14.6 16.29 14.1 16.22 13.99C16.16 13.88 16 13.82 15.75 13.7L16.57 14.39Z"/>
-            </svg>
-          </div>
-          <div class="share-banner-texts">
-            <h4 class="share-banner-title">انْشُرِ الخَيْرَ مَعَ أَحْبَابِكَ 💬💚</h4>
-            <p class="share-banner-desc">شارك رابط تطبيق «البطل المسلم» عبر واتساب ليتعلم أطفال المسلمين الصلاة والأذكار ولك مثل أجرهم إن شاء الله!</p>
-          </div>
-        </div>
-        <button type="button" class="btn-whatsapp-share-action" id="btn-share-whatsapp-home">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2ZM12.05 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.07 16.3C4.24 14.98 3.8 13.47 3.8 11.91C3.8 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.25 14.87 13 14.75C12.75 14.62 11.7 14.28 10.45 13.16C9.48 12.3 8.82 11.23 8.63 10.98C8.44 10.73 8.61 10.6 8.74 10.47C8.85 10.36 8.99 10.18 9.11 10.04C9.24 9.9 9.28 9.79 9.36 9.63C9.45 9.46 9.4 9.32 9.34 9.2C9.28 9.07 8.79 7.87 8.58 7.38C8.38 6.9 8.18 6.96 8.03 6.95C7.89 6.94 7.72 6.94 7.56 6.94C7.39 6.94 7.12 7 6.89 7.25C6.66 7.5 6.01 8.11 6.01 9.35C6.01 10.59 6.91 11.79 7.04 11.96C7.16 12.13 8.81 14.68 11.33 15.77C11.93 16.03 12.4 16.18 12.76 16.3C13.37 16.49 13.92 16.46 14.36 16.4C14.85 16.33 15.87 15.78 16.08 15.19C16.29 14.6 16.29 14.1 16.22 13.99C16.16 13.88 16 13.82 15.75 13.7L16.57 14.39Z"/>
-          </svg>
-          <span>مشاركة عبر واتساب</span>
-        </button>
       </div>
     </section>
 
@@ -384,6 +405,100 @@
           </button>
         </div>
       </div>
+    </section>
+
+    <!-- ==================== 💧 قسم تعليم الوضوء للصغار ==================== -->
+    <section class="app-section hidden" id="section-wudu">
+      <!-- شريط علوي للعودة للرئيسية -->
+      <div class="section-top-bar">
+        <button type="button" class="btn-back-home" data-target="home" aria-label="العودة للشاشة الرئيسية">
+          <span>🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <span class="section-top-title">💧 تَعَلَّمِ الْوُضُوءَ لِلصِّغَارِ</span>
+      </div>
+
+      <div class="wudu-banner">
+        <div>
+          <div class="wudu-banner-title">💧 تَعَلَّمِ الْوُضُوءَ خُطْوَةً بِخُطْوَةٍ</div>
+          <div class="wudu-banner-desc">الطهور شطر الإيمان؛ تعلّم وضوء النبي ﷺ الصحيح لتكون صلاتك مقبولة ونوراً لك! ✨</div>
+        </div>
+        <div style="font-size: 2.8rem;">🧼</div>
+      </div>
+
+      <div class="wudu-step-card">
+        <div class="wudu-header-row">
+          <span class="wudu-rule-badge" id="wudu-rule-badge">سُنَّة مؤكدة</span>
+          <span id="wudu-step-indicator" style="font-weight: 800; color: #0891b2;">الخطوة 1 من 10</span>
+          <span class="wudu-repeat-badge" id="wudu-repeat-badge">مرة واحدة</span>
+        </div>
+
+        <!-- صورة الخطوة أو الشكل التوضيحي -->
+        <div class="wudu-img-container" id="wudu-img-container">
+          <div class="wudu-img-placeholder" id="wudu-img-placeholder">
+            <span class="wudu-img-placeholder-icon" id="wudu-step-icon">🤲</span>
+            <span style="font-size: 0.95rem; font-weight: 700; color: #0e7490;" id="wudu-step-caption">النية والتسمية</span>
+          </div>
+        </div>
+
+        <h3 class="wudu-step-title" id="wudu-step-title">1. النِّيَّةُ وَالتَّسْمِيَةُ</h3>
+        <div class="wudu-step-action" id="wudu-step-action">أَنْوِي بِقَلْبِي التَّطَهُّرَ لِلصَّلَاةِ، ثُمَّ أَقُولُ بِلِسَانِي بِلُطْفٍ:</div>
+
+        <div class="wudu-step-arabic" id="wudu-step-arabic">بِسْمِ اللَّهِ</div>
+
+        <button type="button" class="wudu-audio-btn" id="btn-wudu-speak">
+          <span>🔊</span>
+          <span>استمع لنطق الخطوة</span>
+        </button>
+
+        <div class="wudu-step-meaning" id="wudu-step-meaning">النية محلها القلب، ونبدأ دائمًا باسم الله المبارك.</div>
+        <div class="wudu-step-tip" id="wudu-step-tip">💡 <b>نصيحة للبطل:</b> لا نسرف في الماء أبداً.</div>
+
+        <!-- مؤشر الخطوات -->
+        <div class="steps-progress-bar" id="wudu-progress-bar"></div>
+
+        <!-- أزرار التنقل -->
+        <div class="wudu-controls-row">
+          <button type="button" class="wudu-btn wudu-btn-prev" id="btn-wudu-prev">➡️ السابق</button>
+          <button type="button" class="wudu-btn wudu-btn-next" id="btn-wudu-next">الخطوة التالية ⬅️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ☀️ قسم أذكار الصباح والمساء ==================== -->
+    <section class="app-section hidden" id="section-morning-evening">
+      <!-- شريط علوي للعودة للرئيسية -->
+      <div class="section-top-bar">
+        <button type="button" class="btn-back-home" data-target="home" aria-label="العودة للشاشة الرئيسية">
+          <span>🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <span class="section-top-title">☀️ أذكار الصباح والمساء</span>
+      </div>
+
+      <!-- محول الصباح والمساء -->
+      <div class="me-type-switcher">
+        <button type="button" class="me-type-btn active type-morning" id="btn-me-morning">
+          <span>☀️</span>
+          <span>أذكار الصباح</span>
+        </button>
+        <button type="button" class="me-type-btn type-evening" id="btn-me-evening">
+          <span>🌙</span>
+          <span>أذكار المساء</span>
+        </button>
+      </div>
+
+      <!-- بطاقة شريط التقدم -->
+      <div class="me-progress-card">
+        <span style="font-weight: 800; font-size: 0.95rem;" id="me-progress-text">إنجازك: 0 من 9</span>
+        <div class="me-progress-bar-wrap">
+          <div class="me-progress-bar-fill" id="me-progress-fill"></div>
+        </div>
+        <span id="me-progress-percent" style="font-weight: 800; color: #10b981;">0%</span>
+      </div>
+
+      <!-- قائمة كروت الأذكار -->
+      <div class="me-cards-list" id="me-cards-list"></div>
     </section>
 
     <!-- ==================== 2. قسم تعليم الصلاة ==================== -->
@@ -968,14 +1083,16 @@
     </div>
   </div>
 
-  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v13 -->
-  <script src="js/azkar-data.js?v=13"></script>
-  <script src="js/prayer-data.js?v=13"></script>
-  <script src="js/aqeedah-data.js?v=13"></script>
-  <script src="js/audio.js?v=13"></script>
-  <script src="js/tree.js?v=13"></script>
-  <script src="js/confetti.js?v=13"></script>
-  <script src="js/salawat-tracker.js?v=13"></script>
-  <script src="js/app.js?v=13"></script>
+  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v14 -->
+  <script src="js/azkar-data.js?v=14"></script>
+  <script src="js/wudu-data.js?v=14"></script>
+  <script src="js/morning-evening-data.js?v=14"></script>
+  <script src="js/prayer-data.js?v=14"></script>
+  <script src="js/aqeedah-data.js?v=14"></script>
+  <script src="js/audio.js?v=14"></script>
+  <script src="js/tree.js?v=14"></script>
+  <script src="js/confetti.js?v=14"></script>
+  <script src="js/salawat-tracker.js?v=14"></script>
+  <script src="js/app.js?v=14"></script>
 </body>
 </html>
