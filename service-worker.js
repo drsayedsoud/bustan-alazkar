@@ -1,24 +1,24 @@
 // Service Worker لتشغيل تطبيق البطل المسلم بدون إنترنت (أوفلاين)
-const CACHE_NAME = 'bustan-alazkar-v14';
+const CACHE_NAME = 'bustan-alazkar-v15';
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=14',
+  './style.css?v=15',
   './manifest.json',
   './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './js/wake-lock.js?v=14',
-  './js/azkar-data.js?v=14',
-  './js/wudu-data.js?v=14',
-  './js/morning-evening-data.js?v=14',
-  './js/prayer-data.js?v=14',
-  './js/aqeedah-data.js?v=14',
-  './js/audio.js?v=14',
-  './js/tree.js?v=14',
-  './js/confetti.js?v=14',
-  './js/salawat-tracker.js?v=14',
-  './js/app.js?v=14'
+  './js/wake-lock.js?v=15',
+  './js/azkar-data.js?v=15',
+  './js/wudu-data.js?v=15',
+  './js/morning-evening-data.js?v=15',
+  './js/prayer-data.js?v=15',
+  './js/aqeedah-data.js?v=15',
+  './js/audio.js?v=15',
+  './js/tree.js?v=15',
+  './js/confetti.js?v=15',
+  './js/salawat-tracker.js?v=15',
+  './js/app.js?v=15'
 ];
 
 self.addEventListener('install', event => {
