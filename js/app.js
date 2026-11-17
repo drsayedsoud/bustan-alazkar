@@ -980,6 +980,17 @@ class AppController {
         this.speakCurrentWuduStep();
       });
     }
+
+    const toggleTipBtn = document.getElementById('btn-wudu-toggle-tip');
+    const tipEl = document.getElementById('wudu-step-tip');
+    if (toggleTipBtn && tipEl) {
+      toggleTipBtn.addEventListener('click', () => {
+        sounds.playPop();
+        const isHidden = tipEl.classList.toggle('hidden');
+        toggleTipBtn.setAttribute('aria-expanded', !isHidden);
+        toggleTipBtn.classList.toggle('active', !isHidden);
+      });
+    }
   }
 
   renderCurrentWuduStep() {
@@ -1009,7 +1020,15 @@ class AppController {
     if (meaningEl) meaningEl.textContent = step.meaning;
 
     const tipEl = document.getElementById('wudu-step-tip');
-    if (tipEl) tipEl.innerHTML = `💡 <b>نصيحة للبطل:</b> ${step.tip}`;
+    if (tipEl) {
+      tipEl.innerHTML = `💡 <b>نصيحة للبطل:</b> ${step.tip}`;
+      tipEl.classList.add('hidden');
+    }
+    const toggleTipBtn = document.getElementById('btn-wudu-toggle-tip');
+    if (toggleTipBtn) {
+      toggleTipBtn.setAttribute('aria-expanded', 'false');
+      toggleTipBtn.classList.remove('active');
+    }
 
     // صورة أو إيموجي الخطوة
     const imgContainer = document.getElementById('wudu-img-container');
@@ -1275,7 +1294,17 @@ class AppController {
     document.getElementById('prayer-step-title').textContent = step.title;
     document.getElementById('prayer-step-action').textContent = step.action;
     document.getElementById('prayer-step-arabic').textContent = step.arabic;
-    document.getElementById('prayer-step-tip').innerHTML = `💡 <b>نصيحة للبطل:</b> ${step.tip}`;
+
+    const prayerTipEl = document.getElementById('prayer-step-tip');
+    if (prayerTipEl) {
+      prayerTipEl.innerHTML = `💡 <b>نصيحة للبطل:</b> ${step.tip}`;
+      prayerTipEl.classList.add('hidden');
+    }
+    const btnPrayerTip = document.getElementById('btn-prayer-toggle-tip');
+    if (btnPrayerTip) {
+      btnPrayerTip.setAttribute('aria-expanded', 'false');
+      btnPrayerTip.classList.remove('active');
+    }
 
     const bar = document.getElementById('steps-progress-bar');
     bar.innerHTML = '';
@@ -1596,6 +1625,17 @@ class AppController {
       this.clearAllSpeakingStyles();
       this.prevPrayerStep();
     });
+
+    const btnPrayerTip = document.getElementById('btn-prayer-toggle-tip');
+    const prayerTip = document.getElementById('prayer-step-tip');
+    if (btnPrayerTip && prayerTip) {
+      btnPrayerTip.addEventListener('click', () => {
+        sounds.playPop();
+        const isHidden = prayerTip.classList.toggle('hidden');
+        btnPrayerTip.setAttribute('aria-expanded', !isHidden);
+        btnPrayerTip.classList.toggle('active', !isHidden);
+      });
+    }
 
     // عقيدة
     document.getElementById('btn-aq-speak').addEventListener('click', () => {

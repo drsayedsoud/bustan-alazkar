@@ -18,19 +18,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=16">
   <script>
     // تنظيف فوري للكاشات القديمة
     if ('caches' in window) {
       caches.keys().then(function(keys) {
         keys.forEach(function(k) {
-          if (k !== 'bustan-alazkar-v15') caches.delete(k);
+          if (k !== 'bustan-alazkar-v16') caches.delete(k);
         });
       });
     }
   </script>
   <!-- سكريبت إبقاء الشاشة مضاءة دائماً (Always-On Screen Wake Lock) -->
-  <script src="js/wake-lock.js?v=15"></script>
+  <script src="js/wake-lock.js?v=16"></script>
 </head>
 <body>
 
@@ -226,108 +226,66 @@
         </div>
       </div>
 
-      <!-- شبكة مغامرات البطل الستة الكبيرة والمبسطة بدون أي تشتيت -->
+      <!-- شبكة مغامرات البطل الستة المبسطة: كل 2 متجاورين وبحجم مريح وبدون تشتيت -->
       <div class="home-cards-grid simple-grid">
 
         <!-- 1. تعلّم الوضوء -->
-        <article class="home-card card-wudu" id="card-launch-wudu" role="button" tabindex="0" aria-label="الدخول إلى تعلّم الوضوء">
+        <article class="home-card card-wudu compact-card" id="card-launch-wudu" role="button" tabindex="0" aria-label="الدخول إلى تعلّم الوضوء">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">💧 طهارة ونور</div>
-          <div class="card-icon-big">🧼</div>
+          <div class="card-icon-big">💧</div>
           <div class="card-body">
-            <h3 class="card-title">تَعَلَّمِ الْوُضُوءَ</h3>
-            <p class="card-tagline">خطوات الوضوء الصحيحة بالصور 💧</p>
-          </div>
-          <div class="card-footer">
-            <div class="card-action-btn" style="background: #06b6d4; color: white;">
-              <span>ابدأ الآن</span>
-              <span class="btn-arrow">⬅️</span>
-            </div>
+            <h3 class="card-title">تَعَلَّمِ الوُضُوء</h3>
+            <p class="card-tagline">خطوات مصوّرة</p>
           </div>
         </article>
 
         <!-- 2. مُدرِّب الصلاة -->
-        <article class="home-card card-prayer" id="card-launch-prayer" role="button" tabindex="0" aria-label="الدخول إلى مدرب الصلاة">
+        <article class="home-card card-prayer compact-card" id="card-launch-prayer" role="button" tabindex="0" aria-label="الدخول إلى مدرب الصلاة">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">🕌 5 صلوات</div>
-          <div class="card-icon-big">🤲</div>
+          <div class="card-icon-big">🕌</div>
           <div class="card-body">
-            <h3 class="card-title">مُدَرِّبُ الصَّلَاةِ</h3>
-            <p class="card-tagline">تعلّم الصلاة والخشوع خطوة بخطوة 🕌</p>
-          </div>
-          <div class="card-footer">
-            <div class="card-action-btn btn-prayer">
-              <span>تعلّم الصلاة</span>
-              <span class="btn-arrow">⬅️</span>
-            </div>
+            <h3 class="card-title">مُدَرِّبُ الصَّلَاة</h3>
+            <p class="card-tagline">صلواتي الخمس</p>
           </div>
         </article>
 
         <!-- 3. أذكار الصباح والمساء -->
-        <article class="home-card card-morning-evening" id="card-launch-morning-evening" role="button" tabindex="0" aria-label="الدخول إلى أذكار الصباح والمساء">
+        <article class="home-card card-morning-evening compact-card" id="card-launch-morning-evening" role="button" tabindex="0" aria-label="الدخول إلى أذكار الصباح والمساء">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">☀️ حصنك اليومي</div>
-          <div class="card-icon-big">🌅</div>
+          <div class="card-icon-big">☀️</div>
           <div class="card-body">
             <h3 class="card-title">أَذْكَارُ الصَّبَاحِ وَالمَسَاءِ</h3>
-            <p class="card-tagline">ردّد أذكارك واحفظ يومك بحصن الله 🛡️</p>
-          </div>
-          <div class="card-footer">
-            <div class="card-action-btn" style="background: #f59e0b; color: white;">
-              <span>ردّد الأذكار</span>
-              <span class="btn-arrow">⬅️</span>
-            </div>
+            <p class="card-tagline">حصنك اليومي</p>
           </div>
         </article>
 
         <!-- 4. بُستان الأذكار -->
-        <article class="home-card card-azkar" id="card-launch-azkar" role="button" tabindex="0" aria-label="الدخول إلى بستان الأذكار">
+        <article class="home-card card-azkar compact-card" id="card-launch-azkar" role="button" tabindex="0" aria-label="الدخول إلى بستان الأذكار">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">🌸 سُقيا الشجرة</div>
           <div class="card-icon-big">🌳</div>
           <div class="card-body">
-            <h3 class="card-title">بُسْتَانُ الأَذْكَارِ</h3>
-            <p class="card-tagline">اسقِ شجرتك ورَدِّدْ تسابيحك كل يوم 🌱</p>
-          </div>
-          <div class="card-footer">
-            <div class="card-action-btn btn-azkar">
-              <span>ادخل البستان</span>
-              <span class="btn-arrow">⬅️</span>
-            </div>
+            <h3 class="card-title">بُسْتَانُ الأَذْكَار</h3>
+            <p class="card-tagline">اسقِ شجرتك</p>
           </div>
         </article>
 
         <!-- 5. عقيدتي نوري -->
-        <article class="home-card card-aqeedah" id="card-launch-aqeedah" role="button" tabindex="0" aria-label="الدخول إلى قسم عقيدتي">
+        <article class="home-card card-aqeedah compact-card" id="card-launch-aqeedah" role="button" tabindex="0" aria-label="الدخول إلى قسم عقيدتي">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">📖 تدرَّب واقرأ</div>
-          <div class="card-icon-big">⭐</div>
+          <div class="card-icon-big">📖</div>
           <div class="card-body">
             <h3 class="card-title">عَقِيدَتِي نُورِي</h3>
-            <p class="card-tagline">اقرأ بنفسك واكتشف أركان الإيمان 📖</p>
-          </div>
-          <div class="card-footer">
-            <div class="card-action-btn btn-aqeedah">
-              <span>اقرأ وتعلّم</span>
-              <span class="btn-arrow">⬅️</span>
-            </div>
+            <p class="card-tagline">تعلّم دينك</p>
           </div>
         </article>
 
         <!-- 6. صلواتي وميزاني -->
-        <article class="home-card card-salawat" id="card-launch-salawat" role="button" tabindex="0" aria-label="الدخول إلى صلواتي">
+        <article class="home-card card-salawat compact-card" id="card-launch-salawat" role="button" tabindex="0" aria-label="الدخول إلى صلواتي">
           <div class="card-glow-bg"></div>
-          <div class="card-badge-top">💰 حصالة الصلوات</div>
           <div class="card-icon-big">🪙</div>
           <div class="card-body">
             <h3 class="card-title">صَلَوَاتِي وَمِيزَانِي</h3>
-            <p class="card-tagline">سجّل صلواتك في البيت والمسجد واكسب 💰</p>
-          </div>
-          <div class="card-footer">
-            <div class="card-action-btn btn-salawat">
-              <span>افتح ميزاني</span>
-              <span class="btn-arrow">⬅️</span>
-            </div>
+            <p class="card-tagline">سجّل صلواتك</p>
           </div>
         </article>
 
@@ -415,25 +373,22 @@
           <span>🏠</span>
           <span>الرئيسية</span>
         </button>
-        <span class="section-top-title">💧 تَعَلَّمِ الْوُضُوءَ لِلصِّغَارِ</span>
+        <span class="section-top-title">💧 تَعَلَّمِ الْوُضُوءَ</span>
       </div>
 
-      <div class="wudu-banner">
-        <div>
-          <div class="wudu-banner-title">💧 تَعَلَّمِ الْوُضُوءَ خُطْوَةً بِخُطْوَةٍ</div>
-          <div class="wudu-banner-desc">الطهور شطر الإيمان؛ تعلّم وضوء النبي ﷺ الصحيح لتكون صلاتك مقبولة ونوراً لك! ✨</div>
-        </div>
-        <div style="font-size: 2.8rem;">🧼</div>
-      </div>
-
-      <div class="wudu-step-card">
-        <div class="wudu-header-row">
-          <span class="wudu-rule-badge" id="wudu-rule-badge">سُنَّة مؤكدة</span>
-          <span id="wudu-step-indicator" style="font-weight: 800; color: #0891b2;">الخطوة 1 من 10</span>
-          <span class="wudu-repeat-badge" id="wudu-repeat-badge">مرة واحدة</span>
+      <div class="wudu-step-card simplified-step-card">
+        <!-- 1. فوق الصورة وصفها -->
+        <div class="step-top-header">
+          <div class="wudu-header-row">
+            <span class="wudu-rule-badge" id="wudu-rule-badge">سُنَّة مؤكدة</span>
+            <span id="wudu-step-indicator" class="step-indicator">الخطوة 1 من 10</span>
+            <span class="wudu-repeat-badge" id="wudu-repeat-badge">مرة واحدة</span>
+          </div>
+          <h3 class="wudu-step-title" id="wudu-step-title">1. النِّيَّةُ وَالتَّسْمِيَةُ</h3>
+          <div class="wudu-step-action" id="wudu-step-action">أَنْوِي بِقَلْبِي التَّطَهُّرَ لِلصَّلَاةِ، ثُمَّ أَقُولُ بِلِسَانِي بِلُطْفٍ:</div>
         </div>
 
-        <!-- صورة الخطوة أو الشكل التوضيحي -->
+        <!-- 2. الصورة في المنتصف -->
         <div class="wudu-img-container" id="wudu-img-container">
           <div class="wudu-img-placeholder" id="wudu-img-placeholder">
             <span class="wudu-img-placeholder-icon" id="wudu-step-icon">🤲</span>
@@ -441,23 +396,32 @@
           </div>
         </div>
 
-        <h3 class="wudu-step-title" id="wudu-step-title">1. النِّيَّةُ وَالتَّسْمِيَةُ</h3>
-        <div class="wudu-step-action" id="wudu-step-action">أَنْوِي بِقَلْبِي التَّطَهُّرَ لِلصَّلَاةِ، ثُمَّ أَقُولُ بِلِسَانِي بِلُطْفٍ:</div>
+        <!-- 3. الشرح اسفلها بخط كبير وواضح -->
+        <div class="step-below-img">
+          <div class="wudu-step-arabic" id="wudu-step-arabic">بِسْمِ اللَّهِ</div>
+          <div class="wudu-step-meaning" id="wudu-step-meaning">النية محلها القلب، ونبدأ دائمًا باسم الله المبارك.</div>
 
-        <div class="wudu-step-arabic" id="wudu-step-arabic">بِسْمِ اللَّهِ</div>
+          <div class="step-audio-row">
+            <button type="button" class="step-sound-btn" id="btn-wudu-speak">
+              <span>🔊</span>
+              <span>استمع للنطق</span>
+            </button>
+            <button type="button" class="btn-toggle-tip" id="btn-wudu-toggle-tip" aria-expanded="false">
+              <span>💡 تلميحات</span>
+              <span class="tip-arrow">▼</span>
+            </button>
+          </div>
 
-        <button type="button" class="wudu-audio-btn" id="btn-wudu-speak">
-          <span>🔊</span>
-          <span>استمع لنطق الخطوة</span>
-        </button>
-
-        <div class="wudu-step-meaning" id="wudu-step-meaning">النية محلها القلب، ونبدأ دائمًا باسم الله المبارك.</div>
-        <div class="wudu-step-tip" id="wudu-step-tip">💡 <b>نصيحة للبطل:</b> لا نسرف في الماء أبداً.</div>
+          <!-- تلميحات مخفية افتراضياً -->
+          <div class="wudu-step-tip tip-collapsible hidden" id="wudu-step-tip">
+            💡 <b>نصيحة للبطل:</b> لا نسرف في الماء أبداً.
+          </div>
+        </div>
 
         <!-- مؤشر الخطوات -->
         <div class="steps-progress-bar" id="wudu-progress-bar"></div>
 
-        <!-- أزرار التنقل -->
+        <!-- 4. واسفلها زر الخطوة التالية -->
         <div class="wudu-controls-row">
           <button type="button" class="wudu-btn wudu-btn-prev" id="btn-wudu-prev">➡️ السابق</button>
           <button type="button" class="wudu-btn wudu-btn-next" id="btn-wudu-next">الخطوة التالية ⬅️</button>
@@ -509,12 +473,7 @@
           <span>🏠</span>
           <span>الرئيسية</span>
         </button>
-        <span class="section-top-title">🕌 مُدرِّب الصلاة للصغار</span>
-      </div>
-
-      <div class="prayer-header-card">
-        <h2 class="prayer-header-title">🕌 مُدرِّب الصَّلاة للصِّغار</h2>
-        <p class="prayer-header-desc">الصلاة صلة بينك وبين الله، تعال نتعلّم كيف نصلّي بخشوع وجمال!</p>
+        <span class="section-top-title">🕌 مُدرِّب الصلاة</span>
       </div>
 
       <!-- شريط اختيار الصلوات الخمس -->
@@ -526,30 +485,47 @@
         <span id="p-info-type">جهرية</span>
       </div>
 
-      <!-- بطاقة خطوات الصلاة التفاعلية خطوة بخطوة -->
-      <div class="prayer-step-card">
-        <div class="prayer-step-top">
-          <span class="step-indicator" id="step-indicator">الخطوة 1 من 11</span>
-          <button type="button" class="tool-btn" id="btn-prayer-speak" style="padding: 6px 12px;">
-            <span>🔊</span>
-            <span>استمع للنطق</span>
-          </button>
+      <!-- بطاقة خطوات الصلاة التفاعلية المبسطة -->
+      <div class="prayer-step-card simplified-step-card">
+        <!-- 1. فوق الصورة وصفها -->
+        <div class="step-top-header">
+          <div class="prayer-step-top">
+            <span class="step-indicator" id="step-indicator">الخطوة 1 من 11</span>
+          </div>
+          <h3 class="prayer-step-title" id="prayer-step-title">1. النية وتكبيرة الإحرام</h3>
+          <div class="prayer-step-action" id="prayer-step-action">أقف باعتدال مستقبلاً القبلة وأقول:</div>
         </div>
 
-        <div class="prayer-step-icon" id="prayer-step-icon">🤲</div>
-        <h3 class="prayer-step-title" id="prayer-step-title">1. النية وتكبيرة الإحرام</h3>
-        <div class="prayer-step-action" id="prayer-step-action">أقف باعتدال مستقبلاً القبلة وأقول:</div>
+        <!-- 2. الصورة في المنتصف -->
+        <div class="prayer-img-container" id="prayer-step-icon">🤲</div>
 
-        <div class="prayer-arabic-box">
-          <p class="prayer-arabic" id="prayer-step-arabic">اللَّهُ أَكْبَرُ</p>
+        <!-- 3. الشرح اسفلها بخط كبير وواضح -->
+        <div class="step-below-img">
+          <div class="prayer-arabic-box">
+            <p class="prayer-arabic" id="prayer-step-arabic">اللَّهُ أَكْبَرُ</p>
+          </div>
+
+          <div class="step-audio-row">
+            <button type="button" class="step-sound-btn" id="btn-prayer-speak">
+              <span>🔊</span>
+              <span>استمع للنطق</span>
+            </button>
+            <button type="button" class="btn-toggle-tip" id="btn-prayer-toggle-tip" aria-expanded="false">
+              <span>💡 تلميحات</span>
+              <span class="tip-arrow">▼</span>
+            </button>
+          </div>
+
+          <!-- تلميحات مخفية افتراضياً -->
+          <div class="prayer-step-tip tip-collapsible hidden" id="prayer-step-tip">
+            💡 <b>تلميح للبطل:</b> ارفع يديك حذو منكبيك واجعل نظرك لموضع السجود.
+          </div>
         </div>
 
-        <div class="prayer-step-tip" id="prayer-step-tip">
-          💡 <b>تلميح للبطل:</b> ارفع يديك حذو منكبيك واجعل نظرك لموضع السجود.
-        </div>
-
+        <!-- مؤشر الخطوات -->
         <div class="steps-progress-bar" id="steps-progress-bar"></div>
 
+        <!-- 4. واسفلها زر الخطوة التالية -->
         <div class="prayer-nav-actions">
           <button type="button" class="prayer-btn prayer-btn-prev" id="btn-prayer-prev">➡️ الخطوة السابقة</button>
           <button type="button" class="prayer-btn prayer-btn-next" id="btn-prayer-next">الخطوة التالية ⬅️</button>
@@ -1083,16 +1059,16 @@
     </div>
   </div>
 
-  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v15 -->
-  <script src="js/azkar-data.js?v=15"></script>
-  <script src="js/wudu-data.js?v=15"></script>
-  <script src="js/morning-evening-data.js?v=15"></script>
-  <script src="js/prayer-data.js?v=15"></script>
-  <script src="js/aqeedah-data.js?v=15"></script>
-  <script src="js/audio.js?v=15"></script>
-  <script src="js/tree.js?v=15"></script>
-  <script src="js/confetti.js?v=15"></script>
-  <script src="js/salawat-tracker.js?v=15"></script>
-  <script src="js/app.js?v=15"></script>
+  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v16 -->
+  <script src="js/azkar-data.js?v=16"></script>
+  <script src="js/wudu-data.js?v=16"></script>
+  <script src="js/morning-evening-data.js?v=16"></script>
+  <script src="js/prayer-data.js?v=16"></script>
+  <script src="js/aqeedah-data.js?v=16"></script>
+  <script src="js/audio.js?v=16"></script>
+  <script src="js/tree.js?v=16"></script>
+  <script src="js/confetti.js?v=16"></script>
+  <script src="js/salawat-tracker.js?v=16"></script>
+  <script src="js/app.js?v=16"></script>
 </body>
 </html>
