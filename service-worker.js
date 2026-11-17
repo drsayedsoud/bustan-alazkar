@@ -1,24 +1,29 @@
 // Service Worker لتشغيل تطبيق البطل المسلم بدون إنترنت (أوفلاين)
-const CACHE_NAME = 'bustan-alazkar-v16';
+const CACHE_NAME = 'bustan-alazkar-v17';
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=16',
+  './test-voice.html',
+  './style.css?v=17',
   './manifest.json',
   './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './js/wake-lock.js?v=16',
-  './js/azkar-data.js?v=16',
-  './js/wudu-data.js?v=16',
-  './js/morning-evening-data.js?v=16',
-  './js/prayer-data.js?v=16',
-  './js/aqeedah-data.js?v=16',
-  './js/audio.js?v=16',
-  './js/tree.js?v=16',
-  './js/confetti.js?v=16',
-  './js/salawat-tracker.js?v=16',
-  './js/app.js?v=16'
+  './assets/wow.mp3',
+  './assets/win.mp3',
+  './assets/lose.mp3',
+  './assets/hover_main.mp3',
+  './js/wake-lock.js?v=17',
+  './js/azkar-data.js?v=17',
+  './js/wudu-data.js?v=17',
+  './js/morning-evening-data.js?v=17',
+  './js/prayer-data.js?v=17',
+  './js/aqeedah-data.js?v=17',
+  './js/audio.js?v=17',
+  './js/tree.js?v=17',
+  './js/confetti.js?v=17',
+  './js/salawat-tracker.js?v=17',
+  './js/app.js?v=17'
 ];
 
 self.addEventListener('install', event => {
@@ -62,8 +67,12 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
 
-  // استثناء خدمة قراءة الصوت أونلاين من جوجل (مثل تطبيق kids) لتمر مباشرة من الشبكة بدون تخزين
-  if (url.hostname.includes('translate.googleapis.com') || url.pathname.includes('translate_tts')) {
+  // استثناء خدمات الصوت والـ API لتمر مباشرة من الشبكة بدون تخزين
+  if (
+    url.pathname.startsWith('/api/') ||
+    url.hostname.includes('translate.googleapis.com') ||
+    url.pathname.includes('translate_tts')
+  ) {
     return;
   }
 

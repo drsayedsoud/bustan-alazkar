@@ -1,0 +1,8 @@
+{
+  "name": "bustan-alazkar",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "node-edge-tts": "^1.2.12"
+  }
+}

@@ -4518,3 +4518,216 @@ body {
     font-size: 3rem;
   }
 }
+
+/* ==========================================================================
+   ??? √’Ê«  «·ﬁ—«¡… Ê«··ÂÃ«  «·⁄—»Ì… (AI Neural TTS) - „ﬁ »” „‰  ÿ»Ìﬁ kids
+   ========================================================================== */
+.modal-card-voice {
+  max-width: 580px;
+  width: 95%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.voice-mode-controls {
+  margin: 12px 0 14px;
+}
+
+.voice-chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.voice-chip-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1.5px solid #d1fae5;
+  background: #f0fdf4;
+  color: #065f46;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.voice-chip-btn.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border-color: #059669;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.voice-mode-tip {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #059669;
+  line-height: 1.4;
+}
+
+.voice-table-wrap {
+  border-radius: 16px;
+  border: 1.5px solid rgba(16, 185, 129, 0.35);
+  background: #ffffff;
+  overflow-y: auto;
+  max-height: 320px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.voice-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  color: #1f2937;
+  background: transparent;
+}
+
+.voice-table th {
+  background: #f0fdf4;
+  color: #065f46;
+  padding: 10px 8px;
+  font-weight: 800;
+  border-bottom: 2px solid #a7f3d0;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.voice-table td {
+  padding: 9px 8px;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.voice-table tr:last-child td {
+  border-bottom: none;
+}
+
+.voice-table tr.selected {
+  background: #ecfdf5;
+}
+
+.voice-table tr:hover {
+  background: #f0fdf4;
+  cursor: pointer;
+}
+
+.voice-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin: 0;
+  color: inherit;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.voice-radio-label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #10b981;
+}
+
+.btn-sample {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: inherit;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+  transition: transform 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.btn-sample:active {
+  transform: scale(0.94);
+}
+
+.btn-sample.playing {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+}
+
+.test-voice-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  color: #059669;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: #f0fdf4;
+  border: 1px dashed #a7f3d0;
+  transition: all 0.2s ease;
+}
+
+.test-voice-link:hover {
+  background: #d1fae5;
+  color: #047857;
+}
+
+/* «·Ê÷⁄ «··Ì·Ì */
+body.dark-mode .voice-table-wrap {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .voice-table {
+  color: #f1f5f9;
+}
+
+body.dark-mode .voice-table th {
+  background: #0f172a;
+  color: #6ee7b7;
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .voice-table td {
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .voice-table tr.selected {
+  background: rgba(16, 185, 129, 0.2);
+}
+
+body.dark-mode .voice-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .voice-chip-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+body.dark-mode .voice-chip-btn.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+body.dark-mode .test-voice-link {
+  background: #1e293b;
+  border-color: #334155;
+  color: #6ee7b7;
+}

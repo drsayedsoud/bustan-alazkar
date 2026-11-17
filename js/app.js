@@ -583,6 +583,15 @@ class AppController {
       });
     });
 
+    const sidebarBtnVoice = document.getElementById('sidebar-btn-voice');
+    if (sidebarBtnVoice) {
+      sidebarBtnVoice.addEventListener('click', () => {
+        sounds.playPop();
+        this.closeSidebar();
+        this.openVoiceSettingsModal();
+      });
+    }
+
     const sidebarBtnSettings = document.getElementById('sidebar-btn-settings');
     if (sidebarBtnSettings) {
       sidebarBtnSettings.addEventListener('click', () => {
@@ -2506,6 +2515,177 @@ ${appUrl}
         this.populateSettingsForm(DEFAULT_REWARDS_SETTINGS);
       });
     }
+
+    // زر فتح إعدادات الصوت من نافذة المكافآت
+    const btnOpenVoiceFromSettings = document.getElementById('btn-open-voice-from-settings');
+    if (btnOpenVoiceFromSettings) {
+      btnOpenVoiceFromSettings.addEventListener('click', () => {
+        sounds.playPop();
+        this.closeSettingsModal();
+        this.openVoiceSettingsModal();
+      });
+    }
+
+    // زر إغلاق نافذة أصوات القراءة
+    const btnCloseVoice = document.getElementById('close-voice-modal-btn');
+    if (btnCloseVoice) {
+      btnCloseVoice.addEventListener('click', () => {
+        sounds.playPop();
+        this.closeVoiceSettingsModal();
+      });
+    }
+
+    // إعداد واجهة الأصوات واللهجات
+    this.setupVoiceSettingsUI();
+  }
+
+  setupVoiceSettingsUI() {
+    const chipsWrap = document.getElementById('voice-mode-chips');
+    if (chipsWrap) {
+      chipsWrap.querySelectorAll('.voice-chip-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sounds.playPop();
+          const mode = btn.dataset.v;
+          sounds.setVoiceMode(mode);
+          this.renderVoiceTable();
+        });
+      });
+    }
+
+    // إغلاق النافذة عند الضغط على الخلفية
+    const voiceModal = document.getElementById('voice-settings-modal');
+    if (voiceModal) {
+      voiceModal.addEventListener('click', (e) => {
+        if (e.target === voiceModal) {
+          this.closeVoiceSettingsModal();
+        }
+      });
+    }
+  }
+
+  openVoiceSettingsModal() {
+    this.renderVoiceTable();
+    const modal = document.getElementById('voice-settings-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  closeVoiceSettingsModal() {
+    if (this._activeSampleAudio) {
+      try {
+        this._activeSampleAudio.pause();
+        this._activeSampleAudio.src = '';
+      } catch (e) {}
+      this._activeSampleAudio = null;
+    }
+    const modal = document.getElementById('voice-settings-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  renderVoiceTable() {
+    const tbody = document.getElementById('voice-table-body');
+    if (!tbody) return;
+
+    const curMode = sounds.getVoiceMode();
+    const fixedVoice = localStorage.getItem('kids_voice_name') || localStorage.getItem('bustan_voice_name') || 'ar-EG-SalmaNeural';
+
+    // تحديث الأزرار النشطة للوضع
+    const chipsWrap = document.getElementById('voice-mode-chips');
+    if (chipsWrap) {
+      chipsWrap.dataset.value = curMode;
+      chipsWrap.querySelectorAll('.voice-chip-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.v === curMode);
+      });
+    }
+
+    // تحديث رسالة التلميح
+    const tip = document.getElementById('voice-mode-tip');
+    if (tip) {
+      if (curMode === 'random') {
+        tip.textContent = '✨ الوضع العشوائي مفعّل: في كل مرة يُفتح فيها التطبيق، سيأتي بصوت ولهجة عربية جديدة ومختلفة عن المرة السابقة!';
+        tip.style.color = '#059669';
+      } else {
+        const vObj = sounds.ARABIC_VOICES.find(v => v.id === fixedVoice);
+        tip.textContent = '📌 تم تثبيت الصوت على: ' + (vObj ? (vObj.name + ' (' + vObj.country + ')') : fixedVoice);
+        tip.style.color = '#0284c7';
+      }
+    }
+
+    tbody.innerHTML = '';
+    sounds.ARABIC_VOICES.forEach(v => {
+      const isSelected = (curMode === 'fixed' && v.id === fixedVoice);
+      const tr = document.createElement('tr');
+      if (isSelected) tr.className = 'selected';
+
+      tr.innerHTML = `
+        <td style="font-weight: 800; white-space: nowrap; padding-right: 14px;">
+          <label class="voice-radio-label">
+            <input type="radio" name="rb-voice-choice" value="${v.id}" ${isSelected ? 'checked' : ''}>
+            <span>${v.gender === 'أنثى' ? '👧' : '👦'} ${v.name}</span>
+          </label>
+        </td>
+        <td style="text-align: center; white-space: nowrap; font-weight: 700;">${v.country}</td>
+        <td style="text-align: center;"><button type="button" class="btn-sample" data-voice="${v.id}"><span>🔊</span><span>اسمع</span></button></td>
+      `;
+
+      tr.onclick = (e) => {
+        if (e.target.closest('.btn-sample')) return;
+        sounds.playPop();
+        sounds.setVoiceMode('fixed', v.id);
+        this.renderVoiceTable();
+      };
+
+      const sampleBtn = tr.querySelector('.btn-sample');
+      sampleBtn.onclick = (e) => {
+        e.stopPropagation();
+        this.playVoiceSample(v, sampleBtn);
+      };
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  playVoiceSample(v, btn) {
+    if (this._activeSampleAudio) {
+      try {
+        this._activeSampleAudio.pause();
+        this._activeSampleAudio.src = '';
+      } catch (e) {}
+      this._activeSampleAudio = null;
+    }
+    if (this._activePlayingBtn) {
+      this._activePlayingBtn.classList.remove('playing');
+      this._activePlayingBtn.innerHTML = '<span>🔊</span><span>اسمع</span>';
+      this._activePlayingBtn = null;
+    }
+
+    btn.classList.add('playing');
+    btn.innerHTML = '<span>⏳</span><span>تشغيل...</span>';
+    this._activePlayingBtn = btn;
+
+    const url = `/api/tts?text=${encodeURIComponent(v.sample)}&voice=${encodeURIComponent(v.id)}`;
+    const audio = new Audio(url);
+    this._activeSampleAudio = audio;
+
+    audio.onplay = () => {
+      btn.innerHTML = '<span>🎶</span><span>يقرأ...</span>';
+    };
+
+    const cleanup = () => {
+      btn.classList.remove('playing');
+      btn.innerHTML = '<span>🔊</span><span>اسمع</span>';
+      if (this._activePlayingBtn === btn) this._activePlayingBtn = null;
+      if (this._activeSampleAudio === audio) this._activeSampleAudio = null;
+    };
+
+    audio.onended = cleanup;
+    audio.onerror = () => {
+      btn.classList.remove('playing');
+      btn.innerHTML = '<span>❌</span><span>خطأ</span>';
+      setTimeout(cleanup, 2000);
+    };
+
+    audio.play().catch(cleanup);
+  }
   }
 
   openSettingsModal() {

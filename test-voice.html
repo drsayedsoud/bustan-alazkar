@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تجربة أصوات واللهجات العربية - البطل المسلم</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Cairo', system-ui, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    h1 {
+      color: #10b981;
+      font-size: 24px;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    textarea {
+      width: 100%;
+      height: 110px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 2px solid #a7f3d0;
+      font-size: 16px;
+      font-family: inherit;
+      box-sizing: border-box;
+      resize: vertical;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea:focus {
+      border-color: #10b981;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+      text-align: right;
+    }
+    label {
+      font-size: 13px;
+      color: #555;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1.5px solid #ddd;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      background: #fafafa;
+    }
+    .btn-play {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-play:active {
+      transform: scale(0.96);
+    }
+    .status {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #666;
+      min-height: 24px;
+    }
+    .status.playing {
+      color: #10b981;
+      font-weight: bold;
+    }
+    .quick-samples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .chip {
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip:hover {
+      background: #a7f3d0;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 18px;
+      color: #6b7280;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .back-link:hover {
+      color: #10b981;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>🎙️ تجربة أصوات واللهجات (AI Neural)</h1>
+  <p style="color:#777; font-size:14px; margin-top:-6px;">تقنية Microsoft Edge Neural - أصوات فصيحة طبيعية 100% مثل تطبيق kids</p>
+
+  <textarea id="text-input">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ الْعَظِيمِ. مرحباً بك يا بطل في بستان الأذكار!</textarea>
+
+  <div class="controls">
+    <div>
+      <label>الصوت العربي:</label>
+      <select id="voice-select">
+        <option value="ar-EG-SalmaNeural" selected>👧 سلمى (مصر 🇪🇬 - فصيح دافئ)</option>
+        <option value="ar-SA-ZariyahNeural">👧 زارية (السعودية 🇸🇦 - فصحى هادئة)</option>
+        <option value="ar-JO-SanaNeural">👧 سناء (الأردن 🇯🇴 - مخارج واضحة)</option>
+        <option value="ar-LB-LaylaNeural">👧 ليلى (لبنان 🇱🇧 - ناعم ورقيق)</option>
+        <option value="ar-AE-FatimaNeural">👧 فاطمة (الإمارات 🇦🇪 - مشرقة)</option>
+        <option value="ar-KW-NouraNeural">👧 نورة (الكويت 🇰🇼 - مرحة وواضحة)</option>
+        <option value="ar-QA-AmalNeural">👧 أمل (قطر 🇶🇦 - هادئة ورصينة)</option>
+        <option value="ar-DZ-AminaNeural">👧 أمينة (الجزائر 🇩🇿 - فصحى محببة)</option>
+        <option value="ar-TN-ReemNeural">👧 ريم (تونس 🇹🇳 - لطيفة وسلسة)</option>
+        <option value="ar-EG-ShakirNeural">👦 شاكر (مصر 🇪🇬 - شاب فصيح ومرح)</option>
+        <option value="ar-JO-TaimNeural">👦 تيم (الأردن 🇯🇴 - فتى نشيط)</option>
+        <option value="ar-SA-HamedNeural">👦 حامد (السعودية 🇸🇦 - وقور وواضح)</option>
+      </select>
+    </div>
+    <div>
+      <label>النبرة (Pitch):</label>
+      <select id="pitch-select">
+        <option value="default" selected>الصوت الطبيعي الأصلي (الموصى به)</option>
+        <option value="+10%">نبرة طفولية ناعمة (+10%)</option>
+        <option value="-5%">نبرة أعمق قليلاً (-5%)</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn-play" id="btn-play">
+    <span>🔊 استمع الآن</span>
+  </button>
+
+  <div class="status" id="status-text">اضغط على الزر للاستماع</div>
+
+  <div class="quick-samples">
+    <span class="chip" onclick="setSample('أَحْسَنْتَ يَا بَطَل! إِجَابَةٌ صَحِيحَةٌ وَرَائِعَةٌ، لَقَدْ فُزْتَ بِنُجُومٍ ذَهَبِيَّةٍ!')">🏆 تشجيع</span>
+    <span class="chip" onclick="setSample('سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ')">🌿 ذكر وتسبيح</span>
+    <span class="chip" onclick="setSample('تَقَبَّلَ اللَّهُ صَلَاتَكَ يَا بَطَل! الصَّلَاةُ نُورٌ لِقَلْبِكَ وَحِصْنٌ لِأَيَّامِكَ.')">🕌 صلاة</span>
+  </div>
+
+  <div>
+    <a href="index.html" class="back-link">← العودة للتطبيق الرئيسي</a>
+  </div>
+</div>
+
+<script>
+  let currentAudio = null;
+
+  function setSample(txt) {
+    document.getElementById('text-input').value = txt;
+    playSound();
+  }
+
+  async function playSound() {
+    const text = document.getElementById('text-input').value.trim();
+    if (!text) return;
+
+    const pitch = document.getElementById('pitch-select').value;
+    const voice = document.getElementById('voice-select').value;
+    const status = document.getElementById('status-text');
+
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.src = '';
+      currentAudio = null;
+    }
+
+    status.textContent = '⏳ جاري تجهيز الصوت الطبيعي...';
+    status.className = 'status';
+
+    const url = `/api/tts?text=${encodeURIComponent(text)}&pitch=${encodeURIComponent(pitch)}&voice=${encodeURIComponent(voice)}&rate=default`;
+
+    const audio = new Audio(url);
+    currentAudio = audio;
+
+    audio.onplay = () => {
+      status.textContent = '🎶 يتم التشغيل الآن بصوت طبيعي نقي...';
+      status.className = 'status playing';
+    };
+
+    audio.onended = () => {
+      status.textContent = '✅ اكتملت القراءة بنجاح';
+      status.className = 'status';
+    };
+
+    audio.onerror = () => {
+      status.textContent = '❌ حدث خطأ أثناء تشغيل الصوت، تأكد من اتصال الإنترنت.';
+      status.className = 'status';
+    };
+
+    try {
+      await audio.play();
+    } catch (e) {
+      status.textContent = '⚠️ اضغط على الزر أولاً للسماح للمتصفح بالتشغيل.';
+    }
+  }
+
+  document.getElementById('btn-play').addEventListener('click', playSound);
+</script>
+
+</body>
+</html>

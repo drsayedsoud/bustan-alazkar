@@ -18,19 +18,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
   <script>
     // تنظيف فوري للكاشات القديمة
     if ('caches' in window) {
       caches.keys().then(function(keys) {
         keys.forEach(function(k) {
-          if (k !== 'bustan-alazkar-v16') caches.delete(k);
+          if (k !== 'bustan-alazkar-v17') caches.delete(k);
         });
       });
     }
   </script>
   <!-- سكريبت إبقاء الشاشة مضاءة دائماً (Always-On Screen Wake Lock) -->
-  <script src="js/wake-lock.js?v=16"></script>
+  <script src="js/wake-lock.js?v=17"></script>
 </head>
 <body>
 
@@ -101,6 +101,10 @@
       <button type="button" class="sidebar-action-btn" id="sidebar-btn-theme">
         <span>الوضع الليلي / النهاري</span>
         <span id="sidebar-theme-icon">🌙</span>
+      </button>
+      <button type="button" class="sidebar-action-btn" id="sidebar-btn-voice">
+        <span>🎙️ أصوات القراءة واللهجات</span>
+        <span>🔊</span>
       </button>
       <button type="button" class="sidebar-action-btn" id="sidebar-btn-settings">
         <span>⚙️ إعدادات المكافآت</span>
@@ -1046,6 +1050,12 @@
           </div>
         </div>
 
+        <div class="form-group" style="text-align: center; margin: 14px 0 6px;">
+          <button type="button" class="modal-btn secondary-btn" id="btn-open-voice-from-settings" style="width: 100%; font-weight: 800; border-color: #10b981; color: #047857;">
+            🎙️ تخصيص أصوات القراءة واللهجات (AI Neural)
+          </button>
+        </div>
+
         <div class="settings-actions">
           <button type="submit" class="modal-btn" id="btn-save-settings">💾 حفظ الإعدادات</button>
           <button type="button" class="modal-btn btn-share-wa-modal" id="btn-share-whatsapp-settings">
@@ -1059,16 +1069,59 @@
     </div>
   </div>
 
-  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v16 -->
-  <script src="js/azkar-data.js?v=16"></script>
-  <script src="js/wudu-data.js?v=16"></script>
-  <script src="js/morning-evening-data.js?v=16"></script>
-  <script src="js/prayer-data.js?v=16"></script>
-  <script src="js/aqeedah-data.js?v=16"></script>
-  <script src="js/audio.js?v=16"></script>
-  <script src="js/tree.js?v=16"></script>
-  <script src="js/confetti.js?v=16"></script>
-  <script src="js/salawat-tracker.js?v=16"></script>
-  <script src="js/app.js?v=16"></script>
+  <!-- نافذة إعدادات أصوات القراءة واللهجات العربية (AI Neural Voice Modal) -->
+  <div class="modal-overlay" id="voice-settings-modal">
+    <div class="modal-card modal-card-voice">
+      <div class="modal-icon">🎙️</div>
+      <h3 class="modal-title">أصوات القراءة واللهجات العربية</h3>
+      <p class="modal-desc">استمع لنصوص التطبيق والتعليمات والأذكار بأصوات عربية فصيحة طبيعية 100% بتقنية Microsoft Edge Neural (مثل تطبيق kids).</p>
+
+      <div class="voice-mode-controls">
+        <label class="form-label" style="font-weight: 800;">🔀 نظام اختيار الصوت:</label>
+        <div class="voice-chips" id="voice-mode-chips" data-value="random">
+          <button type="button" class="voice-chip-btn active" data-v="random">🎲 تشكيلة عشوائية <small>(صوت ولهجة جديدة كل مرة)</small></button>
+          <button type="button" class="voice-chip-btn" data-v="fixed">📌 تثبيت صوت محدد من الجدول</button>
+        </div>
+        <p class="voice-mode-tip" id="voice-mode-tip">✨ الوضع العشوائي مفعّل: في كل مرة يُفتح فيها التطبيق، سيأتي بصوت ولهجة عربية جديدة ومختلفة عن المرة السابقة!</p>
+      </div>
+
+      <div class="voice-table-wrap">
+        <table class="voice-table">
+          <thead>
+            <tr>
+              <th style="text-align: right; padding-right: 14px;">الصوت</th>
+              <th style="text-align: center;">الدولة / العلم</th>
+              <th style="text-align: center; width: 85px;">استماع</th>
+            </tr>
+          </thead>
+          <tbody id="voice-table-body">
+            <!-- يُبنى تلقائياً بـ JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 12px; text-align: center;">
+        <a href="test-voice.html" class="test-voice-link" target="_blank">
+          <span>🔍 تجربة جميع الأصوات ونبرة الصوت في صفحة مخصصة</span>
+        </a>
+      </div>
+
+      <div class="settings-actions" style="margin-top: 14px;">
+        <button type="button" class="modal-btn" id="close-voice-modal-btn">حفظ وإغلاق ✅</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ملفات الجافاسكريبت بالترتيب مع معرّف الكاش المحدث v17 -->
+  <script src="js/azkar-data.js?v=17"></script>
+  <script src="js/wudu-data.js?v=17"></script>
+  <script src="js/morning-evening-data.js?v=17"></script>
+  <script src="js/prayer-data.js?v=17"></script>
+  <script src="js/aqeedah-data.js?v=17"></script>
+  <script src="js/audio.js?v=17"></script>
+  <script src="js/tree.js?v=17"></script>
+  <script src="js/confetti.js?v=17"></script>
+  <script src="js/salawat-tracker.js?v=17"></script>
+  <script src="js/app.js?v=17"></script>
 </body>
 </html>
