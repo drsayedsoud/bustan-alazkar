@@ -2686,7 +2686,6 @@ ${appUrl}
 
     audio.play().catch(cleanup);
   }
-  }
 
   openSettingsModal() {
     this.populateSettingsForm(this.rewardsSettings);

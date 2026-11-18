@@ -5,7 +5,6 @@ class SoundFX {
     this.ctx = null;
     this.enabled = true;
     this.fallbackAudio = null;
-    this.wowAudio = null;
     this.referrerMeta = null;
     this.isSpeaking = false;
     this.currentSpeakToken = 0;
@@ -193,28 +192,17 @@ class SoundFX {
         this.playCoin();
         break;
       case 'wow':
-        this.playWow();
+        this.playBloom();
         break;
       default:
         this.playPop();
     }
   }
 
-  // صوت تشجيع الأطفال الرائع من تطبيق kids (wow.mp3)
+  // رنين تشجيع هادئ ووقور للأطفال
   playWow() {
     if (!this.enabled) return;
-    try {
-      if (!this.wowAudio) {
-        this.wowAudio = new Audio('assets/wow.mp3');
-        this.wowAudio.preload = 'auto';
-      }
-      this.wowAudio.currentTime = 0;
-      this.wowAudio.volume = 1;
-      this.wowAudio.play().catch(() => {});
-      this.play('correct');
-    } catch (e) {
-      this.play('correct');
-    }
+    this.playBloom();
   }
 
   // صوت نقرة البوب المرحة
